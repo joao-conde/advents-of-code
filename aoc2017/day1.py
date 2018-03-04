@@ -10,6 +10,7 @@ captcha1 = 0
 
 for i in range(0, puzzle_len):
 
+    #Last element has to check the first (circular list)
     if i == puzzle_len - 1:
         if puzzle_input[i] == puzzle_input[0]:
             captcha1 = captcha1 + int(puzzle_input[i])
@@ -25,6 +26,7 @@ step = puzzle_len / 2
 
 for i in range(0, puzzle_len):
 
+    #Past the last element check has to loop from beginning
     if i + step > puzzle_len - 1:
 
         if puzzle_input[i] == puzzle_input[int((i+step) % puzzle_len)]:

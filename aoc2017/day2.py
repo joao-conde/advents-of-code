@@ -21,8 +21,13 @@ for line in lines:
 
 #PART2
 
+#Returns the division between an element (el) and the first number that evenly divides it in the row, excluding itself
+# -1 if none found
 def getEvenDiv(row,el):
     for x in row:
+        if x == el:
+            continue
+
         if el % x == 0:
             return el / x
 
@@ -30,19 +35,16 @@ def getEvenDiv(row,el):
     
 checksum2 = 0
 
-lines = input_file.readlines()
-
 for line in lines:
     line = line.split('\t')
     line = [int(el) for el in line]
 
-
+    for el in line:
+        ret = getEvenDiv(line, el)
         
-
-    
-print(getEvenDiv([3,3,3,2],4))
-
-
+        if ret != -1:
+            checksum2 = checksum2 + ret
+            break
 
 
 print("\nThe checksum1 is " + str(checksum1))
