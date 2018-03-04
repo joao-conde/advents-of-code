@@ -1,7 +1,9 @@
 #Link to problem: https://adventofcode.com/2017/day/2
 
+#For current repos config path is '../res/d2input.txt'
 
-input_file = open("day2_input.txt")
+src = input("Input file path + extension (e.g.: /dir/file.txt): ")
+input_file = open(src)
 
 #PART1
 
