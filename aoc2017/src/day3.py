@@ -2,9 +2,26 @@
 
 import math
 
+#PART1
 
+#Manhattan distance algorithm
 def calcManhattanDist(originRow, originCol, destRow, destCol):
-    print(originRow + originCol + destRow + destCol)
+    distance = 0
+    
+    while originRow != destRow:
+        if(originRow < destRow) : destRow -= 1 
+        else: destRow += 1
+        
+        distance += 1
+
+    while originCol != destCol:
+        if(originCol < destCol) : destCol -=1 
+        else: destCol +=1
+        
+        distance += 1
+
+    return distance
+
 
 puzzInput = int(input("Enter your puzzle input: "))
 
@@ -23,12 +40,15 @@ grid = [[0 for element in range(gridSize)] for line in range(gridSize)]
 #being R(right), U(p), D(own), L(eft)
 # 1xR + (2*i+1)xU + (U+1)xL + (U+1)xD + (U+1)xR
 
-posX = posY = math.floor(gridSize / 2)
+center = math.floor(gridSize / 2)
+posX = posY = center
 grid[posX][posY] = 1
 
 element = 2
 control = 0
 
+
+#Grid filling algorithm
 while element <= puzzInput:
     
     upTimes = 2*control + 1
@@ -89,9 +109,29 @@ while element <= puzzInput:
     
 
 
-#2 linha 1 coluna
-#grid[line][col]
-#grid[1][0] = 3
+#Find element coords
+elX = elY = 0
+for i in range(gridSize):
+    for j in range(gridSize):
+        if grid[i][j] == puzzInput:
+            elX = i
+            elY = j
+            break
 
+#Calculate distance from point to origin (1)
+distance = calcManhattanDist(center, center, elX, elY) 
+
+
+#PART2
+
+
+#Print grid
+print("\n--------Created following grid--------")
 for line in grid:
     print(line)
+
+print("\nDistance: " + str(distance))
+
+
+
+
