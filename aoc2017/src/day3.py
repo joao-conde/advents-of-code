@@ -2,12 +2,15 @@
 
 import math
 
+
+def calcManhattanDist(originRow, originCol, destRow, destCol):
+    print(originRow + originCol + destRow + destCol)
+
 puzzInput = int(input("Enter your puzzle input: "))
 
 #1 gridSize is always odd so it has a middle for the '1' and 
 #big enough to contain all numbers
 gridSize = math.ceil(math.sqrt(puzzInput))
-
 if(gridSize % 2 == 0) : gridSize += 1
 
 #2 Create a square grid of gridSize by gridSize filled with 0's
@@ -18,64 +21,76 @@ grid = [[0 for element in range(gridSize)] for line in range(gridSize)]
 #From a starting point, in order to complete one spiral (one cycle)
 #you use the following algorithm (found by pattern analysis)
 #being R(right), U(p), D(own), L(eft)
-# 1xR + (2*i+1)xU + (U+1)xL + (U+1)xD + (U+2)xR
+# 1xR + (2*i+1)xU + (U+1)xL + (U+1)xD + (U+1)xR
 
-#middle position for the 1
-posX = posY = math.floor(gridSize/2)
-element = 1
-i = 0
+posX = posY = math.floor(gridSize / 2)
+grid[posX][posY] = 1
+
+element = 2
+control = 0
 
 while element <= puzzInput:
     
-    #fill center
-    grid[posY][posX] = element
+    upTimes = 2*control + 1
+
+    #one right and fill
+    posY +=1
+    grid[posX][posY] = element
+
     element += 1
-    if element >= puzzInput : break
+    if element > puzzInput : break
 
-    #right move
-    posX += 1
-    grid[posY][posX] = element
-    element += 1
-    if element >= puzzInput : break
-
-    upTimes = 2*i + 1
-
-    #up moves
+    #up times and fill for each
     for i in range(upTimes):
-        posY -= 1
-        grid[posY][posX] = element
-        element += 1
-        if element >= puzzInput : break
-       
-
-    #left moves
-    for i in range(upTimes + 1):
         posX -= 1
-        grid[posY][posX] = element
-        element += 1
-        if element >= puzzInput : break
+        grid[posX][posY] = element
 
-    #down moves
+        element += 1
+        if element > puzzInput : break
+
+    if element > puzzInput : break
+
+
+    #left times and fil for each
+
     for i in range(upTimes + 1):
-        posY += 1
-        grid[posY][posX] = element
-        element += 1
-        if element >= puzzInput : break
+        posY -= 1
+        grid[posX][posY] = element
 
-    #right moves
+        element += 1
+        if element > puzzInput : break
+
+    if element > puzzInput : break
+
+
+    #down times and fill for each
+
     for i in range(upTimes + 1):
         posX += 1
-        grid[posY][posX] = element
+        grid[posX][posY] = element
+
         element += 1
+        if element > puzzInput : break
 
-    i += 1
+    if element > puzzInput : break
+
+    #right times and fill for each
+
+    for i in range(upTimes + 1):
+        posY += 1
+        grid[posX][posY] = element
+
+        element += 1
+        if element > puzzInput : break
 
 
-
-
+    control += 1
+    if element > puzzInput : break
+    
 
 
 #2 linha 1 coluna
+#grid[line][col]
 #grid[1][0] = 3
 
 for line in grid:
