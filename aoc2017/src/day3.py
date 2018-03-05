@@ -23,12 +23,14 @@ def calcManhattanDist(originRow, originCol, destRow, destCol):
     return distance
 
 
+
 puzzInput = int(input("Enter your puzzle input: "))
 
 #1 gridSize is always odd so it has a middle for the '1' and 
 #big enough to contain all numbers
 gridSize = math.ceil(math.sqrt(puzzInput))
 if(gridSize % 2 == 0) : gridSize += 1
+
 
 #2 Create a square grid of gridSize by gridSize filled with 0's
 grid = [[0 for element in range(gridSize)] for line in range(gridSize)]
@@ -124,14 +126,35 @@ distance = calcManhattanDist(center, center, elX, elY)
 
 #PART2
 
+#sum of al surrounding elements
+def surrondSum(grid, posX, posY):
+    return grid[posX-1][posY] + grid[posX+1][posY] + grid[posX][posY-1] + grid[posX][posY+1] + grid[posX+1][posY+1] + grid[posX+1][posY-1] + grid[posX-1][posY-1] + grid[posX-1][posY+1] 
 
-#Print grid
-print("\n--------Created following grid--------")
+
+grid2 = [[0 for element in range(gridSize)] for line in range(gridSize)]
+
+firstBiggerVal = 0
+element = 1
+
+while element <= puzzInput:
+    print("do stuff here")
+
+
+
+#Print part1 solution
+print("\n--------Created following grid - p1--------\n")
 for line in grid:
     print(line)
 
 print("\nDistance: " + str(distance))
 
 
+#Print part2 solution
+print("\n--------Created following grid - p2--------\n")
+for line in grid2:
+    print(line)
+
+#val = surrondSum(grid,1,1)
+print("\nFirst value bigger than input: " + str(firstBiggerVal))
 
 
