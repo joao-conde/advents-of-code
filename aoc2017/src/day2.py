@@ -14,6 +14,8 @@ checksum1 = 0
 
 lines = input_file.readlines()
 
+input_file.close()
+
 for line in lines:
     line = line.split('\t')
     line = [int(el) for el in line]

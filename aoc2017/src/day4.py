@@ -5,6 +5,7 @@
 src = input("Input file path + extension (e.g.: /dir/file.txt): ")
 input_file = open(src)
 lines = input_file.readlines()
+input_file.close()
 
 #PART1
 
