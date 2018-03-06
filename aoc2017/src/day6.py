@@ -1,6 +1,5 @@
 #Link to problem: https://adventofcode.com/2017/day/6
 
-
 #For current repos config path is '../res/d5input.txt'
 src = '../res/d6input.txt'
 #src = input("Input file path + extension (e.g.: /dir/file.txt): ")
@@ -10,10 +9,10 @@ input_file.close()
 
 memory = [int(x) for x in memory]
 
-#PART1
-
+#PART1&2
 states = []
 cycles = 0
+loopLen = 0
 
 while memory not in states:
     #copy the list or it is passed by reference and completes at first attempt (obviously)
@@ -30,8 +29,10 @@ while memory not in states:
     
     cycles += 1
 
+loopLen = len(states) - states.index(memory)
 
-print("Current memory state:", memory)
-print("Redistribution cycles:", cycles)
+print("\nCurrent memory state:", memory)
+print("\nRedistribution cycles:", cycles)
+print("Redistribution loop length:", loopLen)
 
 
