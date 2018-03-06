@@ -124,21 +124,100 @@ for i in range(gridSize):
 distance = calcManhattanDist(center, center, elX, elY) 
 
 
-#PART2
+#PART2 - bit of spaghetti code
 
 #sum of al surrounding elements
-def surrondSum(grid, posX, posY):
+def surroundSum(grid, posX, posY):
     return grid[posX-1][posY] + grid[posX+1][posY] + grid[posX][posY-1] + grid[posX][posY+1] + grid[posX+1][posY+1] + grid[posX+1][posY-1] + grid[posX-1][posY-1] + grid[posX-1][posY+1] 
 
 
-grid2 = [[0 for element in range(gridSize)] for line in range(gridSize)]
+#gridsize+1 to ensure grid is big enough for the surroundSum algorithm not to check out of boundaries
+#quicker fix rathe than fix surroundSum function
+grid2 = [[0 for element in range(gridSize+1)] for line in range(gridSize+1)]
 
-firstBiggerVal = 0
-element = 1
 
-while element <= puzzInput:
-    print("do stuff here")
+posX = posY = center
+grid2[posX][posY] = 1
 
+el = 0
+control2 = 0
+
+#Grid filling algorithm
+while el <= puzzInput:
+    
+    upTimes = 2*control2 + 1
+
+    #one right and fill
+    posY +=1
+    el = surroundSum(grid2, posX, posY)
+    print(el)
+
+    if el <= puzzInput : 
+        grid2[posX][posY] = el
+    else:
+        break
+
+
+    #up times and fill for each
+    for i in range(upTimes):
+        posX -= 1
+        el = surroundSum(grid2, posX, posY)
+
+        if el <= puzzInput : 
+            grid2[posX][posY] = el
+        else:
+            break
+
+
+    if el > puzzInput : break
+
+
+    #left times and fil for each
+
+    for i in range(upTimes + 1):
+        posY -= 1
+        el = surroundSum(grid2, posX, posY)
+        
+        if el <= puzzInput : 
+            grid2[posX][posY] = el
+        else:
+            break
+
+
+    if el > puzzInput : break
+
+
+    #down times and fill for each
+
+    for i in range(upTimes + 1):
+        posX += 1
+        el = surroundSum(grid2, posX, posY)
+        
+        if el <= puzzInput : 
+            grid2[posX][posY] = el
+        else:
+            break
+
+    if el > puzzInput : break
+
+    #right times and fill for each
+
+    for i in range(upTimes + 1):
+        posY += 1
+        el = surroundSum(grid2, posX, posY)
+        
+        if el <= puzzInput : 
+            grid2[posX][posY] = el
+        else:
+            break
+
+
+    control2 += 1
+    if el > puzzInput : break
+
+
+#Fill the value 
+grid2[posX][posY] = el
 
 
 #Print part1 solution
@@ -154,7 +233,6 @@ print("\n--------Created following grid - p2--------\n")
 for line in grid2:
     print(line)
 
-#val = surrondSum(grid,1,1)
-print("\nFirst value bigger than input: " + str(firstBiggerVal))
+print("\nFirst value bigger than input: " + str(el))
 
 
