@@ -1,60 +1,47 @@
 #Link to problem: https://adventofcode.com/2017/day/7
 
-
+#Program nodes of calling tree
 class Program():
 
-    def __init__(self,name,weight,disc):
+    def __init__(self,name):
         self.name = name
-        self.weight = weight
-        self.disc = disc
-        self.caller = "none"
+        self.parent = "none"
 
-    def setCaller(self, caller):
-        self.caller = caller
+    def set_parent_prog(self, parent):
+        self.parent = parent
 
-    def isOnDisc(self, prog):
-        return prog in disc
-
-
-    def printProgram(self):
-        print("My name is", self.name, "I weight", self.weight, "and my disc content is", disc)
+    def print_program(self):
+        print("My name is", self.name, "and my parent is")
 
 
 #For current repos config path is '../res/d5input.txt'
 src = '../res/d7input.txt'
 #src = input("Input file path + extension (e.g.: /dir/file.txt): ")
 input_file = open(src)
-programList= input_file.read().split('\n')
+program_list= input_file.read().split('\n')
 input_file.close()
 
 
-#parse of input and creation of Program objects
-programs = []
-for program in programList:
 
-    programParams = program.split(' ')
+program_nodes = []
 
-    disc = []   
-    if len(programParams) > 2 : disc = programParams[3:]
+for prog in program_list:
+    prog = prog.split(' ')
+    program_nodes.append(Program(prog[0]))
 
-    prog = Program(programParams[0], programParams[1][1:][:-1], disc)
-    programs.append(prog)
-    prog.printProgram()
+program_names = [prog.name for prog in program_nodes]
 
+for prog in program_list:
+    prog = prog.split(' ')
 
+    if(len(prog) > 2) :
+        children = prog[3:]
+        children = [child.replace(',','') for child in children]
 
-for prog1 in programs:
-    for prog2 in programs:
-        #print(prog1.name, " + ", prog2.name)
-        if(prog1.isOnDisc(prog2.name)) : 
-            #print(prog2.name, "is on disc of", prog1.name)
-            prog2.setCaller(prog1.name)
+        for child in children:
+            program_nodes[program_names.index(child)].set_parent_prog(prog.name)
 
-
-
-for program in programs:
-    if(program.caller == "none") : print(program.name)
-
-
-
-
+root_node = ""
+for node in program_nodes:
+    print(node.parent)
+    if node.parent == "none" : root_node = node
