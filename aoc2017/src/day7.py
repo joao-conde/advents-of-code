@@ -45,6 +45,8 @@ input_file.close()
 
 program_list = parse_input(program_list)
 
+#PART1
+
 #creates call tree nodes
 program_nodes = []
 for program in program_list:
@@ -68,5 +70,29 @@ for node in program_nodes:
 root_node = [node for node in program_nodes if node.parent is None][0]
 print("The name of the bottom program is:", root_node.name)
 
+
+#PART2
+unbalanced_program = None
+unbalanced_weights = []
+
+for program in program_nodes:
+    children = [node for node in program_nodes if node.name in program.disc]
+    weights = [child.weight for child in children]
+    
+    #check if unbalanced (different value)
+    weight_len = len(weights)
+    if weight_len > 0 :
+        if weight_len != weights.count(weights[0]) :
+            unbalanced_program = program
+            unbalanced_weights = weights
+            break
+
+
+
+#finding the unique value
+set_of_weights = set(unbalanced_weights)
+
+
+print(set_of_weights)
 
 
