@@ -21,6 +21,7 @@ class Program():
     def set_parent_prog(self, parent):
         self.parent = parent
 
+
     def print_program(self):
         print("My name is", self.name, "my disc content is", self.disc)
         if(self.parent is not None) :
@@ -34,6 +35,17 @@ def parse_input(string_list):
     string_list = [x.replace('->',' ') for x in string_list]
     string_list = [" ".join(x.split()) for x in string_list]
     return string_list
+
+
+#calculates the weight of the disc (weight of the follow discs - recursive)
+def get_disc_weight(program):
+    weight = program.weight
+    
+    for prog_name in program.disc:
+        prog = [x for x in program_nodes if x.name == prog_name][0]
+        weight += get_disc_weight(prog)
+
+    return weight
 
 
 #For current repos config path is '../res/d7input.txt'
@@ -52,7 +64,7 @@ program_nodes = []
 for program in program_list:
     program = program.split()
     prog_name = program[0]
-    prog_weight = program[1]
+    prog_weight = int(program[1])
     prog_disc = []
     if(len(program) > 2) : 
         prog_disc = program[2:]
@@ -73,7 +85,6 @@ print("The name of the bottom program is:", root_node.name)
 
 #PART2
 unbalanced_program = None
-unbalanced_weights = []
 
 for program in program_nodes:
     children = [node for node in program_nodes if node.name in program.disc]
@@ -84,15 +95,25 @@ for program in program_nodes:
     if weight_len > 0 :
         if weight_len != weights.count(weights[0]) :
             unbalanced_program = program
-            unbalanced_weights = weights
             break
 
 
+unbalanced_weights = []
+for prog_name in unbalanced_program.disc:
+    program = [node for node in program_nodes if node.name == prog_name][0]
+    unbalanced_weights.append(get_disc_weight(program))
+
+
+print(get_disc_weight([prog for prog in program_nodes if prog.name == "ugml"][0]))
 
 #finding the unique value
-set_of_weights = set(unbalanced_weights)
-
+set_of_weights = set(unbalanced_weights) 
 
 print(set_of_weights)
+
+
+
+
+
 
 
