@@ -85,45 +85,4 @@ print("The name of the bottom program is:", root_node.name)
 
 #PART2
 
-for program in program_nodes:
-    children = [node for node in program_nodes if node.name in program.disc]
-    weights = [child.weight for child in children]
-    
-    #check if unbalanced (different value)
-    weight_len = len(weights)
-    if weight_len > 0 :
-        if weight_len != weights.count(weights[0]) :
-            unbalanced_program = program
-            break
-
-
-unbalanced_weights = []
-for prog_name in unbalanced_program.disc:
-    program = [node for node in program_nodes if node.name == prog_name][0]
-    unbalanced_weights.append(get_disc_weight(program))
-
-
-
-#finding the unique value
-set_of_weights = set(unbalanced_weights) 
-unique_weight = 0
-duplicate_weight = 0
-for weight in set_of_weights:
-    #unique value
-    if unbalanced_weights.count(weight) == 1 : 
-        unique_weight = weight
-    else:
-        duplicate_weight = weight
-        
-
-unbalanced_subprogram_name = unbalanced_program.disc[unbalanced_weights.index(unique_weight)]
-unbalanced_subprogram_weight = [node.weight for node in program_nodes if node.name == unbalanced_subprogram_name][0]
-
-correct_weight = unbalanced_subprogram_weight - abs(unique_weight - duplicate_weight)
-
-print("The unbalanced program is", unbalanced_subprogram_name, "and its weight is", unbalanced_subprogram_weight, "but needs to be", correct_weight)
-
-
-
-
 
