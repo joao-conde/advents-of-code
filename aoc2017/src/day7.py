@@ -48,6 +48,21 @@ def get_disc_weight(program):
     return weight
 
 
+#Checks for unique value in a list. Returns it or -1 if all equal
+def get_unique_value(values):
+    for el in values:
+        if values.count(el) == 1 : return el
+    
+    return -1
+
+#Returns the first element different from element in values. If nonem returns element
+def get_another__value(element, values):
+    for el in values:
+        if el != element : return el
+    
+    return element
+
+
 #For current repos config path is '../res/d7input.txt'
 src = '../res/d7input.txt'
 #src = input("Input file path + extension (e.g.: /dir/file.txt): ")
@@ -78,11 +93,26 @@ for node in program_nodes:
     for child in children:
         child.set_parent_prog(node)
     
-#finds root node
-root_node = [node for node in program_nodes if node.parent is None][0]
-print("The name of the bottom program is:", root_node.name)
 
+root_node = [node for node in program_nodes if node.parent is None][0]
 
 #PART2
 
+new_weight = 0
+for node in program_nodes:
+    children = [child for child in program_nodes if child.name in node.disc]
+    children_weights = [get_disc_weight(child) for child in children]
 
+    unique_weight = get_unique_value(children_weights)
+    other_value = get_another__value(unique_weight, children_weights)
+    
+    if(unique_weight != -1) : 
+        unbalanced_node_name = children[children_weights.index(unique_weight)].name
+        new_weight = children[children_weights.index(unique_weight)].weight
+        diff = unique_weight - other_value
+        new_weight -= diff
+        break
+                       
+#-----Print Results-----
+print("\nThe name of the bottom program is:", root_node.name)
+print("The unbalanced program is ", unbalanced_node_name, "and its new weight is", new_weight)
