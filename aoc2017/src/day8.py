@@ -1,6 +1,5 @@
 #Link to problem: https://adventofcode.com/2017/day/8
 
-
 class Register():
 
     def __init__(self, name):
@@ -25,14 +24,13 @@ ops = {
 }
 
 #For current repos config path is '../res/d8input.txt'
-src = '../res/d8input.txt'
-#src = input("Input file path + extension (e.g.: /dir/file.txt): ")
+src = input("Input file path + extension (e.g.: /dir/file.txt): ")
 input_file = open(src)
 instructions_list= input_file.read().split('\n')
 input_file.close()
 
 
-#PART1 - could do all in one cycle but since the complexity of O(n) or O(2n) is similiar to O(3n) I didn't bother to much since its a small data set
+#PART1 - could do all in one cycle but since the complexity of O(n) is similiar to O(2n) I didn't bother to much since its a small data set
 
 registers = []
 max_value_held = "none"
@@ -80,13 +78,15 @@ for instruction in instructions_list:
     if method == "dec":
         target_reg.cash_out(cash)
 
+
+    #PART2
     if max_value_held == "none" or max_value_held < target_reg.cash : max_value_held = target_reg.cash
 
 
 #getting max value
 cashes = [reg.cash for reg in registers]
-print("\nMaximum value held during transactions was", max_value_held)
-print("The largest value in any register after completing the instructions is", max(cashes))
+print("\nThe largest value in any register after completing the instructions is", max(cashes))
+print("Maximum value held during transactions was", max_value_held)
 
 
 
