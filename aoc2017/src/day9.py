@@ -5,12 +5,13 @@
 src = "../res/d9input.txt"
 #src = input("Input file path + extension (e.g.: /dir/file.txt): ")
 input_file = open(src)
-instructions_list= input_file.read().split('\n')
+input_group = input_file.read().split('\n')
 input_file.close()
 
 
 #PART1 
 
+print(input_group)
 
 
 
