@@ -1,6 +1,5 @@
 #Link to problem: https://adventofcode.com/2017/day/9
 
-
 #get subgroups
 def get_subgroups(group):
     subgroups = []
@@ -8,12 +7,27 @@ def get_subgroups(group):
     i = 1
     while i < len(group): 
         
-        if group[i] == '{' and group[i+1] != '{':
+        if group[i] == '{':
+            nest_lvl = 0
+            offset = 1
+            next_char = group[i+offset]
+            while next_char == '{':
+                nest_lvl += 1
+                offset += 1
+                next_char = group[i+offset]
+
+
             j = i
             while j < len(group):
+                if group[j] == ',' : nest_lvl += 1
                 if group[j] == '}' :
-                    print(group[i:j+1])
-                    break
+                    if nest_lvl == 0:
+                        #print(group[i:j+1])
+                        subgroups.append(group[i:j+1])
+                        i = j
+                        break
+                    else:
+                        nest_lvl -= 1
                 j += 1
 
         i += 1
@@ -27,13 +41,7 @@ src = "../res/d9input.txt"
 input_file = open(src)
 input_group = input_file.read()
 input_file.close()
-print(input_group)
 
-
-subgroups = get_subgroups(input_group)
-for subgroup in subgroups:
-    print(subgroup)
-    subgroups.append(get_subgroups(subgroup))
 
 
 #PART1 
@@ -68,3 +76,7 @@ while i < len(input_group):
 
     i += 1
     
+
+
+print(input_group)
+print(get_subgroups(input_group)[0].split(','))
