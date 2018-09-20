@@ -1,6 +1,5 @@
 #Link to problem: https://adventofcode.com/2017/day/1
 
-
 puzzle_input = input("\nEnter puzzle input: ")
 puzzle_len = len(puzzle_input)
 print("\nInput puzzle was: " + puzzle_input + '\n')

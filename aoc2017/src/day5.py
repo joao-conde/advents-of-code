@@ -2,8 +2,8 @@
 
 import sys
 
-
 #For current repos config path is '../res/d5input.txt'
+
 src = input("Input file path + extension (e.g.: /dir/file.txt): ")
 input_file = open(src)
 offsets = input_file.read().split('\n')
