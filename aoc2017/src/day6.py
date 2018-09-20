@@ -9,7 +9,7 @@ input_file.close()
 
 memory = [int(x) for x in memory]
 
-#PART1&2
+#PART 1 & 2
 states = []
 cycles = 0
 loopLen = 0
