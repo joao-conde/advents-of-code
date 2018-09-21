@@ -1,6 +1,5 @@
 #Link to problem: https://adventofcode.com/2017/day/16
 
-
 #Basic permutation operations~
 
 def spin(programs, size):
@@ -19,13 +18,12 @@ def partner(programs, p1, p2):
 
 
 #For current repos config path is '../res/d16input.txt'
-#src = input("Input file path + extension (e.g.: /dir/file.txt): ")
-src = '../res/d16input.txt'
+src = input("Input file path + extension (e.g.: /dir/file.txt): ")
+
 input_file = open(src)
 instructions = input_file.read().split(',')
 instructions = [str(instruction) for instruction in instructions]
 input_file.close()
-
 
 
 #PART 1 & 2
@@ -52,7 +50,6 @@ for i in range(iterations):
 
 
     if ''.join(programs) in configs:
-        print("TERMINATED AT:", ''.join(programs))
         break
     else:
         configs.append(''.join(programs))
