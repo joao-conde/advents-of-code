@@ -1,25 +1,27 @@
 #Link to problem: https://adventofcode.com/2017/day/12
      
 
-class Node:
+def find_connections(prog, connections, explored):
+    
+    programs = set()
 
-    def __init__(self, id):
-        self.id = id
-        self.parents = set() #incoming nodes
-                
-    def add_parent_node(self, node):
-        self.parents.add(node)
+    for program in connections[prog]:
+
+        #Add known DIRECT CONNECTION
+        programs.add(program)
+
+        #If direct connection not explored, do so
+        if program not in explored: 
+
+            explored.append(prog)
+            indirect_cons = find_connections(program, connections, explored)
+
+            for i_con in indirect_cons:
+                programs.add(i_con)
+
+    return programs
 
 
-def are_connected(n1, n2, visited):
-
-    if n1 in n2.parents: return True
-
-    if n2 not in visited: 
-        visited.add(n2)
-
-    for node in n2.parents:
-        return are_connected(n1, node, visited)
 
 #For current repos config path is '../res/d12input.txt'
 #src = input("Input file path + extension (e.g.: /dir/file.txt): ")
@@ -30,22 +32,24 @@ pipes = input_file.read().split('\n')
 input_file.close()
 
 
-nodes = [Node(x) for x in range(len(pipes))]
+#PART 1
+
+connections = []
 
 for pipe in pipes:
 
-    pipe = pipe.split()
-    pipe = [x.replace(',', '').replace('<->', '') for x in pipe]
-    pipe = list(filter(lambda a: a != '', pipe))
+    #Parse input
+    pipe = [x.replace(',', '') for x in pipe.split()]
+    pipe = list(filter(lambda a: a != '<->', pipe))
+    pipe = [int(x) for x in pipe]
 
-    for i in range(len(pipe)):
-        nodes[int(pipe[0])].add_parent_node(nodes[int(pipe[i])])
+    #List of connections as program sets
+    connections.append(set(pipe))
+
+connected_to_0 = 0
+for i in range(len(connections)):
+    group = find_connections(i, connections, [])
+    if 0 in group: connected_to_0 += 1
 
 
-# for node in nodes:
-#     print("\nNODE",node.id, end=' ')
-#     print("PARENTS:", end=' ')
-#     for p in node.parents: print(p.id, end=' ')
-
-
-print(are_connected(nodes[0], nodes[3], set()))
+print("Programs in PROGRAM 0 group:", connected_to_0)
