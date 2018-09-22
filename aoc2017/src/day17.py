@@ -1,20 +1,29 @@
 #Link to problem: https://adventofcode.com/2017/day/17
 
-#PART 1
 
-insertions = 2017
-step = 359 #int(input("Step size: "))
+#deque acts as a list but with better performance
+#list incur O(n) memory movement costs for pop and insert
+#deque's guarantee O(1)
+from collections import deque
 
-cbuf, curr_pos = [0], 0
+def spin(insertions, step):
+    spinlock = deque([0])
+    for i in range(insertions):
+        spinlock.rotate(-step)
+        spinlock.append(i+1)
+    return spinlock
 
-for i in range(insertions):
-    
-    pos = (step % len(cbuf))
-    pos = (pos + curr_pos) % len(cbuf)
-    cbuf.insert(pos + 1, i+1)
-    curr_pos = pos + 1
 
-print("Element after 2017:", cbuf[cbuf.index(2017)+1])
+#PART 1 & 2
+
+print("\nWait a few seconds. Computing results...\n")
+
+step = int(input("Spin step size: "))
+spinlock1 = spin(2017, step)
+spinlock2 = spin(50_000_000, step)
+
+print("\nValue after 2017:", spinlock1[0])
+print("Value after 0:", spinlock2[spinlock2.index(0) + 1])
 
 
 
