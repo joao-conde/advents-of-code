@@ -35,9 +35,9 @@ def get_subgroups(group):
     return subgroups
 
 
-#For current repos config path is '../res/d9input.txt'
-src = "../res/d9input.txt"
-#src = input("Input file path + extension (e.g.: /dir/file.txt): ")
+#For current repos config path is '../res/d09.txt'
+
+src = input("Input file path + extension (e.g.: /dir/file.txt): ")
 input_file = open(src)
 input_group = input_file.read()
 input_file.close()

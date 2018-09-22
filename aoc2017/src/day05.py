@@ -2,7 +2,7 @@
 
 import sys
 
-#For current repos config path is '../res/d5input.txt'
+#For current repos config path is '../res/d05.txt'
 
 src = input("Input file path + extension (e.g.: /dir/file.txt): ")
 input_file = open(src)

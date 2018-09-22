@@ -25,7 +25,7 @@ def find_connections(prog, connections, explored = None):
 
 
 
-#For current repos config path is '../res/d12input.txt'
+#For current repos config path is '../res/d12.txt'
 
 src = input("Input file path + extension (e.g.: /dir/file.txt): ")
 

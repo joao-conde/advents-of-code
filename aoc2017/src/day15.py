@@ -16,8 +16,10 @@ def generator(start_val, factor, divisor, multiple = 1):
 divisor = 2147483647
 gen_a_factor, gen_b_factor = 16807, 48271
 
-init_val_a = 512 #int(input("Generator A starting value: "))
-init_val_b = 191 #int(input("Generator B starting value: "))
+init_val_a = int(input("Generator A starting value: "))
+init_val_b = int(input("Generator B starting value: "))
+
+print("\nWait a minute. Computing judge points for both parts...\n")
 
 #PART 1
 

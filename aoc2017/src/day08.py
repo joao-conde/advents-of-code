@@ -23,7 +23,7 @@ ops = {
     "!=": (lambda x,y: x != y)
 }
 
-#For current repos config path is '../res/d8input.txt'
+#For current repos config path is '../res/d08.txt'
 src = input("Input file path + extension (e.g.: /dir/file.txt): ")
 input_file = open(src)
 instructions_list= input_file.read().split('\n')

@@ -63,7 +63,7 @@ def get_another__value(element, values):
     return element
 
 
-#For current repos config path is '../res/d7input.txt'
+#For current repos config path is '../res/d07.txt'
 src = input("Input file path + extension (e.g.: /dir/file.txt): ")
 input_file = open(src)
 program_list= input_file.read().split('\n')

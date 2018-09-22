@@ -17,7 +17,7 @@ def partner(programs, p1, p2):
     return programs
 
 
-#For current repos config path is '../res/d16input.txt'
+#For current repos config path is '../res/d16.txt'
 src = input("Input file path + extension (e.g.: /dir/file.txt): ")
 
 input_file = open(src)

@@ -2,7 +2,7 @@
 
 #Useful material on Hex grids: https://www.redblobgames.com/grids/hexagons/
 
-#For current repos config path is '../res/d11input.txt'
+#For current repos config path is '../res/d11.txt'
 src = input("Input file path + extension (e.g.: /dir/file.txt): ")
 
 input_file = open(src)

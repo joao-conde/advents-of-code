@@ -1,6 +1,6 @@
 #Link to problem: https://adventofcode.com/2017/day/4
 
-#For current repos config path is '../res/d4input.txt'
+#For current repos config path is '../res/d04.txt'
 
 src = input("Input file path + extension (e.g.: /dir/file.txt): ")
 input_file = open(src)
