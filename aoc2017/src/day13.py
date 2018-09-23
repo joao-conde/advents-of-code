@@ -6,6 +6,10 @@ class Layer:
     def __init__(self, range):
         self.range = range
         self.scan_area = ['E'] * range
+        self.scan_dir = 1 #default, 1 to go "down", -1 to go "up"
+
+        if range > 0: self.scan_area[0] = 'S' #scanner initial position
+
 
     def top(self):
 
@@ -15,28 +19,41 @@ class Layer:
             return self.scan_area[0]
 
     def advance_scanner(self):
-        print("SCANNER ADVANCE")
+        
+        if self.range > 0:
+            scanner_idx = self.scan_area.index('S')
+            self.scan_area[scanner_idx] = 'E'
+            scanner_idx += self.scan_dir
+            self.scan_area[scanner_idx] = 'S'
+
+            if scanner_idx == self.range-1: self.scan_dir = -1
+            if scanner_idx == 0: self.scan_dir = 1
+
+
 
     def __str__(self):
-        return "LAYER RANGE: " + str(self.range)
+        info = "LAYER RANGE: " + str(self.range) + "\n"
+
+        for el in self.scan_area:
+            info += el + " "
+
+
+        return info
 
 
 #For current repos config path is '../res/d13.txt'
 #src = input("Input file path + extension (e.g.: /dir/file.txt): ")
 
-#TODO: advance SCANNERS, remove this hardcoded input, place scanners at begin position
 
 src = '../res/d13.txt'
-
 
 
 input_file = open(src)
 layers = input_file.read()
 layers = [layer.replace(':', '').split() for layer in layers.split('\n')]
-
-
 input_file.close()
 
+#PART 1
 
 #Build firewall
 firewall = []
@@ -54,7 +71,7 @@ while len(layers) > 0:
 
 
 
-#Compute severity of gettingcaught
+#Compute severity of getting caught
 severity = 0
 picoseconds = len(firewall)
 for ps in range(picoseconds):
@@ -62,7 +79,9 @@ for ps in range(picoseconds):
     if firewall[ps].top() == 'S':
         severity += ps * firewall[ps].range #depth * range
 
+    for layer in firewall: layer.advance_scanner()
 
-print("Severity:", severity)
+
+print("\nSeverity of the whole trip:", severity)
 
 
