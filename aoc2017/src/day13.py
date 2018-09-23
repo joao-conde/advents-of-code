@@ -5,11 +5,12 @@ class Layer:
 
     def __init__(self, range):
         self.range = range
-        self.scan_area = ['E'] * range
+        self.reset_scanner()
+
+    def reset_scanner(self):
+        self.scan_area = ['E'] * self.range
+        if self.range > 0: self.scan_area[0] = 'S' #scanner initial position
         self.scan_dir = 1 #default, 1 to go "down", -1 to go "up"
-
-        if range > 0: self.scan_area[0] = 'S' #scanner initial position
-
 
     def top(self):
 
@@ -70,7 +71,6 @@ while len(layers) > 0:
     depth += 1
 
 
-
 #Compute severity of getting caught
 severity = 0
 picoseconds = len(firewall)
@@ -85,3 +85,4 @@ for ps in range(picoseconds):
 print("\nSeverity of the whole trip:", severity)
 
 
+#PART 2
