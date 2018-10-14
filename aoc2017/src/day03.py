@@ -5,35 +5,19 @@ import math
 #PART1
 
 #Manhattan distance algorithm
-def calcManhattanDist(originRow, originCol, destRow, destCol):
-    distance = 0
+def manhattan_distance(origin_row, origin_col, dest_row, dest_col):
+    return abs(dest_row - origin_row) + abs(dest_col - origin_col)
     
-    while originRow != destRow:
-        if(originRow < destRow) : destRow -= 1 
-        else: destRow += 1
-        
-        distance += 1
+puzzle_input = int(input("Enter your puzzle input: "))
 
-    while originCol != destCol:
-        if(originCol < destCol) : destCol -=1 
-        else: destCol +=1
-        
-        distance += 1
-
-    return distance
-
-
-
-puzzInput = int(input("Enter your puzzle input: "))
-
-#1 gridSize is always odd so it has a middle for the '1' and 
+#1 grid_size is always odd so it has a middle for the '1' and 
 #big enough to contain all numbers
-gridSize = math.ceil(math.sqrt(puzzInput))
-if(gridSize % 2 == 0) : gridSize += 1
+grid_size = math.ceil(math.sqrt(puzzle_input))
+if(grid_size % 2 == 0) : grid_size += 1
 
 
-#2 Create a square grid of gridSize by gridSize filled with 0's
-grid = [[0 for element in range(gridSize)] for line in range(gridSize)]
+#2 Create a square grid of grid_size by grid_size filled with 0's
+grid = [[0 for element in range(grid_size)] for line in range(grid_size)]
 
 
 #3 The filling pattern is as it follows:
@@ -42,197 +26,184 @@ grid = [[0 for element in range(gridSize)] for line in range(gridSize)]
 #being R(right), U(p), D(own), L(eft)
 # 1xR + (2*i+1)xU + (U+1)xL + (U+1)xD + (U+1)xR
 
-center = math.floor(gridSize / 2)
-posX = posY = center
-grid[posX][posY] = 1
+center = math.floor(grid_size / 2)
+pos_x = pos_y = center
+grid[pos_x][pos_y] = 1
 
 element = 2
 control = 0
 
 
 #Grid filling algorithm
-while element <= puzzInput:
+while element <= puzzle_input:
     
-    upTimes = 2*control + 1
+    up_times = 2*control + 1
 
     #one right and fill
-    posY +=1
-    grid[posX][posY] = element
+    pos_y +=1
+    grid[pos_x][pos_y] = element
 
     element += 1
-    if element > puzzInput : break
+    if element > puzzle_input : break
 
     #up times and fill for each
-    for i in range(upTimes):
-        posX -= 1
-        grid[posX][posY] = element
+    for i in range(up_times):
+        pos_x -= 1
+        grid[pos_x][pos_y] = element
 
         element += 1
-        if element > puzzInput : break
+        if element > puzzle_input : break
 
-    if element > puzzInput : break
+    if element > puzzle_input : break
 
 
     #left times and fil for each
 
-    for i in range(upTimes + 1):
-        posY -= 1
-        grid[posX][posY] = element
+    for i in range(up_times + 1):
+        pos_y -= 1
+        grid[pos_x][pos_y] = element
 
         element += 1
-        if element > puzzInput : break
+        if element > puzzle_input : break
 
-    if element > puzzInput : break
+    if element > puzzle_input : break
 
 
     #down times and fill for each
 
-    for i in range(upTimes + 1):
-        posX += 1
-        grid[posX][posY] = element
+    for i in range(up_times + 1):
+        pos_x += 1
+        grid[pos_x][pos_y] = element
 
         element += 1
-        if element > puzzInput : break
+        if element > puzzle_input : break
 
-    if element > puzzInput : break
+    if element > puzzle_input : break
 
     #right times and fill for each
 
-    for i in range(upTimes + 1):
-        posY += 1
-        grid[posX][posY] = element
+    for i in range(up_times + 1):
+        pos_y += 1
+        grid[pos_x][pos_y] = element
 
         element += 1
-        if element > puzzInput : break
+        if element > puzzle_input : break
 
 
     control += 1
-    if element > puzzInput : break
+    if element > puzzle_input : break
     
 
 
 #Find element coords
 elX = elY = 0
-for i in range(gridSize):
-    for j in range(gridSize):
-        if grid[i][j] == puzzInput:
+for i in range(grid_size):
+    for j in range(grid_size):
+        if grid[i][j] == puzzle_input:
             elX = i
             elY = j
             break
 
 #Calculate distance from point to origin (1)
-distance = calcManhattanDist(center, center, elX, elY) 
+distance = manhattan_distance(center, center, elX, elY) 
 
 
 #PART2 - bit of spaghetti code
 
 #sum of al surrounding elements
-def surroundSum(grid, posX, posY):
-    return grid[posX-1][posY] + grid[posX+1][posY] + grid[posX][posY-1] + grid[posX][posY+1] + grid[posX+1][posY+1] + grid[posX+1][posY-1] + grid[posX-1][posY-1] + grid[posX-1][posY+1] 
+def surround_sum(grid, pos_x, pos_y):
+    return grid[pos_x-1][pos_y] + grid[pos_x+1][pos_y] + grid[pos_x][pos_y-1] + grid[pos_x][pos_y+1] + grid[pos_x+1][pos_y+1] + grid[pos_x+1][pos_y-1] + grid[pos_x-1][pos_y-1] + grid[pos_x-1][pos_y+1] 
 
 
-#gridsize+1 to ensure grid is big enough for the surroundSum algorithm not to check out of boundaries
-#quicker fix rathe than fix surroundSum function
-grid2 = [[0 for element in range(gridSize+1)] for line in range(gridSize+1)]
+#grid_size+1 to ensure grid is big enough for the surround_sum algorithm not to check out of boundaries
+#quicker fix rathe than fix surround_sum function
+grid2 = [[0 for element in range(grid_size+1)] for line in range(grid_size+1)]
 
 
-posX = posY = center
-grid2[posX][posY] = 1
+pos_x = pos_y = center
+grid2[pos_x][pos_y] = 1
 
 el = 0
 control2 = 0
 
 #Grid filling algorithm
-while el <= puzzInput:
+while el <= puzzle_input:
     
-    upTimes = 2*control2 + 1
+    up_times = 2*control2 + 1
 
     #one right and fill
-    posY +=1
-    el = surroundSum(grid2, posX, posY)
-    print(el)
+    pos_y +=1
+    el = surround_sum(grid2, pos_x, pos_y)
 
-    if el <= puzzInput : 
-        grid2[posX][posY] = el
+    if el <= puzzle_input : 
+        grid2[pos_x][pos_y] = el
     else:
         break
 
 
     #up times and fill for each
-    for i in range(upTimes):
-        posX -= 1
-        el = surroundSum(grid2, posX, posY)
+    for i in range(up_times):
+        pos_x -= 1
+        el = surround_sum(grid2, pos_x, pos_y)
 
-        if el <= puzzInput : 
-            grid2[posX][posY] = el
+        if el <= puzzle_input : 
+            grid2[pos_x][pos_y] = el
         else:
             break
 
 
-    if el > puzzInput : break
+    if el > puzzle_input : break
 
 
     #left times and fil for each
 
-    for i in range(upTimes + 1):
-        posY -= 1
-        el = surroundSum(grid2, posX, posY)
+    for i in range(up_times + 1):
+        pos_y -= 1
+        el = surround_sum(grid2, pos_x, pos_y)
         
-        if el <= puzzInput : 
-            grid2[posX][posY] = el
+        if el <= puzzle_input : 
+            grid2[pos_x][pos_y] = el
         else:
             break
 
 
-    if el > puzzInput : break
+    if el > puzzle_input : break
 
 
     #down times and fill for each
 
-    for i in range(upTimes + 1):
-        posX += 1
-        el = surroundSum(grid2, posX, posY)
+    for i in range(up_times + 1):
+        pos_x += 1
+        el = surround_sum(grid2, pos_x, pos_y)
         
-        if el <= puzzInput : 
-            grid2[posX][posY] = el
+        if el <= puzzle_input : 
+            grid2[pos_x][pos_y] = el
         else:
             break
 
-    if el > puzzInput : break
+    if el > puzzle_input : break
 
     #right times and fill for each
 
-    for i in range(upTimes + 1):
-        posY += 1
-        el = surroundSum(grid2, posX, posY)
+    for i in range(up_times + 1):
+        pos_y += 1
+        el = surround_sum(grid2, pos_x, pos_y)
         
-        if el <= puzzInput : 
-            grid2[posX][posY] = el
+        if el <= puzzle_input : 
+            grid2[pos_x][pos_y] = el
         else:
             break
 
 
     control2 += 1
-    if el > puzzInput : break
+    if el > puzzle_input : break
 
 
 #Fill the value 
-grid2[posX][posY] = el
+grid2[pos_x][pos_y] = el
 
-
-#Print part1 solution
-print("\n--------Created following grid - p1--------\n")
-for line in grid:
-    print(line)
-
+#Print solutions
 print("\nDistance: " + str(distance))
-
-
-#Print part2 solution
-print("\n--------Created following grid - p2--------\n")
-for line in grid2:
-    print(line)
-
-print("\nFirst value bigger than input: " + str(el))
+print("First value bigger than input: " + str(el))
 
 

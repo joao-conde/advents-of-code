@@ -9,7 +9,7 @@ input_file.close()
 
 #PART1
 
-def validPassPhraseP1(pp):
+def valid_pass_p1(pp):
     words = pp.split(' ')
     
     for word in words:
@@ -23,7 +23,7 @@ validPPs1 = 0
 #PART2
 
 #checks if 2 words are anagrams of each other ; true if so false if not
-def isAnagram(word1, word2):
+def is_anagram(word1, word2):
     if len(word1) != len(word2) : return False
         
     for letter in word1:
@@ -31,7 +31,7 @@ def isAnagram(word1, word2):
 
     return True
 
-def validPassPhraseP2(pp):
+def valid_pass_p2(pp):
     wordsList = pp.split()
 
     while len(wordsList) > 1:
@@ -39,7 +39,7 @@ def validPassPhraseP2(pp):
         tail = wordsList[1:]
 
         for word in tail:
-            if(isAnagram(head, word)) : return False
+            if(is_anagram(head, word)) : return False
         
         wordsList = tail
     
@@ -50,8 +50,8 @@ validPPs2 = 0
 
 for line in lines:
     line = line.replace('\n', '')
-    if validPassPhraseP1(line) : validPPs1 += 1
-    if validPassPhraseP2(line) : validPPs2 += 1
+    if valid_pass_p1(line) : validPPs1 += 1
+    if valid_pass_p2(line) : validPPs2 += 1
 
 #Results print
 print("\nP1 valid passphrases: " + str(validPPs1))

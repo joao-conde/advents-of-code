@@ -7,7 +7,7 @@ input_file = open(src)
 
 #PART1
 
-def getRowDiff(row):
+def get_row_diff(row):
     return max(row) - min(row)
 
 checksum1 = 0
@@ -19,7 +19,7 @@ input_file.close()
 for line in lines:
     line = line.split('\t')
     line = [int(el) for el in line]
-    checksum1 = checksum1 + getRowDiff(line)
+    checksum1 = checksum1 + get_row_diff(line)
 
 
 
@@ -27,7 +27,7 @@ for line in lines:
 
 #Returns the division between an element (el) and the first number that evenly divides it in the row, excluding itself
 # -1 if none found
-def getEvenDiv(row,el):
+def get_even_div(row,el):
     for x in row:
         if x == el:
             continue
@@ -44,7 +44,7 @@ for line in lines:
     line = [int(el) for el in line]
 
     for el in line:
-        ret = getEvenDiv(line, el)
+        ret = get_even_div(line, el)
         
         if ret != -1:
             checksum2 = checksum2 + ret
