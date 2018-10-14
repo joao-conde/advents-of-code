@@ -3,7 +3,7 @@ set a 1
 mul p 17
 jgz p p
 mul a 2
-add i -1
+add i -1 
 jgz i -2
 add a -1
 set i 127

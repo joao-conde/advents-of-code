@@ -4,7 +4,7 @@ import math
 
 #PART1
 
-#Manhattan distance algorithm
+#Manhattan distance
 def manhattan_distance(origin_row, origin_col, dest_row, dest_col):
     return abs(dest_row - origin_row) + abs(dest_col - origin_col)
     

@@ -1,6 +1,5 @@
 #Link to problem: https://adventofcode.com/2017/day/17
 
-
 #deque acts as a list but with better performance
 #list incur O(n) memory movement costs for pop and insert
 #deque's guarantee O(1)
