@@ -1,3 +1,4 @@
+//Link to problem: https://adventofcode.com/2018/day/1
 const fs = require('fs');
 const input = fs.readFileSync('../res/d01').toString().split('\n');
 
