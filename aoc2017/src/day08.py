@@ -24,8 +24,7 @@ ops = {
 }
 
 #For current repos config path is '../res/d08.txt'
-src = input("Input file path + extension (e.g.: /dir/file.txt): ")
-input_file = open(src)
+input_file = open(input("Input file path + extension (e.g.: /dir/file.txt): "))
 instructions_list= input_file.read().split('\n')
 input_file.close()
 
@@ -85,19 +84,5 @@ for instruction in instructions_list:
 
 #getting max value
 cashes = [reg.cash for reg in registers]
-print("\nThe largest value in any register after completing the instructions is", max(cashes))
+print("The largest value in any register after completing the instructions is", max(cashes))
 print("Maximum value held during transactions was", max_value_held)
-
-
-
-
-
-    
-        
-
-
-    
-    
-
-
-

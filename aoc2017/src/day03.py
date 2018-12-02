@@ -203,7 +203,5 @@ while el <= puzzle_input:
 grid2[pos_x][pos_y] = el
 
 #Print solutions
-print("\nDistance: " + str(distance))
+print("Distance: " + str(distance))
 print("First value bigger than input: " + str(el))
-
-

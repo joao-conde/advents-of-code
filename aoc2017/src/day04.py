@@ -1,9 +1,7 @@
 #Link to problem: https://adventofcode.com/2017/day/4
 
 #For current repos config path is '../res/d04.txt'
-
-src = input("Input file path + extension (e.g.: /dir/file.txt): ")
-input_file = open(src)
+input_file = open(input("Input file path + extension (e.g.: /dir/file.txt): "))
 lines = input_file.readlines()
 input_file.close()
 
@@ -54,10 +52,5 @@ for line in lines:
     if valid_pass_p2(line) : validPPs2 += 1
 
 #Results print
-print("\nP1 valid passphrases: " + str(validPPs1))
-print("\nP2 valid passphrases: " + str(validPPs2))
-
-
-
-
-
+print("P1 valid passphrases: " + str(validPPs1))
+print("P2 valid passphrases: " + str(validPPs2))

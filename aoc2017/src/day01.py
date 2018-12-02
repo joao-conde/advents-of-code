@@ -1,8 +1,9 @@
 #Link to problem: https://adventofcode.com/2017/day/1
 
-puzzle_input = input("\nEnter puzzle input: ")
+puzzle_input = input("Enter puzzle input: ")
+print("Input puzzle was: " + puzzle_input + '\n')
+
 puzzle_len = len(puzzle_input)
-print("\nInput puzzle was: " + puzzle_input + '\n')
 
 #PART1
 captcha1 = 0
@@ -37,15 +38,5 @@ for i in range(0, puzzle_len):
             captcha2 = captcha2 + int(puzzle_input[i])
 
 
-
-print("---------RESULTS---------")
 print("Captcha1 sum is " + str(captcha1))
 print("Captcha2 sum is " + str(captcha2))
-
-        
-
-    
-
-
-
-

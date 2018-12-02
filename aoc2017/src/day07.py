@@ -64,8 +64,7 @@ def get_another__value(element, values):
 
 
 #For current repos config path is '../res/d07.txt'
-src = input("Input file path + extension (e.g.: /dir/file.txt): ")
-input_file = open(src)
+input_file = open(input("Input file path + extension (e.g.: /dir/file.txt): "))
 program_list= input_file.read().split('\n')
 input_file.close()
 
@@ -113,5 +112,5 @@ for node in program_nodes:
         break
                        
 #-----Print Results-----
-print("\nThe name of the bottom program is:", root_node.name)
+print("The name of the bottom program is:", root_node.name)
 print("The unbalanced program is ", unbalanced_node_name, "and its new weight is", new_weight)

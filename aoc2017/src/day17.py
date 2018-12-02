@@ -14,15 +14,12 @@ def spin(insertions, step):
 
 
 #PART 1 & 2
-
-print("\nWait a few seconds. Computing results...\n")
-
 step = int(input("Spin step size: "))
+
+print("\nWait a minute. Computing values for both parts...\n")
+
 spinlock1 = spin(2017, step)
 spinlock2 = spin(50_000_000, step)
 
-print("\nValue after 2017:", spinlock1[0])
+print("Value after 2017:", spinlock1[0])
 print("Value after 0:", spinlock2[spinlock2.index(0) + 1])
-
-
-

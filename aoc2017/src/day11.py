@@ -3,9 +3,7 @@
 #Useful material on Hex grids: https://www.redblobgames.com/grids/hexagons/
 
 #For current repos config path is '../res/d11.txt'
-src = input("Input file path + extension (e.g.: /dir/file.txt): ")
-
-input_file = open(src)
+input_file = open(input("Input file path + extension (e.g.: /dir/file.txt): "))
 directions = input_file.read().split(',')
 input_file.close()
 
@@ -36,5 +34,5 @@ for dir in directions:
 
     dists.append(hex_grid_distance(pos, [0, 0, 0]))
 
-print("\nFewest number of steps required:", hex_grid_distance(pos, [0, 0, 0]))
-print("\nFurthest from starting position:", max(dists))
+print("Fewest number of steps required:", hex_grid_distance(pos, [0, 0, 0]))
+print("Furthest from starting position:", max(dists))

@@ -3,9 +3,7 @@
 import sys
 
 #For current repos config path is '../res/d05.txt'
-
-src = input("Input file path + extension (e.g.: /dir/file.txt): ")
-input_file = open(src)
+input_file = open(input("Input file path + extension (e.g.: /dir/file.txt): "))
 offsets = input_file.read().split('\n')
 
 input_file.close()

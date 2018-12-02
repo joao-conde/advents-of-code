@@ -1,9 +1,9 @@
 #Link to problem: https://adventofcode.com/2017/day/2
 
 #For current repos config path is '../res/d02.txt'
-
-src = input("Input file path + extension (e.g.: /dir/file.txt): ")
-input_file = open(src)
+input_file = open(input("Input file path + extension (e.g.: /dir/file.txt): "))
+lines = input_file.readlines()
+input_file.close()
 
 #PART1
 
@@ -11,17 +11,10 @@ def get_row_diff(row):
     return max(row) - min(row)
 
 checksum1 = 0
-
-lines = input_file.readlines()
-
-input_file.close()
-
 for line in lines:
     line = line.split('\t')
     line = [int(el) for el in line]
     checksum1 = checksum1 + get_row_diff(line)
-
-
 
 #PART2
 
@@ -51,6 +44,5 @@ for line in lines:
             break
 
 
-print("\nThe checksum1 is " + str(checksum1))
-print("\nThe checksum2 is " + str(checksum2))
-
+print("The checksum1 is " + str(checksum1))
+print("The checksum2 is " + str(checksum2))

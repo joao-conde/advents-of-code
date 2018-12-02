@@ -26,10 +26,7 @@ def find_connections(prog, connections, explored = None):
 
 
 #For current repos config path is '../res/d12.txt'
-
-src = input("Input file path + extension (e.g.: /dir/file.txt): ")
-
-input_file = open(src)
+input_file = open(input("Input file path + extension (e.g.: /dir/file.txt): "))
 pipes = input_file.read().split('\n')
 input_file.close()
 
@@ -60,5 +57,5 @@ for i in range(len(connections)):
     if 0 in group: connected_to_0 += 1
 
 
-print("\nPrograms in PROGRAM 0 group:", connected_to_0)
+print("Programs in PROGRAM 0 group:", connected_to_0)
 print("Number of groups:", len(groups))

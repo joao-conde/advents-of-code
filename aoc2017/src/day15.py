@@ -19,7 +19,7 @@ gen_a_factor, gen_b_factor = 16807, 48271
 init_val_a = int(input("Generator A starting value: "))
 init_val_b = int(input("Generator B starting value: "))
 
-print("\nWait a minute. Computing judge points for both parts...\n")
+print("\nWait a moment. Computing judge points for both parts, this may take several minutes...\n")
 
 #PART 1
 
@@ -65,5 +65,5 @@ for i in range(iterations_p2):
 
 
 #Results
-print("\nOld generator judge's final count:", judge_pts_p1)
+print("Old generator judge's final count:", judge_pts_p1)
 print("New generator judge's final count:", judge_pts_p2)

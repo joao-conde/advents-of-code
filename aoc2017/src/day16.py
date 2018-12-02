@@ -18,9 +18,7 @@ def partner(programs, p1, p2):
 
 
 #For current repos config path is '../res/d16.txt'
-src = input("Input file path + extension (e.g.: /dir/file.txt): ")
-
-input_file = open(src)
+input_file = open(input("Input file path + extension (e.g.: /dir/file.txt): "))
 instructions = input_file.read().split(',')
 instructions = [str(instruction) for instruction in instructions]
 input_file.close()
@@ -55,5 +53,5 @@ for i in range(iterations):
         configs.append(''.join(programs))
 
 
-print("\nPrograms order after dance:", ''.join(programs))
+print("Programs order after dance:", ''.join(programs))
 print("Programs order after their billion dances:", configs[(iterations % len(configs)) - 1])

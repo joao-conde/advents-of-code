@@ -1,9 +1,7 @@
 #Link to problem: https://adventofcode.com/2017/day/6
 
 #For current repos config path is '../res/d06.txt'
-
-src = input("Input file path + extension (e.g.: /dir/file.txt): ")
-input_file = open(src)
+input_file = open(input("Input file path + extension (e.g.: /dir/file.txt): "))
 memory = input_file.read().split()
 input_file.close()
 
@@ -31,8 +29,6 @@ while memory not in states:
 
 loopLen = len(states) - states.index(memory)
 
-print("\nCurrent memory state:", memory)
-print("\nRedistribution cycles:", cycles)
+print("Current memory state:", memory)
+print("Redistribution cycles:", cycles)
 print("Redistribution loop length:", loopLen)
-
-
