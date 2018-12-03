@@ -64,3 +64,8 @@ target/
 
 # mypy
 .mypy_cache/
+
+#packagejson and eslint
+.eslintrc.js
+package.json
+node_modules

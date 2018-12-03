@@ -11,5 +11,5 @@ while(!previousFreqVals.has(frequency)){
 	else i++;
 }
 
-console.log('Resulting frequency is ' + input.map(Number).reduce((acc, currVal) => acc + currVal));
-console.log('First repeated frequency is ' + frequency);
+console.log('P1: Resulting frequency is ' + input.map(Number).reduce((acc, currVal) => acc + currVal));
+console.log('P2: First repeated frequency is ' + frequency);

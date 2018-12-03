@@ -27,7 +27,7 @@ input.forEach(str1 => input.forEach(str2 => {
 	}
 }));
 
-console.log('Checksum is ' + input.filter(word => { return containsNOccur(2, buildOccurMap(word)) }).length
+console.log('P1: Checksum is ' + input.filter(word => { return containsNOccur(2, buildOccurMap(word)) }).length
 			* input.filter(word => { return containsNOccur(3, buildOccurMap(word)) }).length);
 
-console.log('Common letters between correct box ID\'s are ' + largestCommonStr);
+console.log('P2: Common letters between correct box ID\'s are ' + largestCommonStr);
