@@ -10,7 +10,7 @@ buildOccurMap = (word) => {
 };
 
 containsNOccur = (n, occurrencyMap) => { 
-	for(key in occurrencyMap){
+	for(const key in occurrencyMap){
 		if(occurrencyMap[key] == n) return true;
 	}
 	return false;
@@ -23,19 +23,18 @@ solveP1 = () => {
 
 //P2
 getCommonSubstring = (str1, str2) => {
-	let zip = str1.split('').map((e, i) => {return [e, str2.split('')[i]]});
+	const zip = str1.split('').map((e, i) => {return [e, str2.split('')[i]]});
 	return zip.filter(e => {return e[0] == e[1]}).map(e => e[0]).join('');
 };
 
 solveP2 = () => {
 	let largestCommonStr = '';
-	for(str1 of input){
-		for(str2 of input){
-			if(str1 == str2) continue;
-			let common = getCommonSubstring(str1, str2);
+	input.forEach(str1 => input.forEach(str2 => {
+		if(str1 != str2){
+			const common = getCommonSubstring(str1, str2);
 			if(largestCommonStr.length < common.length) largestCommonStr = common;
 		}
-	}
+	}));
 	console.log('Common letters between correct box ID\'s are ' + largestCommonStr);
 };
 

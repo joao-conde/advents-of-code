@@ -8,8 +8,8 @@ solveP1 = () => {
 
 solveP2 = () => {
 	const previousFreqVals = new Set();
-
 	let frequency = 0, i = 0;
+	
 	while(!previousFreqVals.has(frequency)){
 		previousFreqVals.add(frequency);
 		
