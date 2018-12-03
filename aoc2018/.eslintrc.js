@@ -3,8 +3,7 @@ module.exports = {
     rules: {
         'no-console': 'off',
         'max-len': 'off',
-        'no-tabs': 'off',
-        'no-mixed-spaces-and-tabs': 'off'
+        'no-tabs': 'off'    
     },
     env: {
         "node": true,
