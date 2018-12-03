@@ -1,12 +1,18 @@
 //Link to problem: https://adventofcode.com/2018/day/2
 const input = require('fs').readFileSync('../res/d02').toString().split('\n');
 
+/*
+ * Returns a map (json) with each of the word's letters and their frequency
+ */
 buildOccurMap = (word) => {
 	let map = {};
 	word.split('').forEach(letter => letter in map ? map[letter]++ : map[letter] = 1);
 	return map;
 };
 
+/*
+ * Returns true if there are N occurrencies of any letter in a word, false otherwise
+ */
 containsNOccur = (n, occurrencyMap) => {
 	for (const key in occurrencyMap) {
 		if (occurrencyMap[key] == n) return true;
@@ -14,6 +20,9 @@ containsNOccur = (n, occurrencyMap) => {
 	return false;
 }
 
+/*
+ * Returns the common substring between two strings
+ */
 getCommonSubstring = (str1, str2) => {
 	const zip = str1.split('').map((e, i) => { return [e, str2.split('')[i]] });
 	return zip.filter(e => { return e[0] == e[1] }).map(e => e[0]).join('');
