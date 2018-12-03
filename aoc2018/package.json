@@ -1,0 +1,16 @@
+{
+  "name": "aoc2018",
+  "version": "1.0.0",
+  "description": "Advent of code 2018 solutions",
+  "main": "index.js",
+  "dependencies": {},
+  "devDependencies": {
+    "eslint": "^5.9.0",
+    "eslint-config-google": "^0.11.0"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC"
+}
