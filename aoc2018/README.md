@@ -2,7 +2,6 @@
 
 ## Why Javascript
 
-I am an hopeless dreamer that believes one day I might actually write an efficient, pleasant to look at and logic 
-.js script.
+I'm an hopeless dreamer that believes one day I might actually write efficient and pleasant to look at js code.
 
-I also realize it's widespread use....despite hating it.
+I also recognize it's widespread use... despite hating it.
