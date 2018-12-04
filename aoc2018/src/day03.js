@@ -1,7 +1,10 @@
 // Link to problem: https://adventofcode.com/2018/day/3
 const input = require('fs').readFileSync('../res/d03').toString().split('\n');
 
-const fillFabric = (fabric, id, [x, y], [width, height]) => {
+/*
+ * Adds claim ID's to each fabric cell
+ */
+const updateFabric = (fabric, id, [x, y], [width, height]) => {
 	for (let i = x; i < x + width; i++) {
 		for (let j = y; j < y + height; j++) {
 			const cellID = i + '-' + j;
@@ -18,11 +21,10 @@ const fabric = {}, ids = [];
 let conflicts = 0;
 
 input.forEach((claim) => {
-	const claimCoords = claim.split(' ')[2].split(',').map((x) => parseInt(x));
-	const claimDimensions = claim.split(' ')[3].split('x').map((x) => parseInt(x));
-	const id = claim.split(' ')[0];
-	ids.push(id);
-	fillFabric(fabric, id, claimCoords, claimDimensions);
+	ids.push(claim.split(' ')[0]);
+	updateFabric(fabric, claim.split(' ')[0],
+		claim.split(' ')[2].split(',').map((x) => parseInt(x)),
+		claim.split(' ')[3].split('x').map((x) => parseInt(x)));
 });
 
 for (const cell in fabric) {
