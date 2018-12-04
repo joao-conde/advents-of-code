@@ -5,7 +5,8 @@ module.exports = {
         'max-len': 'off',
         'no-tabs': 'off',
         'indent': [2, "tab"],
-        'one-var': 'off'
+        'one-var': 'off',
+        'guard-for-in': 'off'
     },
     env: {
         "node": true,
