@@ -49,5 +49,5 @@ const threes = input.filter((word) => {
 	return containsNOccur(3, buildOccurMap(word));
 }).length;
 
-console.log('P1: Checksum is ' + twos * threes);
-console.log('P2: Common letters between correct box ID\'s are ' + largestCommonStr);
+console.log('P1 - Checksum is ' + twos * threes);
+console.log('P2 - Common letters between correct box ID\'s are ' + largestCommonStr);

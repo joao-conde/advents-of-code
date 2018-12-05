@@ -12,5 +12,5 @@ while (!previousFreqVals.has(frequency)) {
 	else i++;
 }
 
-console.log('P1: Resulting frequency is ' + resultingFreq);
-console.log('P2: First repeated frequency is ' + frequency);
+console.log('P1 - Resulting frequency is ' + resultingFreq);
+console.log('P2 - First repeated frequency is ' + frequency);

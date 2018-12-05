@@ -38,5 +38,5 @@ for (const k in records) {
 	if (maxAsleep > lazyHour[1]) lazyHour = [k, maxAsleep, records[k].indexOf(maxAsleep)];
 }
 
-console.log('P1: ' + parseInt(sleepiestGuard[0]) * sleepiestGuard[2]);
-console.log('P2: ' + parseInt(lazyHour[0]) * lazyHour[2]);
+console.log('P1: - ' + parseInt(sleepiestGuard[0]) * sleepiestGuard[2]);
+console.log('P2: - ' + parseInt(lazyHour[0]) * lazyHour[2]);

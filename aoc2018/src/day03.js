@@ -36,5 +36,5 @@ for (const cell in fabric) {
 	}
 }
 
-console.log('P1: ' + conflicts + ' conflicting fabric inches');
-console.log('P2: ID of non-overlapping claim is ' + ids);
+console.log('P1 - ' + conflicts + ' conflicting fabric inches');
+console.log('P2 - ID of non-overlapping claim is ' + ids);

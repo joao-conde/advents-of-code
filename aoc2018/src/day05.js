@@ -20,4 +20,12 @@ const reactPolymer = (polymer) => {
 	return polymer;
 };
 
+
+const polymerLengths = [...new Set(input)].map((unique) => {
+	return reactPolymer(input.split('').filter((letter) => {
+		return (letter.toUpperCase() != unique.toUpperCase());
+	}).join('')).length;
+});
+
 console.log('P1 - Units remaining after polymer reactions: ' + reactPolymer(input).length);
+console.log('P2 - Shortest polymer length: ' + Math.min(...polymerLengths));
