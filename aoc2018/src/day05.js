@@ -1,14 +1,23 @@
 // Link to problem: https://adventofcode.com/2018/day/5
 const input = require('fs').readFileSync('../res/d05').toString();
 
+/*
+ * Two units react if they are of the same type and opposite polarities
+ */
 const unitsReact = (unit1, unit2) => {
 	return (unit1.toUpperCase() == unit2.toUpperCase() && unit1 != unit2);
 };
 
+/*
+ * Delete a unit from the polymer
+ */
 const deleteUnit = (polymer, unitIdx) => {
 	return polymer.slice(0, unitIdx) + polymer.slice(unitIdx + 1, polymer.length);
 };
 
+/*
+ * Processes the polymer performing unit reactions
+ */
 const reactPolymer = (polymer) => {
 	let i = 0;
 	while (i < polymer.length - 1) {
