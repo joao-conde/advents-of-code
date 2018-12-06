@@ -1,14 +1,24 @@
 // Link to problem: https://adventofcode.com/2018/day/5
 const input = require('fs').readFileSync('../res/d05').toString();
 
+/*
+ * Tests if 2 units react (same type different polarity)
+ */
 const unitsReact = (unit1, unit2) => {
 	return (unit1.toUpperCase() == unit2.toUpperCase() && unit1 != unit2);
 };
 
+/*
+ * Deletes an unit from the polymer
+ */
 const deleteUnit = (polymer, unitIdx) => {
 	return polymer.slice(0, unitIdx) + polymer.slice(unitIdx + 1, polymer.length);
 };
 
+/*
+ * Causes chain reactions across the polymer, reducing it, i.e.
+ * it removes pairs of same letters with difference casing.
+ */
 const reactPolymer = (polymer) => {
 	let i = 0;
 	while (i < polymer.length - 1) {
@@ -20,7 +30,11 @@ const reactPolymer = (polymer) => {
 	return polymer;
 };
 
-
+/*
+ * Remove pairs of same letters with difference casing after removing all
+ * instances of specific letter. Identify which combination generates the
+ * smallest length
+ */
 const polymerLengths = [...new Set(input)].map((unique) => {
 	return reactPolymer(input.split('').filter((letter) => {
 		return (letter.toUpperCase() != unique.toUpperCase());

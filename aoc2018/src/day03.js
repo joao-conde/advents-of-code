@@ -18,8 +18,6 @@ const updateFabric = (fabric, id, [x, y], [width, height]) => {
 };
 
 const fabric = {}, ids = [];
-let conflicts = 0;
-
 input.forEach((claim) => {
 	ids.push(claim.split(' ')[0]);
 	updateFabric(fabric, claim.split(' ')[0],
@@ -27,6 +25,11 @@ input.forEach((claim) => {
 		claim.split(' ')[3].split('x').map((x) => parseInt(x)));
 });
 
+/*
+ * Calculates conflicts or reused area from fabric and removes
+ * areas with multiple claims, leaving the only that does not
+ */
+let conflicts = 0;
 for (const cell in fabric) {
 	if (fabric[cell].length >= 2) {
 		conflicts++;

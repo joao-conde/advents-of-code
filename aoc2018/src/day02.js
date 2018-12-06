@@ -33,14 +33,10 @@ const getCommonSubstring = (str1, str2) => {
 	}).map((e) => e[0]).join('');
 };
 
-let largestCommonStr = '';
-input.forEach((str1) => input.forEach((str2) => {
-	if (str1 != str2) {
-		const common = getCommonSubstring(str1, str2);
-		if (largestCommonStr.length < common.length) largestCommonStr = common;
-	}
-}));
-
+/*
+ * Identifies which set of strings have a letter repeated two or three times 
+ * and multiplies their count
+ */
 const twos = input.filter((word) => {
 	return containsNOccur(2, buildOccurMap(word));
 }).length;
@@ -48,6 +44,17 @@ const twos = input.filter((word) => {
 const threes = input.filter((word) => {
 	return containsNOccur(3, buildOccurMap(word));
 }).length;
+
+/*
+ * Finds largest common string between all ID pairs
+ */
+let largestCommonStr = '';
+input.forEach((str1) => input.forEach((str2) => {
+	if (str1 != str2) {
+		const common = getCommonSubstring(str1, str2);
+		if (largestCommonStr.length < common.length) largestCommonStr = common;
+	}
+}));
 
 console.log('P1 - Checksum is ' + twos * threes);
 console.log('P2 - Common letters between correct box ID\'s are ' + largestCommonStr);

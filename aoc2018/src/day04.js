@@ -29,6 +29,10 @@ input.forEach((record) => {
 	}
 });
 
+/*
+ * Identifies which guard splees more often and when (minute)
+ * Identifies the guard that is most frequently asleep in a minute
+ */
 let sleepiestGuard = [undefined, 0, 0]; // guardID, totalSleep, minuteMaxSleep
 let lazyHour = [undefined, 0, 0]; // guardID, freqAsleep, minute
 for (const k in records) {
