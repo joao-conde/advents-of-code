@@ -1,4 +1,4 @@
-// Link to problem: https://adventofcode.com/2018/day/4
+/* Link to problem: https://adventofcode.com/2018/day/4 */
 const input = require('fs').readFileSync('../res/d04').toString().split('\n').sort();
 
 /*

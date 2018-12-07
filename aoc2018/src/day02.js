@@ -1,18 +1,14 @@
-// Link to problem: https://adventofcode.com/2018/day/2
+/* Link to problem: https://adventofcode.com/2018/day/2 */
 const input = require('fs').readFileSync('../res/d02').toString().split('\n');
 
-/*
- * Returns a map (json) with each of the word's letters and their frequency
- */
+/* Returns a map (json) with each of the word's letters and their frequency */
 const buildOccurMap = (word) => {
 	const map = {};
 	word.split('').forEach((letter) => letter in map ? map[letter]++ : map[letter] = 1);
 	return map;
 };
 
-/*
- * Returns true if there are N occurrencies of any letter in a word, false otherwise
- */
+/* Returns true if there are N occurrencies of any letter in a word, false otherwise */
 const containsNOccur = (n, occurrencyMap) => {
 	for (const key in occurrencyMap) {
 		if (occurrencyMap[key] == n) return true;
@@ -20,9 +16,7 @@ const containsNOccur = (n, occurrencyMap) => {
 	return false;
 };
 
-/*
- * Returns the common substring between two strings
- */
+/* Returns the common substring between two strings */
 const getCommonSubstring = (str1, str2) => {
 	const zip = str1.split('').map((e, i) => {
 		return [e, str2.split('')[i]];
@@ -45,9 +39,7 @@ const threes = input.filter((word) => {
 	return containsNOccur(3, buildOccurMap(word));
 }).length;
 
-/*
- * Finds largest common string between all ID pairs
- */
+/* Finds largest common string between all ID pairs */
 let largestCommonStr = '';
 input.forEach((str1) => input.forEach((str2) => {
 	if (str1 != str2) {

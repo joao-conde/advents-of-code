@@ -1,14 +1,10 @@
-// Link to problem: https://adventofcode.com/2018/day/1
+/* Link to problem: https://adventofcode.com/2018/day/1 */
 const input = require('fs').readFileSync('../res/d01').toString().split('\n');
 
-/*
- * Calculates latest frequency by summing all numbers from input
- */
+/* Calculates latest frequency by summing all numbers from input */
 const resultingFreq = input.map(Number).reduce((acc, currVal) => acc + currVal);
 
-/*
- * Identifies the first frequency that appears twice by repeating the input
- */
+/* Identifies the first frequency that appears twice by repeating the input */
 const previousFreqVals = new Set();
 let frequency = 0, i = 0;
 while (!previousFreqVals.has(frequency)) {

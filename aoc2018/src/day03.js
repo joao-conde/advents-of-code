@@ -1,9 +1,7 @@
-// Link to problem: https://adventofcode.com/2018/day/3
+/* Link to problem: https://adventofcode.com/2018/day/3 */
 const input = require('fs').readFileSync('../res/d03').toString().split('\n');
 
-/*
- * Adds claim ID's to each fabric cell
- */
+/* Adds claim ID's to each fabric cell */
 const updateFabric = (fabric, id, [x, y], [width, height]) => {
 	for (let i = x; i < x + width; i++) {
 		for (let j = y; j < y + height; j++) {
