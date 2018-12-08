@@ -28,7 +28,7 @@ const getCommonSubstring = (str1, str2) => {
 };
 
 /*
- * Identifies which set of strings have a letter repeated two or three times 
+ * Identifies which set of strings have a letter repeated two or three times
  * and multiplies their count
  */
 const twos = input.filter((word) => {
