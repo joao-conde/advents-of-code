@@ -2,7 +2,7 @@
 const input = require('fs').readFileSync('../res/d07').toString().split('\n');
 
 const isSubset = (set1, set2) => {
-	for(let el1 of set1) if(!set2.has(el1)) return false;
+	for (const el1 of set1) if (!set2.has(el1)) return false;
 	return true;
 };
 
@@ -16,7 +16,7 @@ const tasksRdyToExecute = (precedences, tasksDone) => {
 
 const precedences = {}, tasks = new Set();
 input.forEach((instr) => {
-    const prec = instr.match(/^Step (\w)/)[1], task = instr.match(/step (\w)/)[1];
+	const prec = instr.match(/^Step (\w)/)[1], task = instr.match(/step (\w)/)[1];
 	tasks.add(prec).add(task);
 	if (precedences[task]) {
 		precedences[task].add(prec);
