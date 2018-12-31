@@ -2,11 +2,8 @@
 const input = require('fs').readFileSync('../res/d07').toString().split('\n');
 
 const isSubset = (set1, set2) => {
-	let isSubset;
-	set1.forEach((el1) => {
-		isSubset = set2.has(el1);
-	});
-	return isSubset;
+	for(let el1 of set1) if(!set2.has(el1)) return false;
+	return true;
 };
 
 const tasksRdyToExecute = (precedences, tasksDone) => {
@@ -28,19 +25,17 @@ input.forEach((instr) => {
 	}
 });
 
-const possibleRootNodes = [...tasks].filter((node) => {
+const independentNodes = [...tasks].filter((node) => {
 	return !Object.keys(precedences).includes(node);
 });
 
 
 const done = new Set();
 while (done.size < tasks.size) {
-	const rdyToExecute = tasksRdyToExecute(precedences, done).concat(possibleRootNodes);
-
+	const rdyToExecute = tasksRdyToExecute(precedences, done).concat(independentNodes);
 	const notDone = rdyToExecute.filter((task) => {
 		return !done.has(task);
 	}).sort();
-
 	done.add(notDone[0]);
 }
 
