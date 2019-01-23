@@ -1,5 +1,6 @@
 {
   "name": "aoc2018",
+  "repository": "advents-of-code",
   "version": "1.0.0",
   "description": "Advent of code 2018 solutions",
   "main": "index.js",

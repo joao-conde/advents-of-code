@@ -2,6 +2,9 @@
 
 ## Why Javascript
 
-I'm an hopeless dreamer that believes one day I might actually write efficient and pleasant to look at js code.
+Despite hating it, javascript is widely used across the industry.
+In order to improve my skills I decided to do aoc2018 in javascript with no frameworks or extra modules. Pure vanilla javascript.
 
-I also recognize it's widespread use... despite hating it.
+As [Jeff Atwood](https://en.wikipedia.org/wiki/Jeff_Atwood) said:
+
+> “Any application that can be written in JavaScript, will eventually be written in JavaScript.”
