@@ -28,9 +28,7 @@ const computeElfScore = (numPlayers, numMarbles) => {
 			curMarble = nextMarble;
 		} else {
 			let toRemove = curMarble;
-			for (let i = 0; i < 7; i++) {
-				toRemove = toRemove.prev;
-			}
+			for (let i = 0; i < 7; i++) toRemove = toRemove.prev;
 			scores[curPlayer] += marbleToAdd + toRemove.val;
 			curMarble = toRemove.next;
 			remove(toRemove);
