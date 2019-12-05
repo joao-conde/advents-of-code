@@ -26,7 +26,7 @@ vector<int> getParameterModes(int opcode){
     return modes;
 }
 
-int computeOutput(vector<int> intcode){
+int computeOutputP1(vector<int> intcode){
     int i = 0, halt = 0;
     while(!halt && i < intcode.size()){
         int pc_inc; //program counter
@@ -70,7 +70,67 @@ int computeOutput(vector<int> intcode){
     return intcode[0];   
 }
 
+int computeOutputP2(vector<int> intcode){
+    int i = 0, halt = 0;
+    while(!halt && i < intcode.size()){
+        int arg1, arg2, arg3;
+        vector<int> modes = getParameterModes(intcode[i]);
+        try{
+            arg1 = (modes[1] ? intcode.at(i+1) : intcode.at(intcode.at(i+1)));
+            arg2 = (modes[2] ? intcode.at(i+2) : intcode.at(intcode.at(i+2)));
+            arg3 = (modes[3] ? intcode.at(i+3) : intcode.at(intcode.at(i+3)));
+        } catch(const out_of_range &e){} //no more args
+
+        switch(modes[0]){
+            case 1:
+                intcode[intcode[i+3]] = arg1 + arg2;
+                i += 4;
+                break;
+            case 2:
+                intcode[intcode[i+3]] = arg1 * arg2;
+                i += 4;
+                break;
+            case 3:
+                int input; cout << "PROGRAM INPUT: "; cin >> input;
+                intcode[intcode[i+1]] = input;
+                i += 2;
+                break;
+            case 4:
+                cout << "PROGRAM OUTPUT: " << intcode[intcode[i+1]] << endl;
+                i += 2;
+                break;
+            case 5:
+                if(arg1) i = arg2; else i += 3;
+                break;
+            case 6:
+                if(!arg1) i = arg2; else i += 3;
+                break;
+            case 7:
+                intcode[intcode[i+3]] = arg1 < arg2;
+                i += 4;
+                break;
+            case 8:
+                intcode[intcode[i+3]] = arg1 == arg2;
+                i += 4;
+                break;
+            case 99:
+                cout << "HALT" << endl;
+                halt = 1;
+                break;
+            default:
+                halt = 1;
+                break;
+        }
+    }  
+    return intcode[0];   
+}
+
 int main(){
     vector<int> intcode = readIntcode("../res/day05");
-    computeOutput(intcode); //Part1
+
+    cout << "----Part1 program----" << endl;
+    computeOutputP1(intcode);
+
+    cout << "----Part2 program----" << endl;
+    computeOutputP2(intcode);
 }
