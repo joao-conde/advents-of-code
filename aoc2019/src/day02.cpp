@@ -17,9 +17,7 @@ vector<int> readInputInCppOmegaLuL(string filePath){
     return inputVec;
 }
 
-int computeOutput(vector<int> intcode, int noun, int verb){
-    intcode[1] = noun;
-    intcode[2] = verb;
+int computeOutput(vector<int> intcode){
     int i = 0, halt = 0;
     while(!halt && i < intcode.size()){
         switch(intcode[i]){
@@ -43,12 +41,16 @@ int computeOutput(vector<int> intcode, int noun, int verb){
 
 int main(){
     vector<int> intcode = readInputInCppOmegaLuL("../res/day02");
-    cout << "Part1 - " << computeOutput(intcode, 12, 2) << endl;
+    intcode[1] = 12;
+    intcode[2] = 2;
+    cout << "Part1 - " << computeOutput(intcode) << endl;
     
     int output = 19690720;
     for(int noun = 0; noun <= 99; noun++){ 
         for(int verb = 0; verb <= 99; verb++){
-            if(computeOutput(intcode, noun, verb) == output){
+            intcode[1] = noun;
+            intcode[2] = verb;
+            if(computeOutput(intcode) == output){
                 cout << "Part2 - " << 100 * noun + verb << endl;
                 break; 
             }
