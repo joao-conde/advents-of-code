@@ -7,27 +7,27 @@
 using namespace std;
 
 struct Node{
-    string id, center; //center is the 'parent' on which this node rotates
-    vector<string> moons;
+    string id;
+    Node* center;
+    vector<Node*> moons;
     Node(){}
     Node(string id) : id(id) {}
-    void addMoon(string id){ moons.push_back(id); }
-    void setCenter(string id) { center = id; }
+    void addMoon(Node* moon){ this->moons.push_back(moon); }
+    void setCenter(Node* center) { this->center = center; }
 };
 
-int nOrbits(Node node, int depth, unordered_map<string, Node> &nodes, unordered_map<string, int> &depths){
-    cout << "node " << node.id << " at depth " << depth << endl;
-    depths.insert(make_pair(node.id, depth));
+int nOrbits(Node* node, int depth, unordered_map<string, int> &depths){
+    depths.insert(make_pair(node->id, depth));
     int orbits = depth;
-    for(string moonID: node.moons) orbits += nOrbits(nodes[moonID], depth + 1, nodes, depths);
+    for(Node* moon: node->moons) orbits += nOrbits(moon, depth + 1, depths);
     return orbits;
 }
 
-vector<string> pathFromRoot(Node n, Node root, unordered_map<string, Node> &nodes){
-    vector<string> path = { n.id };
-    while(n.id != root.id){
-        path.insert(path.begin(), n.center); 
-        n = nodes[n.center];
+vector<string> pathFromRoot(Node* n, Node* root){
+    vector<string> path = { n->id };
+    while(n->id != root->id){
+        path.insert(path.begin(), n->center->id); 
+        n = n->center;
     }
     return path;
 }
@@ -43,7 +43,6 @@ string deepestCommonAncestor(vector<string> s1, vector<string> s2){
     return deepestCommonAncestor;
 }
 
-
 int main(){
     string line;
     ifstream input("../res/day06"); 
@@ -51,34 +50,33 @@ int main(){
     unordered_map<string, int> depths;
     while(getline(input, line)){
         int separatorPos = line.find(")");
-        string center = line.substr(0, separatorPos), moon = line.substr(separatorPos + 1, line.size());
+        string centerID = line.substr(0, separatorPos), moonID = line.substr(separatorPos + 1, line.size());
         
-        auto it = nodes.find(center);
-        if(it != nodes.end()) it->second.addMoon(moon);
-        else {
-            Node n(center); 
-            n.addMoon(moon);
-            nodes.insert(make_pair(center, n));
-        }        
-        nodes[moon].setCenter(center);
+        auto itCenter = nodes.find(centerID);
+        if(itCenter == nodes.end()){
+            Node center(centerID);
+            nodes.insert(make_pair(centerID, center));
+            itCenter = nodes.find(centerID);
+        }
+
+        auto itMoon = nodes.find(moonID);
+        if(itMoon == nodes.end()){
+            Node moon(moonID);
+            nodes.insert(make_pair(moonID, moon));
+            itMoon = nodes.find(moonID); 
+        }
+
+        itCenter->second.addMoon(&itMoon->second);
+        itMoon->second.setCenter(&itCenter->second);
     }
     input.close();
 
-    cout << "Part1: " << nOrbits(nodes["COM"], 0, nodes, depths) << endl;
-    for(auto kv: depths) cout << "node " << kv.first << " at depth " << kv.second << endl;
-    // cout << depths["D"] << endl;
-    // vector<string> youPath = pathFromRoot(nodes["YOU"], nodes["COM"], nodes);
-    // vector<string> sanPath = pathFromRoot(nodes["SAN"], nodes["COM"], nodes);
-    // string ancestor = deepestCommonAncestor(youPath, sanPath);
+    cout << "Part1: " << nOrbits(&nodes["COM"], 0, depths) << " orbits." << endl;
 
-    // for(string c: youPath) cout << c << " ";
-    // cout << endl;
-    // for(string c: sanPath) cout << c << " ";
-    // cout << endl;
-    // for(string c: lcp) cout << c << " ";
-    // cout << endl;
-
-    // cout << ancestor << endl;
-    // cout << nOrbits(nodes["D"], 0, nodes) << endl;
-    // cout << "Part2: " <<  (youPath.size() - lcp.size()) + (sanPath.size() - lcp.size()) << endl;
+    vector<string> youPath = pathFromRoot(&nodes["YOU"], &nodes["COM"]);
+    vector<string> sanPath = pathFromRoot(&nodes["SAN"], &nodes["COM"]);
+    string deepestAncestor = deepestCommonAncestor(youPath, sanPath);
+    int youParentDepth = depths[nodes["YOU"].center->id], sanParentDepth = depths[nodes["SAN"].center->id];
+    int orbitalTransfers = (youParentDepth - depths[deepestAncestor]) + (sanParentDepth - depths[deepestAncestor]);
+    cout << "Part2: " << orbitalTransfers << " minimum orbital transfers required." << endl;
 }
