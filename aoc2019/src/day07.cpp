@@ -95,6 +95,4 @@ int main(){
     } while (next_permutation(phases.begin(), phases.end()));
     
     cout << "Part1: Maximum thrust is " << maxThrust << endl;
-
-    
 }
