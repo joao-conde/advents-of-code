@@ -12,20 +12,22 @@ class IntcodeProgram{
         int pc; //program counter
         bool halt;
         vector<int> code;
-        queue<int> inputs;
         unordered_map<int, int> opcodePCOffset;
         unordered_map<int, function<int (int, int)>> opcodeBinFun;
 
     public:
-        IntcodeProgram(vector<int> intcode, queue<int> inputs);
-        int get(int position);
-        bool halted();
+        queue<int> inputs;
+        IntcodeProgram(vector<int> intcode);
         void setHalt();
         void offsetPC(int offset);
         void jump(int pos);
         void processBinOpcode(int x, int y, int pos, function<int (int, int)> binFun, int offset);
         void consumeInput(int pos);
+        void addInputs(vector<int> inputs);
+        bool halted();
         vector<int> getParameterModes(int opcode);
+        int get(int position);
         int getArgValue(int pc, int argN, int mode);
         int execute();
+        int execute(vector<int> inputs);
 };

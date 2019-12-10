@@ -2,7 +2,7 @@
 
 using namespace std;
 
-IntcodeProgram::IntcodeProgram(vector<int> intcode, queue<int> inputs){
+IntcodeProgram::IntcodeProgram(vector<int> intcode){
     this->pc = 0;
     this->halt = false;
     this->code = intcode;
@@ -21,10 +21,6 @@ IntcodeProgram::IntcodeProgram(vector<int> intcode, queue<int> inputs){
     this->opcodeBinFun[2] = [](int x, int y){return x * y;};
 }
 
-int IntcodeProgram::get(int position){ return this->code[position]; }
-
-bool IntcodeProgram::halted(){ return this->halt; }
-
 void IntcodeProgram::setHalt() { this->halt = true; }
 
 void IntcodeProgram::offsetPC(int offset){ this->pc += offset; }
@@ -40,6 +36,10 @@ void IntcodeProgram::consumeInput(int pos){
     this->inputs.pop();
 }
 
+void IntcodeProgram::addInputs(vector<int> inputs){
+    for(int i: inputs) this->inputs.push(i);
+}
+
 vector<int> IntcodeProgram::getParameterModes(int opcode){
     vector<int> modes; //(opcode, arg1, arg2, arg3)
     modes.push_back(opcode % 100);
@@ -48,6 +48,10 @@ vector<int> IntcodeProgram::getParameterModes(int opcode){
     modes.push_back(opcode / 10000 % 10);
     return modes;
 }
+
+bool IntcodeProgram::halted(){ return this->halt; }
+
+int IntcodeProgram::get(int position){ return this->code[position]; }
 
 int IntcodeProgram::getArgValue(int pc, int argN, int mode){
     switch(mode){
@@ -103,4 +107,9 @@ int IntcodeProgram::execute(){
         }
     }
     return -1;
+}
+
+int IntcodeProgram::execute(vector<int> inputs){
+    this->addInputs(inputs);
+    return this->execute();
 }
