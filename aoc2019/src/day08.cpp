@@ -22,7 +22,7 @@ int computePixelColor(const vector<vector<vector<int>>> &image, int w, int h){
 
 int main(){
     ifstream input("../res/day08");
-    int width = 25, height = 6; //image: (25 x 6) px
+    int width = 25, height = 26; //image: (25 x 6) px TODO change
     vector<vector<vector<int>>> image;
     while(input.peek() != EOF){
         vector<vector<int>> layer;
@@ -45,9 +45,9 @@ int main(){
     cout << "Part1: " << getLayerValCnt(image[fewestZeroLayerIdx], 1) * getLayerValCnt(image[fewestZeroLayerIdx], 2) << endl;
 
     cout << "Part2" << endl;
-    for(int i = 0; i < width; i++) {
-        for(int j = 0; j < height; j++) 
-            cout << computePixelColor(image, i, j) << " ";
+    for(int i = 0; i < height; i++) {
+        for(int j = 0; j < width; j++) 
+            cout << computePixelColor(image, j, i) << " ";
         cout << endl;
     }
 }
