@@ -39,7 +39,6 @@ int main(){
     }
     input.close();
 
-
     vector<int> zeroCnt;
     transform(image.begin(), image.end(), back_inserter(zeroCnt), [](vector<vector<int>> layer){return getLayerValCnt(layer, 0);});
     int fewestZeroLayerIdx = distance(zeroCnt.begin(), min_element(zeroCnt.begin(), zeroCnt.end()));

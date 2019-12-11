@@ -1,6 +1,7 @@
 #include <fstream>
 #include <iostream>
 #include <queue>
+#include <unordered_map>
 #include <vector>
 
 using namespace std;
@@ -100,9 +101,15 @@ class IntcodeProgram{
         }
 };
 
+struct PointHash{ 
+    size_t operator()(const pair<int,int> &k) const{
+        return (k.first * 10 + k.second);
+    }
+};
+
 int main(){
     vector<long long int> intcode;
-    ifstream input("../res/day09");
+    ifstream input("../res/day11");
     while(!input.eof()){
         long long int code;
         input >> code;
@@ -112,4 +119,35 @@ int main(){
     input.close();
 
     IntcodeProgram program(intcode, intcode.size());
+    unordered_map<pair<int,int>, char, PointHash> pointColorMap; //. -> black, # -> white
+    char dirs[] = {'^', '>', 'v', '<'};
+    
+    int curDir = 0;
+    pair<int,int> curPoint = make_pair(0, 0);
+    while(!program.halt){
+        auto pointIt = pointColorMap.find(curPoint);
+        char curColor = (pointIt != pointColorMap.end() ? pointIt->second : '.');
+        int paintWhite = program.execute({curColor == '#'});
+        int turnRight = program.execute();
+
+        //paint
+        pointColorMap[curPoint] = (paintWhite ? '#' : '.');
+
+        //rotate
+        if(turnRight) curDir++;
+        else curDir--;
+
+        if(curDir < 0) curDir = 3;
+        if(curDir > 3) curDir = 0;
+
+        //move
+        switch(dirs[curDir]){
+            case '^': curPoint.second++; break;
+            case 'v': curPoint.second--; break;
+            case '<': curPoint.first--; break;
+            case '>': curPoint.first++; break;
+        }
+    }
+
+    cout << "Part1: The number of at least once painted panels is " << pointColorMap.size() << endl;
 }
