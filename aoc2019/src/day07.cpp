@@ -42,26 +42,33 @@ int main(){
     maxThrust = -1;
     phases = {5, 6, 7, 8, 9};
     do {
-        int thrust = 0, lastEOut;
         IntcodeProgram pA(intcode), pB(intcode), pC(intcode), pD(intcode), pE(intcode);
-
-        int outA = pA.execute({0, phases[0]});
+        int outA = pA.execute({phases[0], 0});
         int outB = pB.execute({phases[1], outA});
-        int outC = pC.execute({phases[2], outA});
-        int outD = pD.execute({phases[3], outA});
-        int outE = pE.execute({phases[4], outA});
+        int outC = pC.execute({phases[2], outB});
+        int outD = pD.execute({phases[3], outC});
+        int outE = pE.execute({phases[4], outD});
+        int lastEOut = outE;
         
-        while(!pE.halted()){
-            // cout << pA.halted() << " " << pB.halted() << " " << pC.halted() << " " << pD.halted() << " " << endl;
-            outA = pA.execute({outE});
+        while(true){
+            outA = pA.execute({outE});            
+            // if(pA.halted()) break;
             outB = pB.execute({outA});
+            // if(pB.halted()) break;
             outC = pC.execute({outB});
+            // if(pC.halted()) break;
             outD = pD.execute({outC});
+            // if(pD.halted()) break;
             outE = pE.execute({outD});
-            if(!pE.halted()) lastEOut = outE;
+            // if(pE.halted()) break;
+
+            if(pA.halted() || pB.halted() || pC.halted() || pD.halted() || pE.halted())
+                break;
+            else
+                lastEOut = max(lastEOut, outE);
         }
         maxThrust = max(maxThrust, lastEOut);
     } while (next_permutation(phases.begin(), phases.end()));
 
-    cout << "Part2: Maximum thrust is " << maxThrust << endl;
+    cout << "Part2: Maximum feedback loop thrust is " << maxThrust << endl;
 }

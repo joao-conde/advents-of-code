@@ -64,7 +64,7 @@ int IntcodeProgram::getArgValue(int pc, int argN, int mode){
 int IntcodeProgram::execute(){
     while(pc < code.size() && !halt){
         vector<int> modes = getParameterModes(code[pc]);
-        int opcode = modes[0], arg1, arg2, arg3;
+        int opcode = modes[0], arg1, arg2, arg3, tmp;
         try{
             arg1 = getArgValue(pc, 1, modes[1]);
             arg2 = getArgValue(pc, 2, modes[2]);
@@ -82,8 +82,9 @@ int IntcodeProgram::execute(){
                 offsetPC(opcodePCOffset[opcode]);
                 break;
             case 4: //output
-                return code[code[pc + 1]];
-                // offsetPC(opcodePCOffset[opcode]);
+                tmp = code[code[pc + 1]];
+                offsetPC(opcodePCOffset[opcode]);
+                return tmp;
                 // break;
             case 5: //jump-if-true
                 if(arg1) jump(arg2);
@@ -106,6 +107,7 @@ int IntcodeProgram::execute(){
                 setHalt();
         }
     }
+    setHalt();
     return -1;
 }
 
