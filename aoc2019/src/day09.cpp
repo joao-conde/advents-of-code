@@ -9,15 +9,15 @@ using namespace std;
 
 class IntcodeProgram{
     private:
-        int pc; //program counter
+        long long int pc; //program counter
         bool halt;
-        vector<int> code;
+        vector<long long int> code;
         unordered_map<int, int> opcodePCOffset;
-        unordered_map<int, function<int (int, int)>> opcodeBinFun;
-        queue<int> inputs;
+        unordered_map<int, function<long long int (int, int)>> opcodeBinFun;
+        queue<long long int> inputs;
 
     public:       
-        IntcodeProgram(vector<int> intcode){
+        IntcodeProgram(vector<long long int> intcode, int extend = 0){
             this->pc = 0;
             this->halt = false;
             this->code = intcode;
@@ -32,29 +32,31 @@ class IntcodeProgram{
             this->opcodePCOffset[7] = 4;
             this->opcodePCOffset[8] = 4;
 
-            this->opcodeBinFun[1] = [](int x, int y){return x + y;};
-            this->opcodeBinFun[2] = [](int x, int y){return x * y;};
+            this->opcodeBinFun[1] = [](long long int x, long long int y){return x + y;};
+            this->opcodeBinFun[2] = [](long long int x, long long int y){return x * y;};
+
+            for(int i = 0; i < extend; i++) this->code.push_back(0);
         }
 
         void setHalt() { this->halt = true; }
  
-        void offsetPC(int offset){ this->pc += offset; }
+        void offsetPC(long long int offset){ this->pc += offset; }
  
-        void jump(int pos) { this->pc = pos; }
+        void jump(long long int pos) { this->pc = pos; }
  
-        void processBinOpcode(int x, int y, int pos, function<int (int, int)> binFun, int offset){
+        void processBinOpcode(long long int x, long long int y, long long int pos, function<long long int (int, int)> binFun, long long int offset){
             this->code[pos] = binFun(x, y); 
         }
  
-        void consumeInput(int pos){
+        void consumeInput(long long int pos){
             this->code[pos] = this->inputs.front();
             this->inputs.pop();
         }
 
         bool halted(){ return this->halt; }
 
-        vector<int> getParameterModes(int opcode){
-            vector<int> modes; //(opcode, arg1, arg2, arg3)
+        vector<long long int> getParameterModes(long long int opcode){
+            vector<long long int> modes; //(opcode, arg1, arg2, arg3)
             modes.push_back(opcode % 100);
             modes.push_back(opcode / 100 % 10);
             modes.push_back(opcode / 1000 % 10);
@@ -62,9 +64,9 @@ class IntcodeProgram{
             return modes;
         }
 
-        int get(int position){ return this->code[position]; }
+        long long int get(long long int position){ return this->code[position]; }
 
-        int getArgValue(int pc, int argN, int mode){
+        long long int getArgValue(long long int pc, long long int argN, long long int mode){
             switch(mode){
                 case 0: return code.at(code.at(pc + argN));
                 case 1: return code.at(pc + argN);
@@ -72,10 +74,10 @@ class IntcodeProgram{
             return -1;
         }
 
-        int execute(){
+        long long int execute(){
             while(pc < code.size() && !halt){
-                vector<int> modes = getParameterModes(code[pc]);
-                int opcode = modes[0], arg1, arg2, arg3, tmp;
+                vector<long long int> modes = getParameterModes(code[pc]);
+                long long int opcode = modes[0], arg1, arg2, arg3, tmp;
                 try{
                     arg1 = getArgValue(pc, 1, modes[1]);
                     arg2 = getArgValue(pc, 2, modes[2]);
@@ -122,8 +124,8 @@ class IntcodeProgram{
             return -1;
         }
 
-        int execute(vector<int> inputs){
-            for(int x: inputs) this->inputs.push(x);
+        long long int execute(vector<long long int> inputs){
+            for(long long int x: inputs) this->inputs.push(x);
             return this->execute();
         }
 };
@@ -139,6 +141,6 @@ int main(){
     }
     input.close();
 
-    IntcodeProgram program(intcode, 2 * intcode.size());
+    IntcodeProgram program(intcode, intcode.size());
     cout << program.execute({1}) << endl;
 }
