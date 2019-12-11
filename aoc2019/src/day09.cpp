@@ -8,52 +8,20 @@
 using namespace std;
 
 class IntcodeProgram{
-    private:
-        long long int pc; //program counter
+    public:       
+        long long int pc, base; //program counter
         bool halt;
         vector<long long int> code;
-        unordered_map<int, int> opcodePCOffset;
-        unordered_map<int, function<long long int (int, int)>> opcodeBinFun;
         queue<long long int> inputs;
 
-    public:       
         IntcodeProgram(vector<long long int> intcode, int extend = 0){
             this->pc = 0;
+            this->base = 0;
             this->halt = false;
             this->code = intcode;
             this->inputs = inputs;
-
-            this->opcodePCOffset[1] = 4;
-            this->opcodePCOffset[2] = 4;
-            this->opcodePCOffset[3] = 2;
-            this->opcodePCOffset[4] = 2;
-            this->opcodePCOffset[5] = 3;
-            this->opcodePCOffset[6] = 3;
-            this->opcodePCOffset[7] = 4;
-            this->opcodePCOffset[8] = 4;
-
-            this->opcodeBinFun[1] = [](long long int x, long long int y){return x + y;};
-            this->opcodeBinFun[2] = [](long long int x, long long int y){return x * y;};
-
             for(int i = 0; i < extend; i++) this->code.push_back(0);
         }
-
-        void setHalt() { this->halt = true; }
- 
-        void offsetPC(long long int offset){ this->pc += offset; }
- 
-        void jump(long long int pos) { this->pc = pos; }
- 
-        void processBinOpcode(long long int x, long long int y, long long int pos, function<long long int (int, int)> binFun, long long int offset){
-            this->code[pos] = binFun(x, y); 
-        }
- 
-        void consumeInput(long long int pos){
-            this->code[pos] = this->inputs.front();
-            this->inputs.pop();
-        }
-
-        bool halted(){ return this->halt; }
 
         vector<long long int> getParameterModes(long long int opcode){
             vector<long long int> modes; //(opcode, arg1, arg2, arg3)
@@ -64,63 +32,67 @@ class IntcodeProgram{
             return modes;
         }
 
-        long long int get(long long int position){ return this->code[position]; }
-
-        long long int getArgValue(long long int pc, long long int argN, long long int mode){
-            switch(mode){
-                case 0: return code.at(code.at(pc + argN));
-                case 1: return code.at(pc + argN);
-            }
-            return -1;
-        }
-
         long long int execute(){
             while(pc < code.size() && !halt){
                 vector<long long int> modes = getParameterModes(code[pc]);
-                long long int opcode = modes[0], arg1, arg2, arg3, tmp;
-                try{
-                    arg1 = getArgValue(pc, 1, modes[1]);
-                    arg2 = getArgValue(pc, 2, modes[2]);
-                    arg3 = getArgValue(pc, 3, modes[3]);
-                } catch(const out_of_range &e){} //no more args
-
+                long long int arg1, arg2, tmp;
                 switch(modes[0]){
                     case 1: //add
+                        arg1 = (modes[1] == 1 ? code[pc + 1] : modes[1] == 0 ? code[code[pc + 1]] : code[base + code[pc + 1]]);
+                        arg2 = (modes[2] == 1 ? code[pc + 2] : modes[2] == 0 ? code[code[pc + 2]] : code[base + code[pc + 2]]);
+                        code[modes[3] == 0 ? code[pc + 3] : code[pc + 3] + base] = arg1 + arg2;
+                        pc += 4;
+                        break;
                     case 2: //multiply
-                        processBinOpcode(arg1, arg2, code[pc + 3], opcodeBinFun[opcode], opcodePCOffset[opcode]);
-                        offsetPC(opcodePCOffset[opcode]);
+                        arg1 = (modes[1] == 1 ? code[pc + 1] : modes[1] == 0 ? code[code[pc + 1]] : code[base + code[pc + 1]]);
+                        arg2 = (modes[2] == 1 ? code[pc + 2] : modes[2] == 0 ? code[code[pc + 2]] : code[base + code[pc + 2]]);
+                        code[modes[3] == 0 ? code[pc + 3] : code[pc + 3] + base] = arg1 * arg2;
+                        pc += 4;
                         break;
                     case 3: //input
-                        consumeInput(code[pc + 1]);
-                        offsetPC(opcodePCOffset[opcode]);
+                        code[modes[1] == 0 ? code[pc + 1] : code[pc + 1] + base] = inputs.front();
+                        inputs.pop();
+                        pc += 2;
                         break;
                     case 4: //output
-                        tmp = code[code[pc + 1]];
-                        offsetPC(opcodePCOffset[opcode]);
+                        tmp = (modes[1] == 1 ? code[pc + 1] : modes[1] == 0 ? code[code[pc + 1]] : code[base + code[pc + 1]]);
+                        pc += 2;
                         return tmp;
-                        // break;
                     case 5: //jump-if-true
-                        if(arg1) jump(arg2);
-                        else offsetPC(opcodePCOffset[opcode]);
+                        arg1 = (modes[1] == 1 ? code[pc + 1] : modes[1] == 0 ? code[code[pc + 1]] : code[base + code[pc + 1]]);
+                        arg2 = (modes[2] == 1 ? code[pc + 2] : modes[2] == 0 ? code[code[pc + 2]] : code[base + code[pc + 2]]);
+                        if(arg1) pc = arg2;
+                        else pc += 3;
                         break;
                     case 6: //jump-if-false
-                        if(!arg1) jump(arg2);
-                        else offsetPC(opcodePCOffset[opcode]);
+                        arg1 = (modes[1] == 1 ? code[pc + 1] : modes[1] == 0 ? code[code[pc + 1]] : code[base + code[pc + 1]]);
+                        arg2 = (modes[2] == 1 ? code[pc + 2] : modes[2] == 0 ? code[code[pc + 2]] : code[base + code[pc + 2]]);
+                        if(!arg1) pc = arg2;
+                        else pc += 3;
                         break;
                     case 7: //less-than
-                        code[code[pc + 3]] = arg1 < arg2;
-                        offsetPC(opcodePCOffset[opcode]);
+                        arg1 = (modes[1] == 1 ? code[pc + 1] : modes[1] == 0 ? code[code[pc + 1]] : code[base + code[pc + 1]]);
+                        arg2 = (modes[2] == 1 ? code[pc + 2] : modes[2] == 0 ? code[code[pc + 2]] : code[base + code[pc + 2]]);
+                        code[modes[3] == 0 ? code[pc + 3] : code[pc + 3] + base] = arg1 < arg2;
+                        pc += 4;
                         break;
                     case 8: //equals
-                        code[code[pc + 3]] = arg1 == arg2;
-                        offsetPC(opcodePCOffset[opcode]);
+                        arg1 = (modes[1] == 1 ? code[pc + 1] : modes[1] == 0 ? code[code[pc + 1]] : code[base + code[pc + 1]]);
+                        arg2 = (modes[2] == 1 ? code[pc + 2] : modes[2] == 0 ? code[code[pc + 2]] : code[base + code[pc + 2]]);
+                        code[modes[3] == 0 ? code[pc + 3] : code[pc + 3] + base] = arg1 == arg2;
+                        pc += 4;
+                        break;
+                    case 9: //relative base offset
+                        arg1 = (modes[1] == 1 ? code[pc + 1] : modes[1] == 0 ? code[code[pc + 1]] : code[base + code[pc + 1]]);
+                        base += arg1;
+                        pc+= 2;
                         break;
                     case 99: //halt
                     default:
-                        setHalt();
+                        halt = true;
                 }
             }
-            setHalt();
+            halt = true;
             return -1;
         }
 
@@ -141,6 +113,6 @@ int main(){
     }
     input.close();
 
-    IntcodeProgram program(intcode, intcode.size());
+    IntcodeProgram program(intcode, 4 * intcode.size());
     cout << program.execute({1}) << endl;
 }
