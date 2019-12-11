@@ -111,7 +111,5 @@ int main(){
     }
     input.close();
 
-    IntcodeProgram program1(intcode, intcode.size()), program2(intcode, intcode.size());
-    cout << "Part1: BOOST keycode " << program1.execute({1}) << endl;
-    cout << "Part2: Distress signal coordinates " << program2.execute({2}) << endl;
+    IntcodeProgram program(intcode, intcode.size());
 }
