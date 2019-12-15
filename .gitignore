@@ -1,3 +1,5 @@
 #packagejson and eslint
 node_modules
 *.sh
+
+*/exe
