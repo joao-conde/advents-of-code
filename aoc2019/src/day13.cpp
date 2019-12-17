@@ -163,5 +163,17 @@ int main(){
     transform(board.begin(), board.end(), back_inserter(blockRowCnt), countBlockTiles);
     cout << "Part1: " << accumulate(blockRowCnt.begin(), blockRowCnt.end(), 0) << " block tiles" << endl;
 
-    printBoard(board, width, height);
+    intcode[0] = 2; //play for free
+    IntcodeProgram gameCopy3(intcode, intcode.size());
+    int joystickPos = 0;
+    vector<lli> outs = {0, 0, 0};
+    while(!gameCopy3.halt){
+        if(outs[0] == -1 && outs[1] == 0) cout << "SCORE: " << outs[2] << endl;        
+        
+        printBoard(board, width, height);
+
+        outs[0] = outs[1];
+        outs[1] = outs[2];
+        outs[2] = gameCopy3.execute({joystickPos});
+    }
 }
