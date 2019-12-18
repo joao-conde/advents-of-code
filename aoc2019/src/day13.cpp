@@ -25,7 +25,7 @@ class IntcodeProgram{
             for(int i = 0; i < extend; i++) this->code.push_back(0);
         }
 
-        vector<lli>  getParameterModes(lli opcode){
+        vector<lli> getParameterModes(lli opcode){
             vector<lli>  modes; //(opcode, arg1, arg2, arg3)
             modes.push_back(opcode % 100);
             modes.push_back(opcode / 100 % 10);
@@ -33,6 +33,10 @@ class IntcodeProgram{
             modes.push_back(opcode / 10000 % 10);
             return modes;
         }
+
+        void addInput(lli input){ this->inputs.push(input); }
+
+        void clearInputs(){ this->inputs = queue<lli>(); }
 
         lli execute(){
             while(pc < code.size() && !halt){
@@ -98,7 +102,7 @@ class IntcodeProgram{
             return -1;
         }
 
-        lli execute(vector<lli>  inputs){
+        lli execute(vector<lli> inputs){
             for(lli x: inputs) this->inputs.push(x);
             return this->execute();
         }
@@ -128,7 +132,7 @@ char getTileChar(lli tileID){
     return ' ';
 }
 
-void printBoard(vector<vector<lli>> &board, int width, int height){
+void printBoard(const vector<vector<lli>> &board, int width, int height){
     for(lli i = 0; i < height + 1; i++){
         for(lli j = 0; j < width + 1; j++){
             cout << getTileChar(board[j][i]) << " ";
@@ -163,17 +167,36 @@ int main(){
     transform(board.begin(), board.end(), back_inserter(blockRowCnt), countBlockTiles);
     cout << "Part1: " << accumulate(blockRowCnt.begin(), blockRowCnt.end(), 0) << " block tiles" << endl;
 
+    
     intcode[0] = 2; //play for free
     IntcodeProgram gameCopy3(intcode, intcode.size());
-    int joystickPos = 0;
-    vector<lli> outs = {0, 0, 0};
-    while(!gameCopy3.halt){
-        if(outs[0] == -1 && outs[1] == 0) cout << "SCORE: " << outs[2] << endl;        
-        
-        printBoard(board, width, height);
+    vector<vector<lli>> boardFree(width + 1, vector<lli>(height + 1, 0));
+    lli ballX = 0, paddleX = 0, joystick = 0, score;
+    while(!gameCopy3.halt){        
+        // clear and add joystick as input to ensure if an input is requested
+        // it is the most recent position of the joystick
+        gameCopy3.clearInputs();
+        gameCopy3.addInput(joystick);
+        lli x = gameCopy3.execute();
 
-        outs[0] = outs[1];
-        outs[1] = outs[2];
-        outs[2] = gameCopy3.execute({joystickPos});
+        gameCopy3.clearInputs();
+        gameCopy3.addInput(joystick);
+        lli y = gameCopy3.execute();
+
+        gameCopy3.clearInputs();
+        gameCopy3.addInput(joystick);
+        lli z = gameCopy3.execute();
+
+        if(x == -1 && y == 0){
+            score = z; 
+            continue;
+        }
+
+        if(!gameCopy3.halt) boardFree[x][y] = z;
+        if(z == 3) paddleX = x;
+        if(z == 4) ballX = x;
+        
+        joystick = (ballX > paddleX ? 1 : (ballX < paddleX ? -1 : 0));
     }
+    cout << "Part2: Final score " << score << endl;
 }
