@@ -14,21 +14,20 @@ int getLayerValCnt(const vector<vector<int>> &layer, int val){
 }
 
 int computePixelColor(const vector<vector<vector<int>>> &image, int w, int h){
-    for(int i = 0; i < image.size(); i++){
+    for(int i = 0; i < image.size(); i++)
         if(image[i][w][h] != 2) return image[i][w][h];
-    }
     return 0;
 }
 
 int main(){
     ifstream input("../res/day08");
-    int width = 25, height = 26; //image: (25 x 6) px TODO change
+    int width = 25, height = 6; //image: (25 x 6) px
     vector<vector<vector<int>>> image;
     while(input.peek() != EOF){
         vector<vector<int>> layer;
-        for(int i = 0; i < width; i++){
+        for(int i = 0; i < height; i++){
             vector<int> row;
-            for(int j = 0; j < height; j++){
+            for(int j = 0; j < width; j++){
                 char pixel;
                 input >> pixel;
                 row.push_back(stoi(&pixel));
@@ -44,10 +43,10 @@ int main(){
     int fewestZeroLayerIdx = distance(zeroCnt.begin(), min_element(zeroCnt.begin(), zeroCnt.end()));
     cout << "Part1: " << getLayerValCnt(image[fewestZeroLayerIdx], 1) * getLayerValCnt(image[fewestZeroLayerIdx], 2) << endl;
 
-    cout << "Part2" << endl;
+    cout << "Part2:" << endl;
     for(int i = 0; i < height; i++) {
-        for(int j = 0; j < width; j++) 
-            cout << computePixelColor(image, j, i) << " ";
+        for(int j = 0; j < width; j++)
+            cout << (computePixelColor(image, i, j) ? "#" : " ");
         cout << endl;
     }
 }

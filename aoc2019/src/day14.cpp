@@ -37,14 +37,15 @@ int computeMinimumORE(const unordered_map<string, int> &inputs, const reactionsL
         int tmp = reactCnt * basicInputs.first.find("ORE")->second;
         ore += tmp;
 
-        // cout << kv.first << endl;
-        // cout << "Produced - ORE: " << basicInputs.second * reactCnt << " - " << tmp << endl;
+        cout << kv.first << endl;
+        cout << "Produced - ORE: " << basicInputs.second * reactCnt << " - " << tmp << endl;
     }
 
     return ore;
 } 
 
 int main(){
+    //TODO: refactor to a tree structure and walk it since FUEL and continuously update ore needed
     ifstream file("../res/day14");
     string line;
     reactionsList reactions;
@@ -79,9 +80,9 @@ int main(){
     unordered_map<string, int> fuelBasicComponents;
     findBasicComponentsQuantity("FUEL", 1, fuelBasicComponents, reactions);
 
-    // for(auto kv: fuelBasicComponents){
-    //     cout << "Need " << kv.second << " x " << kv.first << endl;
-    // }
+    for(auto kv: fuelBasicComponents){
+        cout << "Need " << kv.second << " x " << kv.first << endl;
+    }
 
     cout << computeMinimumORE(fuelBasicComponents, reactions) << endl;
 }
