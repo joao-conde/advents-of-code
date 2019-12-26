@@ -1,15 +1,23 @@
+#include <algorithm>
 #include <fstream>
 #include <iostream>
+#include <numeric>
 #include <regex>
 #include <vector>
 
 using namespace std;
 
+int sumOfAbsolutes(vector<int> values){
+    vector<int> absolutes;
+    transform(values.begin(), values.end(), back_inserter(absolutes), [](int x){return abs(x);});
+    return accumulate(absolutes.begin(), absolutes.end(), 0);
+}
+
 int main(){
     ifstream input("../res/day12");
     string line, regexExp = "<x=(.*), y=(.*), z=(.*)>";
-    int positions[4][3], velocities[4][3];
-    memset(velocities, 0, 4 * 3 * sizeof(int));
+    vector<vector<int>> positions(4, vector<int>(3, 0)), velocities(4, vector<int>(3, 0));
+
     for(int i = 0; i < 4; i++){
         smatch match; //position 0 is full sentence, 1, 2 and 3 are coordinates
         getline(input, line);
@@ -17,14 +25,8 @@ int main(){
         for(int j = 0; j < 3; j++) positions[i][j] = stoi(match[j+1]);
     }
 
-    int timestep = 0;
-    while(timestep <= 10){
-        cout << "TIMESTEP: " << timestep << endl;
-        for(int k = 0; k < 4; k++){
-            cout << positions[k][0] << ", " << positions[k][1] << ", " << positions[k][2] << endl;
-            cout << velocities[k][0] << ", " << velocities[k][1] << ", " << velocities[k][2] << endl;
-        }
-
+    int timestep = 1, MAX_TIMESTEP = 1000;
+    while(timestep <= MAX_TIMESTEP){
         //update velocities for each pair of moons (i, j) at component k
         for(int i = 0; i < 4; i++){
             for(int j = 0; j < 4; j++){
@@ -41,4 +43,10 @@ int main(){
         timestep++;
     }
 
+    int totalEnergy = 0;
+    vector<int> moonsPot, moonsKin; 
+    transform(positions.begin(), positions.end(), back_inserter(moonsPot), [](vector<int> moonPos){return sumOfAbsolutes(moonPos);});
+    transform(velocities.begin(), velocities.end(), back_inserter(moonsKin), [](vector<int> moonVel){return sumOfAbsolutes(moonVel);});
+    for(int i = 0; i < 4; i++) totalEnergy += moonsPot[i] * moonsKin[i];
+    cout << "Part1: " << totalEnergy << endl;
 }
