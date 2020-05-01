@@ -5,23 +5,18 @@ input_file = open(src)
 groups_str = input_file.read()
 input_file.close()
 
-"""
-PART1
-1. clean the escape chars + the escaped char as both are ignored
-2. clear out garbage
-3. count open brackets and close brackets, whenever one closes, score equal to "nestedness" level
-"""
-
 ESCAPE_CHAR, GARBAGE_OPEN, GARBAGE_CLOSE, GROUP_OPEN, GROUP_CLOSE = "!", "<", ">", "{", "}"
 
 while ESCAPE_CHAR in groups_str:
     escape_char_idx = groups_str.index(ESCAPE_CHAR)
     groups_str = groups_str[:escape_char_idx] + groups_str[escape_char_idx+2:]
 
+removed_garbage = 0
 while GARBAGE_OPEN in groups_str: #[)
     open_tag_idx = groups_str.index(GARBAGE_OPEN)
     close_tag_idx = groups_str.index(GARBAGE_CLOSE)
     groups_str = groups_str[:open_tag_idx] + groups_str[close_tag_idx+1:]
+    removed_garbage += (close_tag_idx - open_tag_idx - 1)
 
 nestedness_lvl, score = 0, 0
 for c in groups_str:
@@ -32,3 +27,4 @@ for c in groups_str:
         nestedness_lvl -= 1
 
 print(f'(Part1) Total score for all groups: {score}')
+print(f'(Part1) Total score for all groups: {removed_garbage}')
