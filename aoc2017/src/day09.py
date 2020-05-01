@@ -1,82 +1,34 @@
 #Link to problem: https://adventofcode.com/2017/day/9
 
-#get subgroups
-def get_subgroups(group):
-    subgroups = []
-
-    i = 1
-    while i < len(group): 
-        
-        if group[i] == '{':
-            nest_lvl = 0
-            offset = 1
-            next_char = group[i+offset]
-            while next_char == '{':
-                nest_lvl += 1
-                offset += 1
-                next_char = group[i+offset]
-
-
-            j = i
-            while j < len(group):
-                if group[j] == ',' : nest_lvl += 1
-                if group[j] == '}' :
-                    if nest_lvl == 0:
-                        #print(group[i:j+1])
-                        subgroups.append(group[i:j+1])
-                        i = j
-                        break
-                    else:
-                        nest_lvl -= 1
-                j += 1
-
-        i += 1
-
-    return subgroups
-
-
-#For current repos config path is '../res/d09.txt'
-
-src = input("Input file path + extension (e.g.: /dir/file.txt): ")
+src = "../res/d09"
 input_file = open(src)
-input_group = input_file.read()
+groups_str = input_file.read()
 input_file.close()
 
+"""
+PART1
+1. clean the escape chars + the escaped char as both are ignored
+2. clear out garbage
+3. count open brackets and close brackets, whenever one closes, score equal to "nestedness" level
+"""
 
+ESCAPE_CHAR, GARBAGE_OPEN, GARBAGE_CLOSE, GROUP_OPEN, GROUP_CLOSE = "!", "<", ">", "{", "}"
 
-#PART1 
+while ESCAPE_CHAR in groups_str:
+    escape_char_idx = groups_str.index(ESCAPE_CHAR)
+    groups_str = groups_str[:escape_char_idx] + groups_str[escape_char_idx+2:]
 
-#clean group string: remove ! and the char they negate
-i = 0
-while i < len(input_group):
+while GARBAGE_OPEN in groups_str: #[)
+    open_tag_idx = groups_str.index(GARBAGE_OPEN)
+    close_tag_idx = groups_str.index(GARBAGE_CLOSE)
+    groups_str = groups_str[:open_tag_idx] + groups_str[close_tag_idx+1:]
 
-    if input_group[i] == '!' : 
-        input_group = input_group[:i] + input_group[(i+1):]
-        input_group = input_group[:i] + input_group[(i+1):] 
+nestedness_lvl, score = 0, 0
+for c in groups_str:
+    if c == GROUP_OPEN:
+        nestedness_lvl += 1
+    elif c == GROUP_CLOSE:
+        score += nestedness_lvl
+        nestedness_lvl -= 1
 
-    i += 1
-    
-
-#clean the garbage - in between '<...>'
-i = 0
-garbage = False
-while i < len(input_group):
-
-    if input_group[i] == '>' :
-        input_group = input_group[:i] + input_group[(i+1):]
-        garbage = False
-        i -= 1
-
-    if input_group[i] == '<' :
-        garbage = True 
-
-    if garbage : 
-        input_group = input_group[:i] + input_group[(i+1):]
-        i -= 1
-
-    i += 1
-    
-
-
-print(input_group)
-print(get_subgroups(input_group)[0].split(','))
+print(f'(Part1) Total score for all groups: {score}')
