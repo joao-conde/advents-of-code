@@ -1,33 +1,28 @@
 #Link to problem: https://adventofcode.com/2017/day/10
 
-#Reverse a portion (sublist) of a list
-def reverse_sublist(origin_list, start, end):
-    sublist = origin_list[start:end]
-    reverse_sublist = sublist[::-1]
-    origin_list[start:end] = reverse_sublist
+def reverse_portion_circular_list(l, start, end):
+    from_pos = [x % len(l) for x in range(start, end)]
+    to_pos = [x % len(l) for x in range(start, end)][::-1]
+    num_swaps = len(from_pos) // 2
+    for i in range(num_swaps):
+        if from_pos[i] == to_pos[i]: 
+            return l
+        else:
+            tmp = l[from_pos[i]]
+            l[from_pos[i]] = l[to_pos[i]]
+            l[to_pos[i]] = tmp
+    return l
 
-
-lengths = input("Enter lengths: ")
-lengths = lengths.split(',')
+src = "../res/d10"
+input_file = open(src)
+lengths = input_file.read().split(',')
 lengths = [int(length) for length in lengths]
 
-circ_list = []
-for i in range(0,5) : circ_list.append(i)
-
+circular_list = [x for x in range(256)]
 pos = skip = 0
-
 for length in lengths:
-
-    if length > len(circ_list) : continue
-
-    if pos > len(circ_list) : pos = 0
-
-    if pos + length > len(circ_list) :
-        excess = (pos + length) - len(circ_list)
-        print(length, excess)
-
-    reverse_sublist(circ_list, pos, pos + length)
-    pos += length + skip
+    circular_list = reverse_portion_circular_list(circular_list, pos, pos + length)
+    pos = (pos + length + skip) % len(circular_list)
     skip += 1
 
-print(circ_list)
+print(f'(Part1) Result of multiplying the first two numbers in the list: {circular_list[0] * circular_list[1]}')

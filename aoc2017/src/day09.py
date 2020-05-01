@@ -27,4 +27,4 @@ for c in groups_str:
         nestedness_lvl -= 1
 
 print(f'(Part1) Total score for all groups: {score}')
-print(f'(Part1) Total score for all groups: {removed_garbage}')
+print(f'(Part2) Total garbage removed: {removed_garbage}')

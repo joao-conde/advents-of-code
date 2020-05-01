@@ -2,8 +2,6 @@
 
 Incomplete exercises in src:
 
-1. day9
-
-2. day10
-3. day13
-4. day18
+1. day10
+2. day13
+3. day18
