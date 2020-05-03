@@ -15,7 +15,7 @@ def knot_hash(raw_lenghts):
         for n in block: xor ^= n
         dense_hash.append(xor)
     
-    return "".join([hex(x)[2:] for x in dense_hash])
+    return "".join(f'{n:02x}' for n in dense_hash)
 
 def knot_hash_logic(l, lengths, pos = 0, skip = 0):
     for length in lengths:

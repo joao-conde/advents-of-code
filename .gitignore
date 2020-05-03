@@ -1,5 +1,9 @@
-#packagejson and eslint
+# javascript
 node_modules
-*.sh
 
+# cpp
+*.sh
 */exe
+
+# python
+aoc2017/src/__pycache__/*
