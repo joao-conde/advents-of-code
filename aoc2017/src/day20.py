@@ -1,6 +1,6 @@
 #Link to problem: https://adventofcode.com/2017/day/20
 
-import re
+import re, math
 
 def get_particle_properties(particle_id, particle_info):
     pattern = "p=<(.*),(.*),(.*)>, v=<(.*),(.*),(.*)>, a=<(.*),(.*),(.*)>"
@@ -25,6 +25,6 @@ input_file.close()
 
 # PART 1
 particles_props = [get_particle_properties(pid, particle_info) for (pid, particle_info) in enumerate(particle_input)]
-particles_abs_accel = [(abs(info["ax"]) + abs(info["ay"]) + abs(info["az"]), info["pid"]) for info in particles_props]
+particles_abs_accel = [(math.sqrt(info["ax"]**2 + info["ay"]**2 + info["az"]**2), info["pid"]) for info in particles_props]
 particles_abs_accel.sort() # sorts by acceleration magnitude
 print(f'Closest particle to <0,0,0> in the long term: {particles_abs_accel[0][1]}')

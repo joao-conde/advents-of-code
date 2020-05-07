@@ -8,7 +8,7 @@ class Program(object):
 
     def run(self):
         while not self.done():
-            self.execute_instr(instructions[self.instr_ptr].split())
+            self.execute_instr(self.instructions[self.instr_ptr].split())
 
     def done(self):
         return self.instr_ptr < 0 or self.instr_ptr >= len(self.instructions)
@@ -93,33 +93,36 @@ class MessageProgram(Program):
             self.awaiting_msg = True
         
 
-src = "../res/d18"
-input_file = open(src)
-instructions = input_file.read().split('\n')
-input_file.close()
+def main(instructions):
+    # PART 1 
+    registers = {}
+    for i in range(26): registers[chr(ord('a')+i)] = 0
+    p = SoundProgram(registers, instructions)
+    print(f'(Part1) First recovered frequency: {p.run()}')
 
-# PART 1 
-registers = {}
-for i in range(26): registers[chr(ord('a')+i)] = 0
-p = SoundProgram(registers, instructions)
-print(f'(Part1) First recovered frequency: {p.run()}')
+    # PART 2
+    p0_registers, p1_registers = {}, {}
+    for i in range(26): 
+        p0_registers[chr(ord('a')+i)] = 0
+        p1_registers[chr(ord('a')+i)] = 0
+    p1_registers["p"] = 1
 
-# PART 2
-p0_registers, p1_registers = {}, {}
-for i in range(26): 
-    p0_registers[chr(ord('a')+i)] = 0
-    p1_registers[chr(ord('a')+i)] = 0
-p1_registers["p"] = 1
+    p0, p1 = MessageProgram(p0_registers, instructions), MessageProgram(p1_registers, instructions)
+    p0.other_msg_program = p1
+    p1.other_msg_program = p0
 
-p0, p1 = MessageProgram(p0_registers, instructions), MessageProgram(p1_registers, instructions)
-p0.other_msg_program = p1
-p1.other_msg_program = p0
+    while not (p0.awaiting_msg and len(p0.msg_queue) == 0 and p1.awaiting_msg and len(p1.msg_queue) == 0):
+        instr = instructions[p0.instr_ptr].split()
+        p0.execute_instr(instr)
+        
+        instr = instructions[p1.instr_ptr].split()
+        p1.execute_instr(instr)
 
-while not (p0.awaiting_msg and len(p0.msg_queue) == 0 and p1.awaiting_msg and len(p1.msg_queue) == 0):
-    instr = instructions[p0.instr_ptr].split()
-    p0.execute_instr(instr)
-    
-    instr = instructions[p1.instr_ptr].split()
-    p1.execute_instr(instr)
+    print(f'(Part2) Messages sent by program 1: {p1.sent_msgs}')
 
-print(f'(Part2) Messages sent by program 1: {p1.sent_msgs}')
+if __name__ == "__main__":
+    src = "../res/d18"
+    input_file = open(src)
+    instructions = input_file.read().split('\n')
+    input_file.close()
+    main(instructions)
