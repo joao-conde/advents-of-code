@@ -48,4 +48,4 @@ registers = {}
 for i in range(8): registers[chr(ord('a')+i)] = 0
 p = CoprocessorProgram(registers, instructions)
 p.run()
-print(f'(Part1) First recovered frequency: {p.mult_instr_cnt}')
+print(f'(Part1) Number of mult instructions: {p.mult_instr_cnt}')
