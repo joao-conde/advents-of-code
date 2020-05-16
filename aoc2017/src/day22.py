@@ -13,7 +13,7 @@ class NodeState(Enum):
     WEAKENED = 'W'
     FLAGGED = 'F'
 
-class GridClusterPart1:
+class GridCluster:
     def __init__(self, gridInput):
         self.grid = {} # dictionary of (row, col) to cell content, allows for dynamic growth and keeps only cells in path
         for i in range(len(gridInput)): 
@@ -26,7 +26,7 @@ class GridClusterPart1:
 
         self.carrierRow = len(gridInput) // 2
         self.carrierCol = len(gridInput[0]) // 2 
-    
+
     def doVirusBurst(self):
         if (self.carrierRow, self.carrierCol) not in self.grid: 
             self.grid[(self.carrierRow, self.carrierCol)] = NodeState.CLEAN # "expand" grid if need be
@@ -34,6 +34,15 @@ class GridClusterPart1:
         self.updateCurrentNodeState()
         self.moveCarrier()
 
+    def moveCarrier(self):
+        self.carrierRow += self.movementDeltas[self.curDelta][0]
+        self.carrierCol += self.movementDeltas[self.curDelta][1]
+    
+    def updateDirection(self): pass
+
+    def updateCurrentNodeState(self): pass
+
+class GridClusterPart1(GridCluster):
     def updateCurrentNodeState(self):
         if self.grid[(self.carrierRow, self.carrierCol)] == NodeState.CLEAN:
             self.grid[(self.carrierRow, self.carrierCol)] = NodeState.INFECTED
@@ -44,12 +53,8 @@ class GridClusterPart1:
     def updateDirection(self):
         self.curDelta += 1 if self.grid[(self.carrierRow, self.carrierCol)] == NodeState.INFECTED else -1
         self.curDelta = self.curDelta % 4 if self.curDelta >= 4 else (3 if self.curDelta < 0 else self.curDelta)
-
-    def moveCarrier(self):
-        self.carrierRow += self.movementDeltas[self.curDelta][0]
-        self.carrierCol += self.movementDeltas[self.curDelta][1]
-
-class GridClusterPart2(GridClusterPart1):
+ 
+class GridClusterPart2(GridCluster):
     def updateCurrentNodeState(self):
         if self.grid[(self.carrierRow, self.carrierCol)] == NodeState.CLEAN:
             self.grid[(self.carrierRow, self.carrierCol)] = NodeState.WEAKENED
