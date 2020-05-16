@@ -1,35 +1,81 @@
 #Link to problem: https://adventofcode.com/2017/day/22
 
+from enum import Enum
+
 src = "../res/d22"
 inputFile = open(src)
 gridInput = inputFile.read().split('\n')
 inputFile.close()
 
-# PART 1
-INFECTED, CLEAN = '#', '.'
-carrierRow, carrierCol = len(gridInput) // 2, len(gridInput[0]) // 2 
-grid = {} # dictionary of (row, col) to cell content, allows for dynamic growth and keeps only cells in path
-deltas, curDir = [(-1, 0), (0, 1), (1, 0), (0, -1)], 0 # up, right, down, left, up, right, ...
-newlyInfected = 0
-for i in range(len(gridInput)): 
-    for j in range(len(gridInput[i])): 
-        grid[(i,j)] = gridInput[i][j]
+class NodeState(Enum):
+    INFECTED = '#'
+    CLEAN = '.'
+    WEAKENED = 'W'
+    FLAGGED = 'F'
 
-for _ in range(10000):
-    if (carrierRow, carrierCol) not in grid: 
-        grid[(carrierRow, carrierCol)] = CLEAN
+class GridClusterPart1:
+    def __init__(self, gridInput):
+        self.grid = {} # dictionary of (row, col) to cell content, allows for dynamic growth and keeps only cells in path
+        for i in range(len(gridInput)): 
+            for j in range(len(gridInput[i])): 
+                self.grid[(i,j)] = NodeState.INFECTED if gridInput[i][j] == '#' else NodeState.CLEAN
 
-    curDir += 1 if grid[(carrierRow, carrierCol)] == INFECTED else -1
-    curDir = curDir % 4 if curDir >= 4 else (3 if curDir < 0 else curDir)
+        self.movementDeltas = [(-1, 0), (0, 1), (1, 0), (0, -1)]
+        self.curDelta = 0
+        self.newlyInfected = 0
 
-    if grid[(carrierRow, carrierCol)] == CLEAN:
-        grid[(carrierRow, carrierCol)] = INFECTED
-        newlyInfected += 1
-    else:
-        grid[(carrierRow, carrierCol)] = CLEAN
-
-    carrierRow += deltas[curDir][0]
-    carrierCol += deltas[curDir][1]
- 
-print(f'(Part1) Bursts where a node becomes infected: {newlyInfected}')
+        self.carrierRow = len(gridInput) // 2
+        self.carrierCol = len(gridInput[0]) // 2 
     
+    def doVirusBurst(self):
+        if (self.carrierRow, self.carrierCol) not in self.grid: 
+            self.grid[(self.carrierRow, self.carrierCol)] = NodeState.CLEAN # "expand" grid if need be
+        self.updateDirection()
+        self.updateCurrentNodeState()
+        self.moveCarrier()
+
+    def updateCurrentNodeState(self):
+        if self.grid[(self.carrierRow, self.carrierCol)] == NodeState.CLEAN:
+            self.grid[(self.carrierRow, self.carrierCol)] = NodeState.INFECTED
+            self.newlyInfected += 1
+        else:
+            self.grid[(self.carrierRow, self.carrierCol)] = NodeState.CLEAN
+        
+    def updateDirection(self):
+        self.curDelta += 1 if self.grid[(self.carrierRow, self.carrierCol)] == NodeState.INFECTED else -1
+        self.curDelta = self.curDelta % 4 if self.curDelta >= 4 else (3 if self.curDelta < 0 else self.curDelta)
+
+    def moveCarrier(self):
+        self.carrierRow += self.movementDeltas[self.curDelta][0]
+        self.carrierCol += self.movementDeltas[self.curDelta][1]
+
+class GridClusterPart2(GridClusterPart1):
+    def updateCurrentNodeState(self):
+        if self.grid[(self.carrierRow, self.carrierCol)] == NodeState.CLEAN:
+            self.grid[(self.carrierRow, self.carrierCol)] = NodeState.WEAKENED
+        elif self.grid[(self.carrierRow, self.carrierCol)] == NodeState.WEAKENED:
+            self.grid[(self.carrierRow, self.carrierCol)] = NodeState.INFECTED
+            self.newlyInfected += 1
+        elif self.grid[(self.carrierRow, self.carrierCol)] == NodeState.INFECTED:
+            self.grid[(self.carrierRow, self.carrierCol)] = NodeState.FLAGGED
+        elif self.grid[(self.carrierRow, self.carrierCol)] == NodeState.FLAGGED:
+            self.grid[(self.carrierRow, self.carrierCol)] = NodeState.CLEAN
+
+    def updateDirection(self):
+        if self.grid[(self.carrierRow, self.carrierCol)] == NodeState.CLEAN:
+            self.curDelta -= 1
+        elif self.grid[(self.carrierRow, self.carrierCol)] == NodeState.INFECTED:
+            self.curDelta += 1
+        elif self.grid[(self.carrierRow, self.carrierCol)] == NodeState.FLAGGED:
+            self.curDelta += 2
+        self.curDelta = self.curDelta % 4 if self.curDelta >= 4 else (3 if self.curDelta < 0 else self.curDelta)
+
+# PART 1
+cluster1 = GridClusterPart1(gridInput)
+for _ in range(10000): cluster1.doVirusBurst()
+print(f'(Part1) Bursts where a node becomes infected: {cluster1.newlyInfected}')
+
+# PART 2
+cluster2 = GridClusterPart2(gridInput)
+for _ in range(10000000): cluster2.doVirusBurst()
+print(f'(Part2) Bursts where a node becomes infected: {cluster2.newlyInfected}')
