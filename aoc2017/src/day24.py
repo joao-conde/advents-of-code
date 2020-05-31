@@ -25,8 +25,12 @@ startComponents = [c for c in components if 0 in c]
 otherComponents = [c for c in components if 0 not in c]
 
 bridges = []
-for c in startComponents:
-  bridges.extend(findBridges(otherComponents, [c], []))
-
+for c in startComponents: bridges.extend(findBridges(otherComponents, [c], []))
 bridgesSums = [sum([sum(c) for c in b]) for b in bridges]
 print(f'(Part1) Strongest bridge strength: {max(bridgesSums)}')
+
+# PART 2
+maxLenBridge = max([len(b) for b in bridges])
+longestBridges = [b for b in bridges if len(b) >= maxLenBridge]
+longestBridgesSums = [sum([sum(c) for c in b]) for b in longestBridges]
+print(f'(Part2) Longest and strongest bridge strength *wink wink*: {max(longestBridgesSums)}')
