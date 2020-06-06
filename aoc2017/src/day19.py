@@ -14,12 +14,12 @@ input_file = open(src)
 lines = input_file.read().split("\n")
 input_file.close()
 
-# PART 1
+# PARTS 1 & 2
 row = 0 
 col = lines[row].find("|")
 dr, dc = 1, 0
 
-letters = []
+letters, steps = [], 0
 while True:
     cur = lines[row][col]
     if cur == " ": break
@@ -31,7 +31,7 @@ while True:
 
     row += dr
     col += dc
+    steps += 1
 
 print(f'(Part1) Packet sees {"".join(letters)}')
-
-        
+print(f'(Part2) Packet takes {steps} steps')
