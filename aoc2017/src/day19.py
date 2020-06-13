@@ -1,6 +1,6 @@
 #Link to problem: https://adventofcode.com/2017/day/19
 
-def update_direction(lines, row, col):
+def update_direction(lines: list, row: int, col: int):
     for r in range(-1, 2):
         for c in range(-1, 2):
             if r == 0 and c == 0: continue
