@@ -19,3 +19,4 @@ From the [Advent Of Code](https://adventofcode.com/about) page on December 2017:
 |  2017  |   Python     |
 |  2018  |   JavaScript |
 |  2019  |   C++        |
+|  2020  |   Rust       |
