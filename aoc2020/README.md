@@ -3,3 +3,9 @@
 ## Why Rust
 
 ## Run solutions
+
+For example, to run the solution for the first day:
+
+```bash
+cargo run --bin day01
+```
