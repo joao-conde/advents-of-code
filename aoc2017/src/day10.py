@@ -14,7 +14,7 @@ def knot_hash(raw_lenghts):
         xor = 0
         for n in block: xor ^= n
         dense_hash.append(xor)
-    
+
     return "".join(f'{n:02x}' for n in dense_hash)
 
 def knot_hash_logic(l, lengths, pos = 0, skip = 0):
@@ -29,7 +29,7 @@ def reverse_portion_circular_list(l, start, end):
     to_pos = [x % len(l) for x in range(start, end)][::-1]
     num_swaps = len(from_pos) // 2
     for i in range(num_swaps):
-        if from_pos[i] == to_pos[i]: 
+        if from_pos[i] == to_pos[i]:
             return l
         else:
             tmp = l[from_pos[i]]
@@ -41,7 +41,7 @@ def main():
     src = "../res/d10"
     input_file = open(src)
     raw_lenghts = input_file.read()
-    
+
     # PART 1
     lengths = [int(length) for length in raw_lenghts.split(',')]
     l, _, _ = knot_hash_logic([x for x in range(256)], lengths)

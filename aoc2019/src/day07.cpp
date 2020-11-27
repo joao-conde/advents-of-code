@@ -18,7 +18,7 @@ class IntcodeProgram{
         unordered_map<int, function<int (int, int)>> opcodeBinFun;
         queue<int> inputs;
 
-    public:       
+    public:
         IntcodeProgram(vector<int> intcode){
             this->pc = 0;
             this->halt = false;
@@ -39,15 +39,15 @@ class IntcodeProgram{
         }
 
         void setHalt() { this->halt = true; }
- 
+
         void offsetPC(int offset){ this->pc += offset; }
- 
+
         void jump(int pos) { this->pc = pos; }
- 
+
         void processBinOpcode(int x, int y, int pos, function<int (int, int)> binFun, int offset){
-            this->code[pos] = binFun(x, y); 
+            this->code[pos] = binFun(x, y);
         }
- 
+
         void consumeInput(int pos){
             this->code[pos] = this->inputs.front();
             this->inputs.pop();
@@ -146,7 +146,7 @@ vector<int> readIntcode(string filePath){
 int main(){
     vector<int> intcode = readIntcode("../res/day07");
     vector<int> phases = {0, 1, 2, 3, 4};
-    
+
     int maxThrust = -1;
     do {
         int thrust = 0;
@@ -156,7 +156,7 @@ int main(){
         }
         maxThrust = max(maxThrust, thrust);
     } while (next_permutation(phases.begin(), phases.end()));
-    
+
     cout << "Part1: Maximum thrust is " << maxThrust << endl;
 
     maxThrust = -1;
@@ -169,9 +169,9 @@ int main(){
         int outD = pD.execute({phases[3], outC});
         int outE = pE.execute({phases[4], outD});
         int lastEOut = outE;
-        
+
         while(true){
-            outA = pA.execute({outE});            
+            outA = pA.execute({outE});
             outB = pB.execute({outA});
             outC = pC.execute({outB});
             outD = pD.execute({outC});

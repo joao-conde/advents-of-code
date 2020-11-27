@@ -1,9 +1,0 @@
-# javascript
-node_modules
-
-# cpp
-*.sh
-*/exe
-
-# python
-aoc2017/src/__pycache__/*

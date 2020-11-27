@@ -1,7 +1,7 @@
 #include <iostream>
 #include <set>
 #include <sstream>
- 
+
 using namespace std;
 
 string encode(int password){
@@ -43,7 +43,7 @@ int main(){
     int uniquePwsP1 = 0, uniquePwsP2 = 0, lb = 278384, ub = 824795;
     for(int i = lb; i <= ub; i++){
         if(isValidPassword(i, false)) uniquePwsP1++;
-        if(isValidPassword(i, true)) uniquePwsP2++; 
+        if(isValidPassword(i, true)) uniquePwsP2++;
     }
     cout << "Part1 - " << uniquePwsP1 << endl;
     cout << "Part2 - " << uniquePwsP2 << endl;

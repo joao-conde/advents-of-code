@@ -14,11 +14,11 @@ for i in range(0, puzzle_len):
     if i == puzzle_len - 1:
         if puzzle_input[i] == puzzle_input[0]:
             captcha1 = captcha1 + int(puzzle_input[i])
-        break        
+        break
 
     if puzzle_input[i] == puzzle_input[i+1]:
         captcha1 = captcha1 + int(puzzle_input[i])
-    
+
 
 #PART2
 captcha2 = 0

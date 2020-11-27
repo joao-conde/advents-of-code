@@ -15,7 +15,7 @@ lines = input_file.read().split("\n")
 input_file.close()
 
 # PARTS 1 & 2
-row = 0 
+row = 0
 col = lines[row].find("|")
 dr, dc = 1, 0
 
@@ -26,7 +26,7 @@ while True:
 
     if cur == "+":
         dr, dc = update_direction(lines, row, col)
-    elif cur.isalpha(): 
+    elif cur.isalpha():
         letters.append(cur)
 
     row += dr

@@ -13,7 +13,7 @@ for pair in layers:
 
 # PART 1
 severity, max_ps = 0, max([x for x in layers_dict])
-for ps in range(max_ps + 1): 
+for ps in range(max_ps + 1):
     if ps in layers_dict:
         if ps % (2*(layers_dict[ps] - 1)) == 0: # scanner is at position 0 at frequency 2 * (range - 1)
             severity += (ps * layers_dict[ps])

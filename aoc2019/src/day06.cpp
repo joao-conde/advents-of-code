@@ -26,7 +26,7 @@ int nOrbits(Node* node, int depth, unordered_map<string, int> &depths){
 vector<string> pathFromRoot(Node* n, Node* root){
     vector<string> path = { n->id };
     while(n->id != root->id){
-        path.insert(path.begin(), n->center->id); 
+        path.insert(path.begin(), n->center->id);
         n = n->center;
     }
     return path;
@@ -45,13 +45,13 @@ string deepestCommonAncestor(vector<string> s1, vector<string> s2){
 
 int main(){
     string line;
-    ifstream input("../res/day06"); 
+    ifstream input("../res/day06");
     unordered_map<string, Node> nodes;
     unordered_map<string, int> depths;
     while(getline(input, line)){
         int separatorPos = line.find(")");
         string centerID = line.substr(0, separatorPos), moonID = line.substr(separatorPos + 1, line.size());
-        
+
         auto itCenter = nodes.find(centerID);
         if(itCenter == nodes.end()){
             Node center(centerID);
@@ -63,7 +63,7 @@ int main(){
         if(itMoon == nodes.end()){
             Node moon(moonID);
             nodes.insert(make_pair(moonID, moon));
-            itMoon = nodes.find(moonID); 
+            itMoon = nodes.find(moonID);
         }
 
         itCenter->second.addMoon(&itMoon->second);

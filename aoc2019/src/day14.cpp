@@ -18,7 +18,7 @@ bool isBasicComponent(string component, const reactionsList &reactions){
 
 void findBasicComponentsQuantity(string component, int mult, unordered_map<string, int> &list, const reactionsList &reactions){
     unordered_map<string, int> inputs = reactions.find(component)->second.first;
-    
+
     for(auto kv: inputs){
         if(isBasicComponent(kv.first, reactions))
             list[kv.first] += kv.second * mult;
@@ -42,7 +42,7 @@ int computeMinimumORE(const unordered_map<string, int> &inputs, const reactionsL
     }
 
     return ore;
-} 
+}
 
 int main(){
     //TODO: refactor to a tree structure and walk it since FUEL and continuously update ore needed
@@ -52,7 +52,7 @@ int main(){
     while(getline(file, line)){
         size_t arrow = line.find("=>");
         string recipe = line.substr(0, arrow);
-        string result = line.substr(arrow + 3, line.size());    
+        string result = line.substr(arrow + 3, line.size());
 
         int quantity;
         string entry, component;

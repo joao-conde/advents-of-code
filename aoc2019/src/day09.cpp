@@ -6,7 +6,7 @@
 using namespace std;
 
 class IntcodeProgram{
-    public:       
+    public:
         long long int pc, base; //program counter
         bool halt;
         vector<long long int> code;

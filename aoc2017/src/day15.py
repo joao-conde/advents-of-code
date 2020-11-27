@@ -7,7 +7,7 @@ def generator(start_val, factor, divisor, multiple = 1):
     x = start_val
     while True:
         x = (x * factor) % divisor
-        
+
         if x % multiple == 0:
             yield x
 

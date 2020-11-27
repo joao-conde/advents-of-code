@@ -29,7 +29,7 @@ states = {} # state to (0: (write value, movement delta, next state), 1: (write 
 while len(input_lines) > 0:
   cur_state_lines = input_lines[:NUMBER_STATE_DEFINITION_LINES]
   state = re.findall(re_state, cur_state_lines[0])[0]
-  
+
   write_val = int(re.findall(re_write_value, cur_state_lines[2])[0])
   move_delta = 1 if re.findall(re_move_direction, cur_state_lines[3])[0] == "right" else -1
   next_state = re.findall(re_next_state, cur_state_lines[4])[0]

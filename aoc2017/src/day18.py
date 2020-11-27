@@ -37,16 +37,16 @@ class Program(object):
 
         self.instr_ptr += jump_len
 
-    def execute_set(self, x, y): 
+    def execute_set(self, x, y):
         self.registers[x] = self.get_arg_value(y)
-    
-    def execute_add(self, x, y): 
+
+    def execute_add(self, x, y):
         self.registers[x] += self.get_arg_value(y)
 
-    def execute_mul(self, x, y): 
+    def execute_mul(self, x, y):
         self.registers[x] *= self.get_arg_value(y)
-    
-    def execute_mod(self, x, y): 
+
+    def execute_mod(self, x, y):
         self.registers[x] %= self.get_arg_value(y)
 
     def execute_snd(self, x): pass
@@ -57,13 +57,13 @@ class SoundProgram(Program):
     def __init__(self, registers, instructions = [], instr_ptr = 0):
         super().__init__(registers, instructions, instr_ptr)
         self.last_played_frequency = None
-    
+
     def run(self):
         while not self.done():
             instr = instructions[self.instr_ptr].split()
             self.execute_instr(instr)
             if "rcv" in instr: return self.last_played_frequency
-            
+
     def execute_snd(self, x):
         self.last_played_frequency = self.get_arg_value(x)
 
@@ -91,10 +91,10 @@ class MessageProgram(Program):
         else:
             self.instr_ptr -= 1 # prevent point advance
             self.awaiting_msg = True
-        
+
 
 def main(instructions):
-    # PART 1 
+    # PART 1
     registers = {}
     for i in range(26): registers[chr(ord('a')+i)] = 0
     p = SoundProgram(registers, instructions)
@@ -102,7 +102,7 @@ def main(instructions):
 
     # PART 2
     p0_registers, p1_registers = {}, {}
-    for i in range(26): 
+    for i in range(26):
         p0_registers[chr(ord('a')+i)] = 0
         p1_registers[chr(ord('a')+i)] = 0
     p1_registers["p"] = 1
@@ -114,7 +114,7 @@ def main(instructions):
     while not (p0.awaiting_msg and len(p0.msg_queue) == 0 and p1.awaiting_msg and len(p1.msg_queue) == 0):
         instr = instructions[p0.instr_ptr].split()
         p0.execute_instr(instr)
-        
+
         instr = instructions[p1.instr_ptr].split()
         p1.execute_instr(instr)
 

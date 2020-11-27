@@ -1,4 +1,4 @@
-#include <algorithm> 
+#include <algorithm>
 #include <cmath>
 #include <fstream>
 #include <iostream>
@@ -12,12 +12,12 @@ typedef unordered_map<double, pair<int,int>> doubleIntPairMap;
 
 double angleBetweenVectors(int x1, int y1, int x2, int y2){
     pair<double, double> vector = make_pair(x1 - x2, y1 - y2);
-    double vectorNorm = sqrt(vector.first * vector.first + vector.second * vector.second);            
+    double vectorNorm = sqrt(vector.first * vector.first + vector.second * vector.second);
     pair<double, double> normalizedVector = make_pair(vector.first / vectorNorm, vector.second / vectorNorm);
 
     // cos(alpha) = a·b / |a|·|b| ----> b = (0, -1)
-    // becomes y of vec a dividing by 1 (unit vectors) 
-    // alpha = acos(-a.y / 1) = acos(a.y) 
+    // becomes y of vec a dividing by 1 (unit vectors)
+    // alpha = acos(-a.y / 1) = acos(a.y)
     double angle = round(acos(-normalizedVector.second) * 1000) / 1000; //round to 3 decimal place
     return (normalizedVector.first < 0 ? 2 * M_PI - angle : angle);
 }
@@ -42,7 +42,7 @@ int main(){
 
     int maxAsteroids = 0;
     pair<int,int> station;
-    for(int i = 0; i < map.size(); i++) 
+    for(int i = 0; i < map.size(); i++)
         for(int j = 0; j < map.size(); j++)
             if(map[i][j] != '.'){
                 doubleIntPairMap asteroidAngles = getVisibleAsteroids(map, j, i);

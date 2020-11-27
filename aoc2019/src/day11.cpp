@@ -8,7 +8,7 @@
 using namespace std;
 
 class IntcodeProgram{
-    public:       
+    public:
         long long int pc, base; //program counter
         bool halt;
         vector<long long int> code;
@@ -102,7 +102,7 @@ class IntcodeProgram{
         }
 };
 
-struct PointHash{ 
+struct PointHash{
     size_t operator()(const pair<int,int> &k) const{
         return (k.first * 10 + k.second);
     }
@@ -112,7 +112,7 @@ unordered_map<pair<int,int>, char, PointHash> buildPointColorMap(vector<long lon
     IntcodeProgram program(intcode, intcode.size());
     unordered_map<pair<int,int>, char, PointHash> pointColorMap; //. -> black, # -> white
     char dirs[] = {'^', '>', 'v', '<'};
-    
+
     int curDir = 0;
     pair<int,int> curPoint = make_pair(0, 0);
     pointColorMap[curPoint] = startColor;
@@ -157,7 +157,7 @@ int main(){
 
     int areaEstimate = buildPointColorMap(intcode).size();
     cout << "Part1: The number of at least once painted panels is " << areaEstimate << endl;
-    
+
     unordered_map<pair<int,int>, char, PointHash> hullID = buildPointColorMap(intcode, '#');
     int sideEstimate = sqrt(areaEstimate);
     cout << "Part2" << endl;

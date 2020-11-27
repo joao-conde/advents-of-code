@@ -8,10 +8,10 @@ const resultingFreq = input.map(Number).reduce((acc, currVal) => acc + currVal);
 const previousFreqVals = new Set();
 let frequency = 0, i = 0;
 while (!previousFreqVals.has(frequency)) {
-	previousFreqVals.add(frequency);
-	frequency += parseInt(input[i]);
-	if (i + 1 == input.length) i = 0;
-	else i++;
+    previousFreqVals.add(frequency);
+    frequency += parseInt(input[i]);
+    if (i + 1 == input.length) i = 0;
+    else i++;
 }
 
 console.log('P1 - Resulting frequency is ' + resultingFreq);

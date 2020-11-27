@@ -1,8 +1,8 @@
 #Link to problem: https://adventofcode.com/2017/day/12
-     
+
 
 def find_connections(prog, connections, explored = None):
-    
+
     if explored == None: explored = []
 
     programs = set()
@@ -13,7 +13,7 @@ def find_connections(prog, connections, explored = None):
         programs.add(program)
 
         #If direct connection not explored, do so
-        if program not in explored: 
+        if program not in explored:
 
             explored.append(prog)
             indirect_cons = find_connections(program, connections, explored)
@@ -50,7 +50,7 @@ connected_to_0 = 0
 groups = set()
 
 for i in range(len(connections)):
-    
+
     group = frozenset(find_connections(i, connections)) #frozenset indicates python we do not want to mutate the inner sets
     groups.add(group)
 

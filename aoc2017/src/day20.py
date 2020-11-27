@@ -10,11 +10,11 @@ def get_particle_properties(particle_id: int, particle_info: str):
         "px": px,
         "py": py,
         "pz": pz,
-        "vx": vx, 
+        "vx": vx,
         "vy": vy,
-        "vz": vz, 
+        "vz": vz,
         "ax": ax,
-        "ay": ay, 
+        "ay": ay,
         "az": az
     }
 
@@ -38,7 +38,7 @@ for _ in range(SIMULATION_STEPS):
         for axis in axes:
             p["v" + axis] += p["a" + axis]
             p["p" + axis] += p["v" + axis]
-    
+
     collided = []
     for pid1, p1 in particles_props:
         for pid2, p2 in particles_props:

@@ -29,7 +29,7 @@ def get_even_div(row,el):
             return el / x
 
     return -1
-    
+
 checksum2 = 0
 
 for line in lines:
@@ -38,7 +38,7 @@ for line in lines:
 
     for el in line:
         ret = get_even_div(line, el)
-        
+
         if ret != -1:
             checksum2 = checksum2 + ret
             break

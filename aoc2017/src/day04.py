@@ -9,7 +9,7 @@ input_file.close()
 
 def valid_pass_p1(pp):
     words = pp.split(' ')
-    
+
     for word in words:
         if words.count(word) > 1 : return False
 
@@ -23,7 +23,7 @@ validPPs1 = 0
 #checks if 2 words are anagrams of each other ; true if so false if not
 def is_anagram(word1, word2):
     if len(word1) != len(word2) : return False
-        
+
     for letter in word1:
         if word2.count(letter) == 0 : return False
 
@@ -38,9 +38,9 @@ def valid_pass_p2(pp):
 
         for word in tail:
             if(is_anagram(head, word)) : return False
-        
+
         wordsList = tail
-    
+
     return True
 
 

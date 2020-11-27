@@ -11,7 +11,7 @@ def dfs_region_explorer(grid, empty, used, x = 0, y = 0):
 
     if y + 1 < len(grid[x]):
       dfs_region_explorer(grid, empty, used, x, y + 1)
-    
+
     if x - 1 >= 0:
       dfs_region_explorer(grid, empty, used, x - 1, y)
 
@@ -39,5 +39,5 @@ for r in range(len(grid)):
   while USED in grid[r]:
     dfs_region_explorer(grid, x=r, y=grid[r].index(USED), empty = EMPTY, used = USED)
     regions += 1
-    
+
 print(f'(Part2) Number of regions: {regions}')

@@ -33,8 +33,8 @@ class CoprocessorProgram(Program):
             self.execute_rcv(instr[1])
 
         self.instr_ptr += jump_len
-    
-    def execute_sub(self, x, y): 
+
+    def execute_sub(self, x, y):
         self.registers[x] -= self.get_arg_value(y)
 
 

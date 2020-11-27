@@ -3,7 +3,7 @@
 #Basic permutation operations~
 
 def spin(programs, size):
-    return programs[-size:] + programs[:-size]    
+    return programs[-size:] + programs[:-size]
 
 def exchange(programs, idx1, idx2):
     temp = programs[idx1]
@@ -41,7 +41,7 @@ for i in range(iterations):
         elif instruction[0] == 'x':
             args = instruction.replace('x', '').split('/')
             programs = exchange(programs, int(args[0]), int(args[1]))
-            
+
         elif instruction[0] == 'p':
             args = instruction[1:].split('/')
             programs = partner(programs, args[0], args[1])

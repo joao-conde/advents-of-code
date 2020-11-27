@@ -24,7 +24,7 @@ while memory not in states:
         bankIdx += 1
         if bankIdx >= len(memory) : bankIdx = 0
         memory[bankIdx] += 1
-    
+
     cycles += 1
 
 loopLen = len(states) - states.index(memory)

@@ -6,7 +6,7 @@
 
 using namespace std;
 
-struct Hash{ 
+struct Hash{
     size_t operator()(const pair<int,int> &k) const{
         return (k.first * 10 + k.second);
     }
@@ -30,7 +30,7 @@ string getMove(string &wire){
 
 coordsDistanceMap computeCoords(string wire){
     coordsDistanceMap map; //(x, y), path length
-    int x = 0, y = 0, pathLength = 0; 
+    int x = 0, y = 0, pathLength = 0;
     while(!wire.empty()){
         string move = getMove(wire);
         char dir = move[0];
@@ -71,11 +71,11 @@ int main(){
     vector<pair<int,int>> wire1Keys, wire2Keys, intersection;
     for(auto kv: wire1Coords) wire1Keys.push_back(kv.first);
     for(auto kv: wire2Coords) wire2Keys.push_back(kv.first);
-    
+
     sort(wire1Keys.begin(), wire1Keys.end());
     sort(wire2Keys.begin(), wire2Keys.end());
     set_intersection(wire1Keys.begin(), wire1Keys.end(), wire2Keys.begin(), wire2Keys.end(), back_inserter(intersection));
-    
+
     vector<int> manhattanDistances;
     transform(intersection.begin(), intersection.end(), back_inserter(manhattanDistances), [](pair<int, int> coords){return abs(coords.first) + abs(coords.second);});
 

@@ -31,7 +31,7 @@ int main(){
         for(int i = 0; i < 4; i++){
             for(int j = 0; j < 4; j++){
                 for(int k = 0; k < 3; k++)
-                    velocities[i][k] += (positions[i][k] > positions[j][k] ? -1 : positions[i][k] < positions[j][k] ? 1 : 0);    
+                    velocities[i][k] += (positions[i][k] > positions[j][k] ? -1 : positions[i][k] < positions[j][k] ? 1 : 0);
             }
         }
 
@@ -44,7 +44,7 @@ int main(){
     }
 
     int totalEnergy = 0;
-    vector<int> moonsPot, moonsKin; 
+    vector<int> moonsPot, moonsKin;
     transform(positions.begin(), positions.end(), back_inserter(moonsPot), [](vector<int> moonPos){return sumOfAbsolutes(moonPos);});
     transform(velocities.begin(), velocities.end(), back_inserter(moonsKin), [](vector<int> moonVel){return sumOfAbsolutes(moonVel);});
     for(int i = 0; i < 4; i++) totalEnergy += moonsPot[i] * moonsKin[i];

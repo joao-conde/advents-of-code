@@ -10,7 +10,7 @@ using namespace std;
 typedef long long int lli;
 
 class IntcodeProgram{
-    public:       
+    public:
         lli pc, base; //program counter
         bool halt;
         vector<lli>  code;
@@ -150,7 +150,7 @@ int main(){
         width = max(gameCopy1.execute(), width);
         height = max(gameCopy1.execute(), height);
         gameCopy1.execute(); //disregard tileID for now
-    }   
+    }
 
     vector<vector<lli>> board(width + 1, vector<lli>(height + 1, 0));
     IntcodeProgram gameCopy2(intcode, intcode.size());
@@ -167,12 +167,12 @@ int main(){
     transform(board.begin(), board.end(), back_inserter(blockRowCnt), countBlockTiles);
     cout << "Part1: " << accumulate(blockRowCnt.begin(), blockRowCnt.end(), 0) << " block tiles" << endl;
 
-    
+
     intcode[0] = 2; //play for free
     IntcodeProgram gameCopy3(intcode, intcode.size());
     vector<vector<lli>> boardFree(width + 1, vector<lli>(height + 1, 0));
     lli ballX = 0, paddleX = 0, joystick = 0, score;
-    while(!gameCopy3.halt){        
+    while(!gameCopy3.halt){
         // clear and add joystick as input to ensure if an input is requested
         // it is the most recent position of the joystick
         gameCopy3.clearInputs();
@@ -188,14 +188,14 @@ int main(){
         lli z = gameCopy3.execute();
 
         if(x == -1 && y == 0){
-            score = z; 
+            score = z;
             continue;
         }
 
         if(!gameCopy3.halt) boardFree[x][y] = z;
         if(z == 3) paddleX = x;
         if(z == 4) ballX = x;
-        
+
         joystick = (ballX > paddleX ? 1 : (ballX < paddleX ? -1 : 0));
     }
     cout << "Part2: Final score " << score << endl;

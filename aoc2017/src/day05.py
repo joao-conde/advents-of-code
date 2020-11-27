@@ -25,7 +25,7 @@ while index1 < len(offsets):
     offsets[index1] += 1
     index1 += offset
     steps1 += 1
-    
+
 
 #PART2
 
@@ -34,12 +34,12 @@ steps2 = 0
 
 while index2 < len(offsets2):
     offset = offsets2[index2]
-    
-    if offset >= 3 : 
+
+    if offset >= 3 :
         offsets2[index2] -= 1
     else:
         offsets2[index2] += 1
-    
+
     index2 += offset
     steps2 += 1
 

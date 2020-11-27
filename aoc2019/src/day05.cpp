@@ -66,8 +66,8 @@ int computeOutputP1(vector<int> intcode){
                 break;
         }
         i += pc_inc;
-    }  
-    return intcode[0];   
+    }
+    return intcode[0];
 }
 
 int computeOutputP2(vector<int> intcode){
@@ -121,8 +121,8 @@ int computeOutputP2(vector<int> intcode){
                 halt = 1;
                 break;
         }
-    }  
-    return intcode[0];   
+    }
+    return intcode[0];
 }
 
 int main(){

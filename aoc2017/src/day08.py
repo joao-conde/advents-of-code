@@ -37,22 +37,22 @@ max_value_held = "none"
 #build registers
 for instruction in instructions_list:
     instruction = instruction.split()
-    
+
     target_reg = instruction[0]
     left_operand = instruction[4]
-    
+
     register1 = [reg for reg in registers if reg.name == left_operand]
     register2 = [reg for reg in registers if reg.name == target_reg]
-    
+
     #if it gets and empty list it means there is no register yet with that name so we create one
-    if len(register1) == 0 : 
+    if len(register1) == 0 :
         register1 = Register(left_operand)
         registers.append(register1)
-        
-    if len(register2) == 0 : 
+
+    if len(register2) == 0 :
         register2 = Register(target_reg)
         registers.append(register2)
-        
+
 
 #perform instructions
 for instruction in instructions_list:
@@ -73,7 +73,7 @@ for instruction in instructions_list:
 
     if method == "inc":
         target_reg.cash_in(cash)
-    
+
     if method == "dec":
         target_reg.cash_out(cash)
 

@@ -35,8 +35,8 @@ int computeOutput(vector<int> intcode){
                 break;
         }
         i+=4;
-    }  
-    return intcode[0];   
+    }
+    return intcode[0];
 }
 
 int main(){
@@ -44,16 +44,16 @@ int main(){
     intcode[1] = 12;
     intcode[2] = 2;
     cout << "Part1 - " << computeOutput(intcode) << endl;
-    
+
     int output = 19690720;
-    for(int noun = 0; noun <= 99; noun++){ 
+    for(int noun = 0; noun <= 99; noun++){
         for(int verb = 0; verb <= 99; verb++){
             intcode[1] = noun;
             intcode[2] = verb;
             if(computeOutput(intcode) == output){
                 cout << "Part2 - " << 100 * noun + verb << endl;
-                break; 
+                break;
             }
         }
     }
-}   
+}

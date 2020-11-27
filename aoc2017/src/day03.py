@@ -7,10 +7,10 @@ import math
 #Manhattan distance
 def manhattan_distance(origin_row, origin_col, dest_row, dest_col):
     return abs(dest_row - origin_row) + abs(dest_col - origin_col)
-    
+
 puzzle_input = int(input("Enter your puzzle input: "))
 
-#1 grid_size is always odd so it has a middle for the '1' and 
+#1 grid_size is always odd so it has a middle for the '1' and
 #big enough to contain all numbers
 grid_size = math.ceil(math.sqrt(puzzle_input))
 if(grid_size % 2 == 0) : grid_size += 1
@@ -36,7 +36,7 @@ control = 0
 
 #Grid filling algorithm
 while element <= puzzle_input:
-    
+
     up_times = 2*control + 1
 
     #one right and fill
@@ -92,7 +92,7 @@ while element <= puzzle_input:
 
     control += 1
     if element > puzzle_input : break
-    
+
 
 
 #Find element coords
@@ -105,14 +105,14 @@ for i in range(grid_size):
             break
 
 #Calculate distance from point to origin (1)
-distance = manhattan_distance(center, center, elX, elY) 
+distance = manhattan_distance(center, center, elX, elY)
 
 
 #PART2 - bit of spaghetti code
 
 #sum of al surrounding elements
 def surround_sum(grid, pos_x, pos_y):
-    return grid[pos_x-1][pos_y] + grid[pos_x+1][pos_y] + grid[pos_x][pos_y-1] + grid[pos_x][pos_y+1] + grid[pos_x+1][pos_y+1] + grid[pos_x+1][pos_y-1] + grid[pos_x-1][pos_y-1] + grid[pos_x-1][pos_y+1] 
+    return grid[pos_x-1][pos_y] + grid[pos_x+1][pos_y] + grid[pos_x][pos_y-1] + grid[pos_x][pos_y+1] + grid[pos_x+1][pos_y+1] + grid[pos_x+1][pos_y-1] + grid[pos_x-1][pos_y-1] + grid[pos_x-1][pos_y+1]
 
 
 #grid_size+1 to ensure grid is big enough for the surround_sum algorithm not to check out of boundaries
@@ -128,14 +128,14 @@ control2 = 0
 
 #Grid filling algorithm
 while el <= puzzle_input:
-    
+
     up_times = 2*control2 + 1
 
     #one right and fill
     pos_y +=1
     el = surround_sum(grid2, pos_x, pos_y)
 
-    if el <= puzzle_input : 
+    if el <= puzzle_input :
         grid2[pos_x][pos_y] = el
     else:
         break
@@ -146,7 +146,7 @@ while el <= puzzle_input:
         pos_x -= 1
         el = surround_sum(grid2, pos_x, pos_y)
 
-        if el <= puzzle_input : 
+        if el <= puzzle_input :
             grid2[pos_x][pos_y] = el
         else:
             break
@@ -160,8 +160,8 @@ while el <= puzzle_input:
     for i in range(up_times + 1):
         pos_y -= 1
         el = surround_sum(grid2, pos_x, pos_y)
-        
-        if el <= puzzle_input : 
+
+        if el <= puzzle_input :
             grid2[pos_x][pos_y] = el
         else:
             break
@@ -175,8 +175,8 @@ while el <= puzzle_input:
     for i in range(up_times + 1):
         pos_x += 1
         el = surround_sum(grid2, pos_x, pos_y)
-        
-        if el <= puzzle_input : 
+
+        if el <= puzzle_input :
             grid2[pos_x][pos_y] = el
         else:
             break
@@ -188,8 +188,8 @@ while el <= puzzle_input:
     for i in range(up_times + 1):
         pos_y += 1
         el = surround_sum(grid2, pos_x, pos_y)
-        
-        if el <= puzzle_input : 
+
+        if el <= puzzle_input :
             grid2[pos_x][pos_y] = el
         else:
             break
@@ -199,7 +199,7 @@ while el <= puzzle_input:
     if el > puzzle_input : break
 
 
-#Fill the value 
+#Fill the value
 grid2[pos_x][pos_y] = el
 
 #Print solutions
