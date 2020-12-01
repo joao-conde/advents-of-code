@@ -1,4 +1,9 @@
+# build artifacts
 Cargo.lock
 target/
 
+# IDE
 .vscode/
+
+# Code style
+.rustfmt.toml
