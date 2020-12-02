@@ -8,16 +8,30 @@ After that, I did a lot of Python and JavaScript for web development and some Ja
 
 However, after programming a while in C++, you tend to notice common problems in systems programming (not related to C++, you would find such problems in C as well). **Issues like dangling pointers, use-after-frees, double frees, data races, and others. Rust introduces an ownership and borrowing memory model which completely eradicates these issues.** I don't know about you, but after knowing about this, how can I ever go back to C or C++?
 
-## Run solutions
+## Running
 
-For example, to run the solution for the first day:
+The following assume you are at the same level of this README (`aoc2020/`).
 
-```bash
-cargo run --bin day01
+### Running all solutions
+
+You can run the unit tests for all solutions with:
+
+```
+cargo test
+```
+
+Puzzle results will not be printed.
+
+### Running one solution
+
+To run the solution for a given day:
+
+```
+cargo run --bin day[01-25]
 ```
 
 Run with `--release` for faster execution but longer compilation time:
 
-```bash
-cargo run --release --bin day01
+```
+cargo run --release --bin day[01-25]
 ```
