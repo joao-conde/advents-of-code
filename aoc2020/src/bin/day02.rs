@@ -4,32 +4,28 @@ use std::fs;
 const INPUT_PATH: &str = "input/day02";
 
 type Entry = (usize, usize, char, String);
+type Policy = dyn Fn(&Entry) -> bool;
 
 fn main() {
     let input = fs::read_to_string(INPUT_PATH).expect("failure opening input file");
     let entries = parse_input(input);
-    println!("Part1: {}", part1(&entries));
-    println!("Part2: {}", part2(&entries));
+    println!("Part1: {}", solve(&entries, Box::new(policy1)));
+    println!("Part2: {}", solve(&entries, Box::new(policy2)));
 }
 
-fn part1(entries: &[Entry]) -> i32 {
-    let mut valid = 0;
-    for entry in entries {
-        let (min, max, letter, password) = entry;
-        let letter_cnt = password.chars().filter(|c| c == letter).count();
-        valid += if letter_cnt >= *min && letter_cnt <= *max { 1 } else { 0 };
-    }
-    valid
+fn solve(entries: &[Entry], policy: Box<Policy>) -> usize {
+    entries.iter().filter(|entry| policy(entry)).count()
 }
 
-fn part2(entries: &[Entry]) -> i32 {
-    let mut valid = 0;
-    for entry in entries {
-        let (min, max, letter, password) = entry;
-        let is_valid = (password.chars().nth(*min - 1) == Some(*letter)) != (password.chars().nth(*max - 1) == Some(*letter));
-        valid += if is_valid { 1 } else { 0 };
-    }
-    valid
+fn policy1(entry: &Entry) -> bool {
+    let (min, max, letter, password) = entry;
+    let letter_cnt = password.chars().filter(|c| c == letter).count();
+    letter_cnt >= *min && letter_cnt <= *max
+}
+
+fn policy2(entry: &Entry) -> bool {
+    let (min, max, letter, password) = entry;
+    (password.chars().nth(*min - 1) == Some(*letter)) != (password.chars().nth(*max - 1) == Some(*letter))
 }
 
 fn parse_input(input: String) -> Vec<Entry> {
@@ -50,6 +46,6 @@ fn parse_input(input: String) -> Vec<Entry> {
 #[test]
 fn examples() {
     let entries = parse_input("1-3 a: abcde\n1-3 b: cdefg\n2-9 c: ccccccccc".to_owned());
-    assert!(2 == part1(&entries));
-    assert!(1 == part2(&entries));
+    assert!(2 == solve(&entries, Box::new(policy1)));
+    assert!(1 == solve(&entries, Box::new(policy2)));
 }
