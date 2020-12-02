@@ -2,6 +2,7 @@ use regex::Regex;
 use std::fs;
 
 const INPUT_PATH: &str = "input/day02";
+const PARSE_LINE_REGEX: &str = "(?P<min>[0-9]*)-(?P<max>[0-9]*) (?P<letter>[a-zA-Z]): (?P<password>.*)";
 
 type Entry = (usize, usize, char, String);
 type Policy = dyn Fn(&Entry) -> bool;
@@ -38,8 +39,7 @@ fn parse_input(input: String) -> Vec<Entry> {
             matches["password"].to_owned(),
         )
     }
-
-    let re = Regex::new("(?P<min>[0-9]*)-(?P<max>[0-9]*) (?P<letter>[a-zA-Z]): (?P<password>.*)").expect("invalid regex expression");
+    let re = Regex::new(PARSE_LINE_REGEX).expect("invalid regex expression");
     input.split('\n').map(|x| parse_entry(x, &re)).collect::<Vec<Entry>>()
 }
 
