@@ -46,6 +46,14 @@ fn parse_input(input: String) -> Vec<Entry> {
 #[test]
 fn examples() {
     let entries = parse_input("1-3 a: abcde\n1-3 b: cdefg\n2-9 c: ccccccccc".to_owned());
-    assert!(2 == solve(&entries, Box::new(policy1)));
-    assert!(1 == solve(&entries, Box::new(policy2)));
+    assert!(solve(&entries, Box::new(policy1)) == 2);
+    assert!(solve(&entries, Box::new(policy2)) == 1);
+}
+
+#[test]
+fn puzzle() {
+    let input = fs::read_to_string(INPUT_PATH).expect("failure opening input file");
+    let entries = parse_input(input);
+    assert!(solve(&entries, Box::new(policy1)) == 469);
+    assert!(solve(&entries, Box::new(policy2)) == 267);
 }
