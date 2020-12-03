@@ -1,0 +1,77 @@
+set a 1
+set b 79
+mul b 100
+sub b -100000   # b = 79 * 100 + 100000
+set c b
+sub c -17000    # c = b + 17000
+
+LOOP1
+    set f 1     # f = 1
+    set d 2     # d = 2
+    LOOP2
+        set e 2 # e = 2
+        LOOP3
+            set g d 
+            mul g e
+            sub g b  # g = d * e - b
+            jnz g 2   # if g == 0:
+            set f 0      # f = 0
+            sub e -1 # e++
+            set g e   
+            sub g b  # g = e - b # stop when e == b
+            jnz g -8 # jump to LOOP3
+        sub d -1    # d++
+        set g d     
+        sub g b     # g = d - b # stop when d == b
+        jnz g -13 # jump to LOOP2
+    jnz f 2     # if f == 0:
+    sub h -1        # h++
+    set g b     
+    sub g c     # g = b - c # stop when b == c
+    jnz g 2     # if g == 0:
+    jnz 1 3         # exit LOOP1 and program
+    sub b -17
+    jnz 1 -23   # jump to LOOP1
+
+### Python source
+```python
+a = 1
+b = 107_900
+c = b + 17000
+h = 0
+# test for each x value from b to c
+# stepping 17
+while True:
+    f = 1
+    d = 2
+
+    # test for each d value (from 2)
+    # up until constant d = b
+    while True:
+        e = 2
+
+        # test for each e value
+        # up until constant e = b
+        while True:
+            if d * e - b: f = 0
+            e += 1
+            if e - b: break 
+
+        d += 1
+        if d - b: break
+
+    if f == 0: h += 1
+
+    if b - c: break
+    else: b += 17
+```
+
+### Python source (iteration #2)
+```python
+b = 107_900
+c = b + 17000
+for i in range(b, c, 17):
+    for j in range(2, b):
+        for k in range(2, c):
+            pass
+```
