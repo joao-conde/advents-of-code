@@ -7,10 +7,10 @@ fn main() {
     let input = fs::read_to_string(INPUT_PATH).expect("failure opening input file");
     let map = input.split('\n').map(|line| line.chars().collect()).collect::<Vec<Vec<char>>>();
     println!("Part1: {}", trees_hit(&map, (3, 1)));
-    println!("Part2: {}", p2(&map));
+    println!("Part2: {}", part2(&map));
 }
 
-fn p2(map: &[Vec<char>]) -> u32 {
+fn part2(map: &[Vec<char>]) -> u32 {
     let slopes = [(1, 1), (3, 1), (5, 1), (7, 1), (1, 2)];
     slopes.iter().map(|slope| trees_hit(&map, *slope)).product()
 }
@@ -33,7 +33,7 @@ fn examples() {
     let input = "..##.......\n#...#...#..\n.#....#..#.\n..#.#...#.#\n.#...##..#.\n..#.##.....\n.#.#.#....#\n.#........#\n#.##...#...\n#...##....#\n.#..#...#.#";
     let map = input.split('\n').map(|line| line.chars().collect()).collect::<Vec<Vec<char>>>();
     assert!(trees_hit(&map, (3, 1)) == 7);
-    assert!(p2(&map) == 336);
+    assert!(part2(&map) == 336);
 }
 
 #[test]
@@ -41,5 +41,5 @@ fn puzzle() {
     let input = fs::read_to_string(INPUT_PATH).expect("failure opening input file");
     let map = input.split('\n').map(|line| line.chars().collect()).collect::<Vec<Vec<char>>>();
     assert!(trees_hit(&map, (3, 1)) == 184);
-    assert!(p2(&map) == 2431272960);
+    assert!(part2(&map) == 2431272960);
 }
