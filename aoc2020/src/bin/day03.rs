@@ -16,16 +16,16 @@ fn part2(map: &[Vec<char>]) -> u32 {
 }
 
 fn trees_hit(map: &[Vec<char>], slope: (usize, usize)) -> u32 {
-    let mut tree_hit = 0;
+    let mut trees_hit = 0;
     let (mut x, mut y) = (0, 0);
     let (width, height) = (map[0].len(), map.len());
     while y < height {
-        tree_hit += if map[y][x] == TREE_CHAR { 1 } else { 0 };
+        trees_hit += if map[y][x] == TREE_CHAR { 1 } else { 0 };
         x += slope.0;
         y += slope.1;
         x %= width;
     }
-    tree_hit
+    trees_hit
 }
 
 #[test]
