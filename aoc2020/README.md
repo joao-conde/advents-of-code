@@ -10,7 +10,7 @@ However, after programming a while in C++, you tend to notice common problems in
 
 ## Running
 
-The following assume you are at the same level of this README (`aoc2020/`).
+The following assume you are at Cargo project root level (same as `Cargo.toml`).
 
 ### Running all solutions
 
