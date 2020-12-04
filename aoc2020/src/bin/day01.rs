@@ -1,14 +1,11 @@
 use std::collections::HashSet;
 use std::fs;
 
-const INPUT_PATH: &str = "input/day01";
-const GOAL: i32 = 2020;
-
 fn main() {
-    let input = fs::read_to_string(INPUT_PATH).expect("failure opening input file");
+    let input = fs::read_to_string("input/day01").expect("failure opening input file");
     let nums = parse_input(input);
-    println!("Part1: {}", part1(&nums, GOAL));
-    println!("Part2: {}", part2(&nums, GOAL));
+    println!("Part1: {}", part1(&nums, 2020));
+    println!("Part2: {}", part2(&nums, 2020));
 }
 
 fn part1(nums: &HashSet<i32>, goal: i32) -> i32 {
@@ -43,15 +40,16 @@ fn find_target_pair(nums: &HashSet<i32>, goal: i32) -> Option<(i32, i32)> {
 
 #[test]
 fn examples() {
-    let nums = parse_input("1721\n979\n366\n299\n675\n1456".to_owned());
-    assert!(part1(&nums, GOAL) == 514579);
-    assert!(part2(&nums, GOAL) == 241861950);
+    let input = fs::read_to_string("input/examples/day01").expect("failure opening input file");
+    let nums = parse_input(input);
+    assert!(part1(&nums, 2020) == 514579);
+    assert!(part2(&nums, 2020) == 241861950);
 }
 
 #[test]
 fn puzzle() {
-    let input = fs::read_to_string(INPUT_PATH).expect("failure opening input file");
+    let input = fs::read_to_string("input/day01").expect("failure opening input file");
     let nums = parse_input(input);
-    assert!(part1(&nums, GOAL) == 713184);
-    assert!(part2(&nums, GOAL) == 261244452);
+    assert!(part1(&nums, 2020) == 713184);
+    assert!(part2(&nums, 2020) == 261244452);
 }

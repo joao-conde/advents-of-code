@@ -10,7 +10,7 @@ However, after programming a while in C++, you tend to notice common problems in
 
 ## Running
 
-The following assume you are at Cargo project root level (same as `Cargo.toml`).
+The following assume you are at the project root level (same as `Cargo.toml` and this `README.md`).
 
 ### Running all solutions
 

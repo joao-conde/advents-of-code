@@ -1,22 +1,20 @@
 use regex::Regex;
 use std::fs;
 
-const INPUT_PATH: &str = "input/day04";
-
 fn main() {
-    let input = fs::read_to_string(INPUT_PATH).expect("failure opening input file");
+    let input = fs::read_to_string("input/day04").expect("failure opening input file");
     let passports = input.split("\n\n").collect::<Vec<&str>>();
     println!("Part1: {}", p1(&passports));
     println!("Part2: {}", p2(&passports));
 }
 
-fn p1(passports: &Vec<&str>) -> usize {
+fn p1(passports: &[&str]) -> usize {
     let keys = ["byr", "iyr", "eyr", "hgt", "hcl", "ecl", "pid"];
     passports.iter().filter(|passport| keys.iter().all(|key| passport.contains(key))).count()
 }
 
-fn p2(passports: &Vec<&str>) -> usize {
-    let res = [
+fn p2(passports: &[&str]) -> usize {
+    let regexes = [
         "byr:(19[2-9][0-9]|200[0-2])",
         "iyr:20(1[0-9]|20)",
         "eyr:20(2[0-9]|30)",
@@ -27,11 +25,21 @@ fn p2(passports: &Vec<&str>) -> usize {
     ]
     .iter()
     .map(|re_str| Regex::new(re_str).expect("invalid regex expression"));
-    passports.iter().filter(|passport| res.clone().all(move |re| re.is_match(passport))).count()
+    passports.iter().filter(|passport| regexes.clone().all(move |re| re.is_match(passport))).count()
 }
 
 #[test]
-fn examples() {}
+fn examples() {
+    let input = fs::read_to_string("input/examples/day04").expect("failure opening input file");
+    let passports = input.split("\n\n").collect::<Vec<&str>>();
+    assert!(p1(&passports) == 8);
+    assert!(p2(&passports) == 4);
+}
 
 #[test]
-fn puzzle() {}
+fn puzzle() {
+    let input = fs::read_to_string("input/day04").expect("failure opening input file");
+    let passports = input.split("\n\n").collect::<Vec<&str>>();
+    assert!(p1(&passports) == 256);
+    assert!(p2(&passports) == 198);
+}

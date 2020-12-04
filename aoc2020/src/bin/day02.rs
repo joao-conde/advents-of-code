@@ -1,14 +1,11 @@
 use regex::Regex;
 use std::fs;
 
-const INPUT_PATH: &str = "input/day02";
-const PARSE_LINE_REGEX: &str = "(?P<min>[0-9]*)-(?P<max>[0-9]*) (?P<letter>[a-zA-Z]): (?P<password>.*)";
-
 type Entry = (usize, usize, char, String);
 type Policy = dyn Fn(&Entry) -> bool;
 
 fn main() {
-    let input = fs::read_to_string(INPUT_PATH).expect("failure opening input file");
+    let input = fs::read_to_string("input/day02").expect("failure opening input file");
     let entries = parse_input(input);
     println!("Part1: {}", solve(&entries, Box::new(policy1)));
     println!("Part2: {}", solve(&entries, Box::new(policy2)));
@@ -39,20 +36,21 @@ fn parse_input(input: String) -> Vec<Entry> {
             matches["password"].to_owned(),
         )
     }
-    let re = Regex::new(PARSE_LINE_REGEX).expect("invalid regex expression");
+    let re = Regex::new("(?P<min>[0-9]*)-(?P<max>[0-9]*) (?P<letter>[a-zA-Z]): (?P<password>.*)").expect("invalid regex expression");
     input.split('\n').map(|x| parse_entry(x, &re)).collect::<Vec<Entry>>()
 }
 
 #[test]
 fn examples() {
-    let entries = parse_input("1-3 a: abcde\n1-3 b: cdefg\n2-9 c: ccccccccc".to_owned());
+    let input = fs::read_to_string("input/examples/day02").expect("failure opening input file");
+    let entries = parse_input(input);
     assert!(solve(&entries, Box::new(policy1)) == 2);
     assert!(solve(&entries, Box::new(policy2)) == 1);
 }
 
 #[test]
 fn puzzle() {
-    let input = fs::read_to_string(INPUT_PATH).expect("failure opening input file");
+    let input = fs::read_to_string("input/day02").expect("failure opening input file");
     let entries = parse_input(input);
     assert!(solve(&entries, Box::new(policy1)) == 469);
     assert!(solve(&entries, Box::new(policy2)) == 267);
