@@ -6,6 +6,7 @@ edition = "2018"
 
 [dependencies]
 regex = "1"
+fancy-regex = "0.4.1"
 
 [profile.dev]
 opt-level = 0
