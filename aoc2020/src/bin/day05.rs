@@ -17,20 +17,9 @@ fn main() {
 }
 
 fn seat_id(input: &str) -> i32 {
-    let row = guided_binary_search(&input[0..7], 'F', 'B', 0, 127);
-    let col = guided_binary_search(&input[7..10], 'L', 'R', 0, 7);
+    let row = input[0..7].replace("F", "0").replace("B", "1");
+    let row = i32::from_str_radix(&row, 2).expect("invalid seat string");
+    let col = input[7..10].replace("L", "0").replace("R", "1");
+    let col = i32::from_str_radix(&col, 2).expect("invalid seat string");
     row * 8 + col
-}
-
-fn guided_binary_search(instr: &str, left: char, right: char, mut lb: i32, mut ub: i32) -> i32 {
-    let mut mid = lb + (ub - lb) / 2;
-    for c in instr.chars() {
-        if c == left {
-            ub = mid - 1
-        } else if c == right {
-            lb = mid + 1
-        }
-        mid = lb + (ub - lb) / 2;
-    }
-    mid
 }
