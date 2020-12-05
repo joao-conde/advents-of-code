@@ -2,48 +2,35 @@ use std::fs;
 
 fn main() {
     let input = fs::read_to_string("input/day05").expect("failure opening input file");
-    let seats = input.split("\n");
+    let seats = input.split('\n').map(|seat| seat_id(&seat)).collect::<Vec<i32>>();
 
-    let p1 = seats.clone().map(|seat| seat_id(&seat)).max().unwrap();
+    let p1 = seats.iter().max().expect("there are no seats");
     println!("Part1: {}", p1);
 
-    let mut ids = vec![];
-    for r in 1..126 {
-        for c in 0..7 {
-            ids.push(r * 8 + c);
-        }
-    }
-
-    let seats = seats.map(|seat| seat_id(&seat)).collect::<Vec<i32>>();
-    for p in &seats {
-        if !seats.contains(&&(*p + 1)) && seats.contains(&&(*p + 2)) {
-            println!("Part2: {}", *p + 1);
-        }
-    }
+    let p2 = seats
+        .iter()
+        .filter(|seat| !seats.contains(&(*seat + 1)) && seats.contains(&(*seat + 2)))
+        .map(|x| x + 1)
+        .next()
+        .expect("no seat available");
+    println!("Part2: {:?}", p2);
 }
 
 fn seat_id(input: &str) -> i32 {
-    let (mut lb, mut ub) = (0 as i32, 127 as i32);
-    let mut row = lb + (ub - lb) / 2;
-    for c in input[0..7].chars() {
-        match c {
-            'F' => ub = row - 1,
-            'B' => lb = row + 1,
-            _ => panic!(),
-        }
-        row = lb + (ub - lb) / 2;
-    }
-
-    let (mut lb, mut ub) = (0 as i32, 7 as i32);
-    let mut col = lb + (ub - lb) / 2;
-    for c in input[7..10].chars() {
-        match c {
-            'L' => ub = col - 1,
-            'R' => lb = col + 1,
-            _ => panic!(),
-        }
-        col = lb + (ub - lb) / 2;
-    }
-
+    let row = guided_binary_search(&input[0..7], 'F', 'B', 0, 127);
+    let col = guided_binary_search(&input[7..10], 'L', 'R', 0, 7);
     row * 8 + col
+}
+
+fn guided_binary_search(instr: &str, left: char, right: char, mut lb: i32, mut ub: i32) -> i32 {
+    let mut mid = lb + (ub - lb) / 2;
+    for c in instr.chars() {
+        if c == left {
+            ub = mid - 1
+        } else if c == right {
+            lb = mid + 1
+        }
+        mid = lb + (ub - lb) / 2;
+    }
+    mid
 }
