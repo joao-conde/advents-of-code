@@ -13,7 +13,7 @@ fn main() {
         .map(|x| x + 1)
         .next()
         .expect("no seat available");
-    println!("Part2: {:?}", p2);
+    println!("Part2: {}", p2);
 }
 
 fn seat_id(input: &str) -> i32 {
