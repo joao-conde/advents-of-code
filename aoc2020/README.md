@@ -8,6 +8,8 @@ After that, I did a lot of Python and JavaScript for web development and some Ja
 
 However, after programming a while in C++, you tend to notice common problems in systems programming (not related to C++, you would find such problems in C as well). **Issues like dangling pointers, use-after-frees, double frees, data races, and others. Rust introduces an ownership and borrowing memory model which completely eradicates these issues.** I don't know about you, but after knowing about this, how can I ever go back to C or C++?
 
+<img src="https://rustacean.net/assets/cuddlyferris.png" width=50% height=50%>
+
 ## Running
 
 The following assume you are at the project root level (same as `Cargo.toml` and this `README.md`).
