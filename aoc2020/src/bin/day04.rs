@@ -27,19 +27,3 @@ fn p2(passports: &[&str]) -> usize {
     .map(|re_str| Regex::new(re_str).expect("invalid regex expression"));
     passports.iter().filter(|passport| regexes.clone().all(move |re| re.is_match(passport))).count()
 }
-
-#[test]
-fn examples() {
-    let input = fs::read_to_string("input/examples/day04").expect("failure opening input file");
-    let passports = input.split("\n\n").collect::<Vec<&str>>();
-    assert!(p1(&passports) == 8);
-    assert!(p2(&passports) == 4);
-}
-
-#[test]
-fn puzzle() {
-    let input = fs::read_to_string("input/day04").expect("failure opening input file");
-    let passports = input.split("\n\n").collect::<Vec<&str>>();
-    assert!(p1(&passports) == 256);
-    assert!(p2(&passports) == 198);
-}

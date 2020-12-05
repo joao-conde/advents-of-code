@@ -37,19 +37,3 @@ fn find_target_pair(nums: &HashSet<i32>, goal: i32) -> Option<(i32, i32)> {
     }
     None
 }
-
-#[test]
-fn examples() {
-    let input = fs::read_to_string("input/examples/day01").expect("failure opening input file");
-    let nums = parse_input(input);
-    assert!(part1(&nums, 2020) == 514579);
-    assert!(part2(&nums, 2020) == 241861950);
-}
-
-#[test]
-fn puzzle() {
-    let input = fs::read_to_string("input/day01").expect("failure opening input file");
-    let nums = parse_input(input);
-    assert!(part1(&nums, 2020) == 713184);
-    assert!(part2(&nums, 2020) == 261244452);
-}

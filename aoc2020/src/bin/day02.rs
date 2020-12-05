@@ -39,19 +39,3 @@ fn parse_input(input: String) -> Vec<Entry> {
     let re = Regex::new("(?P<min>[0-9]*)-(?P<max>[0-9]*) (?P<letter>[a-zA-Z]): (?P<password>.*)").expect("invalid regex expression");
     input.split('\n').map(|x| parse_entry(x, &re)).collect::<Vec<Entry>>()
 }
-
-#[test]
-fn examples() {
-    let input = fs::read_to_string("input/examples/day02").expect("failure opening input file");
-    let entries = parse_input(input);
-    assert!(solve(&entries, Box::new(policy1)) == 2);
-    assert!(solve(&entries, Box::new(policy2)) == 1);
-}
-
-#[test]
-fn puzzle() {
-    let input = fs::read_to_string("input/day02").expect("failure opening input file");
-    let entries = parse_input(input);
-    assert!(solve(&entries, Box::new(policy1)) == 469);
-    assert!(solve(&entries, Box::new(policy2)) == 267);
-}

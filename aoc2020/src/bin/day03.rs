@@ -21,19 +21,3 @@ fn trees_hit(map: &[Vec<char>], slope: (usize, usize)) -> u32 {
     }
     trees_hit
 }
-
-#[test]
-fn examples() {
-    let input = fs::read_to_string("input/examples/day03").expect("failure opening input file");
-    let map = input.split('\n').map(|line| line.chars().collect()).collect::<Vec<Vec<char>>>();
-    assert!(trees_hit(&map, (3, 1)) == 7);
-    assert!(part2(&map) == 336);
-}
-
-#[test]
-fn puzzle() {
-    let input = fs::read_to_string("input/day03").expect("failure opening input file");
-    let map = input.split('\n').map(|line| line.chars().collect()).collect::<Vec<Vec<char>>>();
-    assert!(trees_hit(&map, (3, 1)) == 184);
-    assert!(part2(&map) == 2431272960);
-}

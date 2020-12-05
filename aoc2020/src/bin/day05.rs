@@ -7,7 +7,6 @@ fn main() {
     let p1 = seats.clone().map(|seat| seat_id(&seat)).max().unwrap();
     println!("Part1: {}", p1);
 
-    
     let mut ids = vec![];
     for r in 1..126 {
         for c in 0..7 {
@@ -15,14 +14,12 @@ fn main() {
         }
     }
 
-    
     let seats = seats.map(|seat| seat_id(&seat)).collect::<Vec<i32>>();
     for p in &seats {
-        if !seats.contains(&&(*p + 1)) && seats.contains(&&(*p + 2)){
+        if !seats.contains(&&(*p + 1)) && seats.contains(&&(*p + 2)) {
             println!("Part2: {}", *p + 1);
         }
     }
-
 }
 
 fn seat_id(input: &str) -> i32 {
@@ -32,7 +29,7 @@ fn seat_id(input: &str) -> i32 {
         match c {
             'F' => ub = row - 1,
             'B' => lb = row + 1,
-            _ => panic!()
+            _ => panic!(),
         }
         row = lb + (ub - lb) / 2;
     }
@@ -43,7 +40,7 @@ fn seat_id(input: &str) -> i32 {
         match c {
             'L' => ub = col - 1,
             'R' => lb = col + 1,
-            _ => panic!()
+            _ => panic!(),
         }
         col = lb + (ub - lb) / 2;
     }

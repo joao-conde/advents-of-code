@@ -12,26 +12,10 @@ However, after programming a while in C++, you tend to notice common problems in
 
 The following assume you are at the project root level (same as `Cargo.toml` and this `README.md`).
 
-### Running all solutions
-
-You can run the unit tests for all solutions with:
-
-```
-cargo test
-```
-
-Puzzle results will not be printed.
-
 ### Running one solution
 
 To run the solution for a given day:
 
 ```
 cargo run --bin day[01-25]
-```
-
-Run with `--release` for faster execution but longer compilation time:
-
-```
-cargo run --release --bin day[01-25]
 ```
