@@ -2,17 +2,13 @@ use std::fs;
 
 fn main() {
     let input = fs::read_to_string("input/day05").expect("failure opening input file");
-    let seats = input.split('\n').map(|seat| seat_id(&seat)).collect::<Vec<i32>>();
+    let mut seats = input.split('\n').map(|seat| seat_id(&seat)).collect::<Vec<i32>>();
 
     let p1 = seats.iter().max().expect("there are no seats");
     println!("Part1: {}", p1);
 
-    let p2 = seats
-        .iter()
-        .filter(|seat| !seats.contains(&(*seat + 1)) && seats.contains(&(*seat + 2)))
-        .map(|x| x + 1)
-        .next()
-        .expect("no seat available");
+    seats.sort();
+    let p2 = seats.windows(2).filter(|seats| seats[1] - seats[0] == 2).next().expect("no seat available")[0] + 1;
     println!("Part2: {}", p2);
 }
 
