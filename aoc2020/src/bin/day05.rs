@@ -8,7 +8,7 @@ fn main() {
     println!("Part1: {}", p1);
 
     seats.sort();
-    let p2 = seats.windows(2).filter(|seats| seats[1] - seats[0] == 2).next().expect("no seat available")[0] + 1;
+    let p2 = seats.windows(2).find(|seats| seats[1] - seats[0] == 2).expect("no seat available")[0] + 1;
     println!("Part2: {}", p2);
 }
 

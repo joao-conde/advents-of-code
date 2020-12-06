@@ -3,7 +3,7 @@ use std::fs;
 
 fn main() {
     let input = fs::read_to_string("input/day06").expect("failure opening input file");
-    let groups: Vec<Vec<&str>> = input.split("\n\n").map(|x| x.split("\n").collect()).collect();
+    let groups: Vec<Vec<&str>> = input.split("\n\n").map(|x| x.split('\n').collect()).collect();
 
     let groups_counts: Vec<HashMap<char, usize>> = groups.iter().map(|group| answers_map(group)).collect();
 
