@@ -10,11 +10,9 @@ However, after programming a while in C++, you tend to notice common problems in
 
 <img src="https://rustacean.net/assets/cuddlyferris.png" width=50% height=50%>
 
-## Running
+## Running each solution
 
 The following assume you are at the project root level (same as `Cargo.toml` and this `README.md`).
-
-### Running one solution
 
 To run the solution for a given day:
 
