@@ -16,6 +16,12 @@ The following assume you are at the project root level (same as `Cargo.toml` and
 
 To run the solution for a given day:
 
+```bash
+$ cargo run --bin day[01-25]
 ```
-cargo run --bin day[01-25]
+
+## Running all
+
+```
+$ for i in {1..7}; do cargo run --release --bin day0$i; done;
 ```
