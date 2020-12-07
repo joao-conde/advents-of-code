@@ -4,10 +4,9 @@ fn main() {
     let input = fs::read_to_string("input/day05").expect("failure opening input file");
     let mut seats = input.split('\n').map(|seat| seat_id(&seat)).collect::<Vec<i32>>();
 
-    let p1 = seats.iter().max().expect("there are no seats");
-    println!("Part1: {}", p1);
-
     seats.sort();
+    println!("Part1: {}", seats.last().expect("zero seat IDs provided"));
+    
     let p2 = seats.windows(2).find(|seats| seats[1] - seats[0] == 2).expect("no seat available")[0] + 1;
     println!("Part2: {}", p2);
 }
