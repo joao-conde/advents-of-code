@@ -6,29 +6,29 @@ type BagRules = HashMap<String, Vec<(u32, String)>>;
 
 fn main() {
     let input = fs::read_to_string("input/day07").expect("failure opening input file");
-    let map = parse_input(&input);
+    let rules = parse_input(&input);
     let my_bag = "shiny gold";
-    let p1 = map.keys().filter(|key| **key != my_bag).map(|key| closure(key, &map)).filter(|closure| closure.contains(&my_bag)).count();
+    let p1 = rules.keys().filter(|key| **key != my_bag).map(|key| closure(key, &rules)).filter(|closure| closure.contains(&my_bag)).count();
     println!("Part1: {}", p1);
-    println!("Part2: {}", num_bags(my_bag, &map) - 1);
+    println!("Part2: {}", num_bags(my_bag, &rules) - 1);
 }
 
-fn closure<'a>(bag: &'a str, map: &'a BagRules) -> Vec<&'a str> {
-    map.get(bag)
+fn closure<'a>(bag: &'a str, rules: &'a BagRules) -> Vec<&'a str> {
+    rules.get(bag)
         .map(|bags| {
             bags.iter().fold(vec![bag], |mut acc, (_, bag)| {
-                acc.append(&mut closure(bag, &map));
+                acc.append(&mut closure(bag, &rules));
                 acc
             })
         })
         .unwrap_or_else(Vec::new)
 }
 
-fn num_bags(bag: &str, map: &BagRules) -> u32 {
-    map.get(bag)
+fn num_bags(bag: &str, rules: &BagRules) -> u32 {
+    rules.get(bag)
         .map(|bags| {
             bags.iter().fold(1, |mut acc, (quant, bag)| {
-                acc += quant * num_bags(bag, &map);
+                acc += quant * num_bags(bag, &rules);
                 acc
             })
         })
