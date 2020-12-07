@@ -2,7 +2,6 @@ use regex::Regex;
 use std::fs;
 
 type Entry = (usize, usize, char, String);
-type Policy = dyn Fn(&Entry) -> bool;
 
 fn main() {
     let input = fs::read_to_string("input/day02").expect("failure opening input file");
@@ -11,7 +10,7 @@ fn main() {
     println!("Part2: {}", solve(&entries, Box::new(policy2)));
 }
 
-fn solve(entries: &[Entry], policy: Box<Policy>) -> usize {
+fn solve(entries: &[Entry], policy: Box<dyn Fn(&Entry) -> bool>) -> usize {
     entries.iter().filter(|entry| policy(entry)).count()
 }
 
@@ -36,6 +35,6 @@ fn parse_input(input: String) -> Vec<Entry> {
             matches["password"].to_owned(),
         )
     }
-    let re = Regex::new("(?P<min>[0-9]*)-(?P<max>[0-9]*) (?P<letter>[a-zA-Z]): (?P<password>.*)").expect("invalid regex expression");
+    let re = Regex::new(r"(?P<min>[0-9]*)-(?P<max>[0-9]*) (?P<letter>[a-zA-Z]): (?P<password>.*)").expect("invalid regex expression");
     input.split('\n').map(|x| parse_entry(x, &re)).collect::<Vec<Entry>>()
 }
