@@ -1,6 +1,6 @@
 [package]
 name = "aoc2020"
-version = "0.5.0"
+version = "0.7.0"
 authors = ["João Conde <joaodiasconde@gmail.com>"]
 edition = "2018"
 default-run = "aoc2020"
@@ -9,7 +9,7 @@ default-run = "aoc2020"
 regex = "1"
 
 [profile.dev]
-opt-level = 0
+opt-level = 3
 
 [profile.release]
 opt-level = 3
