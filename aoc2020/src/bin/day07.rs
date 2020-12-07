@@ -14,7 +14,8 @@ fn main() {
 }
 
 fn closure<'a>(bag: &'a str, rules: &'a BagRules) -> Vec<&'a str> {
-    rules.get(bag)
+    rules
+        .get(bag)
         .map(|bags| {
             bags.iter().fold(vec![bag], |mut acc, (_, bag)| {
                 acc.append(&mut closure(bag, &rules));
@@ -25,7 +26,8 @@ fn closure<'a>(bag: &'a str, rules: &'a BagRules) -> Vec<&'a str> {
 }
 
 fn num_bags(bag: &str, rules: &BagRules) -> u32 {
-    rules.get(bag)
+    rules
+        .get(bag)
         .map(|bags| {
             bags.iter().fold(1, |mut acc, (quant, bag)| {
                 acc += quant * num_bags(bag, &rules);
@@ -36,14 +38,14 @@ fn num_bags(bag: &str, rules: &BagRules) -> u32 {
 }
 
 fn parse_input(input: &str) -> BagRules {
-    let bag_re = Regex::new(r"^(?P<bag>\w+ \w+) bags contain").unwrap();
-    let contents_re = Regex::new(r"(?P<quantity>[0-9]+) (?P<bag>\w+ \w+)").unwrap();
+    let bag_re = Regex::new(r"^(?P<bag>\w+ \w+) bags contain").expect("invalid regex expression");
+    let contents_re = Regex::new(r"(?P<quantity>[0-9]+) (?P<bag>\w+ \w+)").expect("invalid regex expression");
     let mut rules = HashMap::new();
     for line in input.lines() {
-        let bag = bag_re.captures(line).unwrap()["bag"].to_string();
+        let bag = bag_re.captures(line).expect("no match")["bag"].to_string();
         for capture in contents_re.captures_iter(line) {
             let child_bag = capture["bag"].to_string();
-            let quantity = capture["quantity"].parse().unwrap();
+            let quantity = capture["quantity"].parse().expect("invalid quantity, must be unsigned int");
             rules.entry(bag.clone()).or_insert_with(Vec::new).push((quantity, child_bag));
         }
     }
