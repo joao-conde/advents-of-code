@@ -23,9 +23,9 @@ fn p1(vm: &mut VM) -> (i32, bool) {
 fn p2(vm: &VM) -> (i32, bool) {
     vm.program
         .iter()
-        .map(|_| vm.clone())
         .enumerate()
-        .map(|(i, mut test_vm)| {
+        .map(|(i, _)| {
+            let mut test_vm = vm.clone();
             test_vm.program[i] = match test_vm.program[i] {
                 Instruction::JMP(_) => Instruction::NOP,
                 Instruction::NOP => Instruction::JMP(1),
