@@ -21,7 +21,8 @@ fn p1(console: &mut RustyConsole) -> (i32, bool) {
 }
 
 fn p2(console: &RustyConsole) -> (i32, bool) {
-    console.program
+    console
+        .program
         .iter()
         .enumerate()
         .map(|(i, _)| {
