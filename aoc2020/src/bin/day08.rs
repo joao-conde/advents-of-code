@@ -21,18 +21,19 @@ fn p1(vm: &mut VM) -> (i32, bool) {
 }
 
 fn p2(vm: &VM) -> i32 {
-    for i in 0..vm.program.len() {
-        let mut test_vm = vm.clone();
-        test_vm.program[i] = match test_vm.program[i] {
-            Instruction::JMP(_) => Instruction::NOP,
-            Instruction::NOP => Instruction::JMP(1),
-            _ => test_vm.program[i],
-        };
-
-        let (acc, looped) = p1(&mut test_vm);
-        if !looped {
-            return acc;
-        }
-    }
-    0
+    vm.program
+        .iter()
+        .map(|_| vm.clone())
+        .enumerate()
+        .map(|(i, mut test_vm)| {
+            test_vm.program[i] = match test_vm.program[i] {
+                Instruction::JMP(_) => Instruction::NOP,
+                Instruction::NOP => Instruction::JMP(1),
+                _ => test_vm.program[i],
+            };
+            p1(&mut test_vm)
+        })
+        .find(|(_, looped)| !*looped)
+        .expect("no fix for the infinite loop")
+        .0
 }
