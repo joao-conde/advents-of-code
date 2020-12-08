@@ -1,51 +1,38 @@
-use aoc2020::vm::VM;
+use aoc2020::vm::{Instruction, VM};
 use std::collections::HashSet;
 use std::fs;
 use std::str::FromStr;
 
 fn main() {
     let input = fs::read_to_string("input/day08").expect("failure opening input file");
-    println!("Part1: {}", p1(&input).0);
-    println!("Part2: {}", p2(&input));
+    let vm = VM::from_str(&input).expect("invalid list of instructions");
+    println!("Part1: {}", p1(&mut vm.clone()).0);
+    println!("Part2: {}", p2(&vm));
 }
 
-fn p1(input: &str) -> (i32, bool) {
-    let mut vm = VM::from_str(&input).unwrap();
+fn p1(vm: &mut VM) -> (i32, bool) {
     let mut looped = false;
     let mut pcs = HashSet::new();
-    while !looped {
+    while !vm.terminated && !looped {
         vm.process_instr();
         looped = !pcs.insert(vm.pc);
     }
     (vm.accumulator, looped)
 }
 
-fn p2(input: &str) -> i32 {
-    let mut instructions = input.split('\n').map(|s| s.to_string()).collect::<Vec<String>>();
-    for i in 0..instructions.len() {
-        let original = instructions[i].clone();
-
-        instructions[i] = if instructions[i].contains("nop") {
-            instructions[i].replace("nop", "jmp")
-        } else if instructions[i].contains("jmp") {
-            instructions[i].replace("jmp", "nop")
-        } else {
-            continue;
+fn p2(vm: &VM) -> i32 {
+    for i in 0..vm.program.len() {
+        let mut test_vm = vm.clone();
+        test_vm.program[i] = match test_vm.program[i] {
+            Instruction::JMP(_) => Instruction::NOP,
+            Instruction::NOP => Instruction::JMP(1),
+            _ => test_vm.program[i],
         };
 
-        let instr_str = instructions.join("\n");
-
-        let mut vm = VM::from_str(&instr_str).unwrap();
-        let mut looped = false;
-        let mut pcs = HashSet::new();
-        while !vm.terminated && !looped {
-            vm.process_instr();
-            looped = !pcs.insert(vm.pc);
-        }
+        let (acc, looped) = p1(&mut test_vm);
         if !looped {
-            return vm.accumulator;
+            return acc;
         }
-        instructions[i] = original;
     }
-    -1
+    0
 }

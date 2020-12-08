@@ -1,7 +1,7 @@
 use std::num::ParseIntError;
 use std::str::FromStr;
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct VM {
     pub pc: i32,
     pub program: Vec<Instruction>,
@@ -9,7 +9,7 @@ pub struct VM {
     pub terminated: bool,
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone, Copy)]
 pub enum Instruction {
     ACC(i32),
     JMP(i32),
