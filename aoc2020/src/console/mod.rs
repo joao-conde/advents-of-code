@@ -6,7 +6,6 @@ pub struct RustyConsole {
     pub pc: i32,
     pub program: Vec<Instruction>,
     pub accumulator: i32,
-    pub terminated: bool,
 }
 
 #[derive(Clone, Copy, Debug)]
@@ -33,7 +32,10 @@ impl RustyConsole {
             Instruction::NOP => (),
         }
         self.pc += jmp;
-        self.terminated = (self.pc as usize) >= self.program.len();
+    }
+
+    pub fn terminated(&self) -> bool {
+        (self.pc as usize) >= self.program.len()
     }
 }
 
@@ -43,7 +45,7 @@ impl FromStr for RustyConsole {
         let instructions =
             program.split('\n').map(|instr| Instruction::from_str(instr)).collect::<Result<Vec<Instruction>, InstructionError>>()?;
 
-        Ok(RustyConsole { pc: 0, program: instructions, accumulator: 0, terminated: false })
+        Ok(RustyConsole { pc: 0, program: instructions, accumulator: 0 })
     }
 }
 

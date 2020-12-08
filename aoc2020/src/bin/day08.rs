@@ -13,7 +13,7 @@ fn main() {
 fn p1(console: &mut RustyConsole) -> (i32, bool) {
     let mut looped = false;
     let mut pcs = HashSet::new();
-    while !console.terminated && !looped {
+    while !console.terminated() && !looped {
         console.step();
         looped = !pcs.insert(console.pc);
     }
