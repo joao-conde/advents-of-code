@@ -6,7 +6,7 @@ fn main() {
 
     seats.sort();
     println!("Part1: {}", seats.last().expect("zero seat IDs provided"));
-    
+
     let p2 = seats.windows(2).find(|seats| seats[1] - seats[0] == 2).expect("no seat available")[0] + 1;
     println!("Part2: {}", p2);
 }
