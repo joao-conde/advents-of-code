@@ -1,61 +1,51 @@
-use std::fs;
+use aoc2020::vm::VM;
 use std::collections::HashSet;
+use std::fs;
+use std::str::FromStr;
 
 fn main() {
     let input = fs::read_to_string("input/day08").expect("failure opening input file");
-
-    let mut instructions = input.split('\n').into_iter().map(|s| s.to_owned()).collect();
-
-    let (acc, _) = emulate(&instructions);
-    println!("Part1: {}", acc);
-
-    let acc = mutate(&mut instructions);
-    println!("Part2: {}", acc)
+    println!("Part1: {}", p1(&input).0);
+    println!("Part2: {}", p2(&input));
 }
 
-fn mutate(instructions: &mut Vec<String>) -> i64 {
+fn p1(input: &str) -> (i32, bool) {
+    let mut vm = VM::from_str(&input).unwrap();
+    let mut looped = false;
+    let mut pcs = HashSet::new();
+    while !looped {
+        vm.process_instr();
+        looped = !pcs.insert(vm.pc);
+    }
+    (vm.accumulator, looped)
+}
+
+fn p2(input: &str) -> i32 {
+    let mut instructions = input.split('\n').map(|s| s.to_string()).collect::<Vec<String>>();
     for i in 0..instructions.len() {
         let original = instructions[i].clone();
-    
-        instructions[i] = if instructions[i].contains("nop"){
-            instructions[i].replace("nop", "jmp")
-        } else {
-            instructions[i].replace("jmp", "nop")
-        };
-        
-        let (acc, looped) = emulate(&instructions);
-        instructions[i] = original;
 
-        if !looped {
-            return acc;
+        instructions[i] = if instructions[i].contains("nop") {
+            instructions[i].replace("nop", "jmp")
+        } else if instructions[i].contains("jmp") {
+            instructions[i].replace("jmp", "nop")
+        } else {
+            continue;
+        };
+
+        let instr_str = instructions.join("\n");
+
+        let mut vm = VM::from_str(&instr_str).unwrap();
+        let mut looped = false;
+        let mut pcs = HashSet::new();
+        while !vm.terminated && !looped {
+            vm.process_instr();
+            looped = !pcs.insert(vm.pc);
         }
+        if !looped {
+            return vm.accumulator;
+        }
+        instructions[i] = original;
     }
     -1
-}
-
-fn emulate(instructions: &Vec<String>) -> (i64, bool) {
-    let mut set = HashSet::new();
-    let mut looped = false;
-    let mut pc: i64 = 0;
-    let mut acc: i64 = 0;
-    while (pc as usize) < instructions.len() {
-        if set.contains(&pc) {
-            looped = true;
-            break;
-        }
-        set.insert(pc);
-        let line = instructions[pc as usize].split(" ").collect::<Vec<&str>>();
-        let (op, arg) = (line[0], line[1]);
-        let arg = arg.parse::<i64>().unwrap();
-        let mut jmp: i64 = 1;
-        match op {
-            "acc" => acc += arg,
-            "jmp" => jmp = arg,
-            "nop" => (),
-            _ => panic!("op not recognized")
-        }
-        
-        pc += jmp;
-    }
-    (acc, looped)
 }
