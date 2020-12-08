@@ -7,7 +7,7 @@ fn main() {
     let input = fs::read_to_string("input/day08").expect("failure opening input file");
     let vm = VM::from_str(&input).expect("invalid list of instructions");
     println!("Part1: {}", p1(&mut vm.clone()).0);
-    println!("Part2: {}", p2(&vm));
+    println!("Part2: {}", p2(&vm).0);
 }
 
 fn p1(vm: &mut VM) -> (i32, bool) {
@@ -20,7 +20,7 @@ fn p1(vm: &mut VM) -> (i32, bool) {
     (vm.accumulator, looped)
 }
 
-fn p2(vm: &VM) -> i32 {
+fn p2(vm: &VM) -> (i32, bool) {
     vm.program
         .iter()
         .map(|_| vm.clone())
@@ -35,5 +35,4 @@ fn p2(vm: &VM) -> i32 {
         })
         .find(|(_, looped)| !*looped)
         .expect("no fix for the infinite loop")
-        .0
 }
