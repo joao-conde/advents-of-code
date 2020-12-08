@@ -10,9 +10,9 @@ pub struct RustyConsole {
 
 #[derive(Clone, Copy, Debug)]
 pub enum Instruction {
-    ACC(i32),
-    JMP(i32),
-    NOP,
+    Acc(i32),
+    Jmp(i32),
+    Nop,
 }
 
 #[derive(Debug)]
@@ -20,16 +20,22 @@ pub enum InstructionError {
     MissingOperation,
     MissingArgument,
     InvalidOperation(String),
-    InvalidArgumentValue(ParseIntError),
+    InvalidArgument(ParseIntError),
 }
 
 impl RustyConsole {
+    pub fn run(&mut self) {
+        while !self.terminated() {
+            self.step()
+        }
+    }
+
     pub fn step(&mut self) {
         let mut jmp = 1;
         match self.program[self.pc as usize] {
-            Instruction::ACC(arg) => self.accumulator += arg,
-            Instruction::JMP(arg) => jmp = arg,
-            Instruction::NOP => (),
+            Instruction::Acc(arg) => self.accumulator += arg,
+            Instruction::Jmp(arg) => jmp = arg,
+            Instruction::Nop => (),
         }
         self.pc += jmp;
     }
@@ -55,11 +61,11 @@ impl FromStr for Instruction {
         let mut fields = instruction.split(' ');
         let op = fields.next().ok_or(InstructionError::MissingOperation)?;
         let arg = fields.next().ok_or(InstructionError::MissingArgument)?;
-        let arg = arg.parse::<i32>().map_err(InstructionError::InvalidArgumentValue)?;
+        let arg = arg.parse::<i32>().map_err(InstructionError::InvalidArgument)?;
         match op {
-            "acc" => Ok(Instruction::ACC(arg)),
-            "jmp" => Ok(Instruction::JMP(arg)),
-            "nop" => Ok(Instruction::NOP),
+            "acc" => Ok(Instruction::Acc(arg)),
+            "jmp" => Ok(Instruction::Jmp(arg)),
+            "nop" => Ok(Instruction::Nop),
             other => Err(InstructionError::InvalidOperation(other.to_string())),
         }
     }

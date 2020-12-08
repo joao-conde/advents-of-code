@@ -28,8 +28,8 @@ fn p2(console: &RustyConsole) -> (i32, bool) {
         .map(|(i, _)| {
             let mut test_console = console.clone();
             test_console.program[i] = match test_console.program[i] {
-                Instruction::JMP(_) => Instruction::NOP,
-                Instruction::NOP => Instruction::JMP(1),
+                Instruction::Jmp(_) => Instruction::Nop,
+                Instruction::Nop => Instruction::Jmp(1),
                 _ => test_console.program[i],
             };
             p1(&mut test_console)
