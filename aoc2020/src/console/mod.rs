@@ -2,7 +2,7 @@ use std::num::ParseIntError;
 use std::str::FromStr;
 
 #[derive(Debug, Clone)]
-pub struct VM {
+pub struct RustyConsole {
     pub pc: i32,
     pub program: Vec<Instruction>,
     pub accumulator: i32,
@@ -24,7 +24,7 @@ pub enum InstructionError {
     InvalidArgumentValue(ParseIntError),
 }
 
-impl VM {
+impl RustyConsole {
     pub fn step(&mut self) {
         let mut jmp = 1;
         match self.program[self.pc as usize] {
@@ -37,13 +37,13 @@ impl VM {
     }
 }
 
-impl FromStr for VM {
+impl FromStr for RustyConsole {
     type Err = InstructionError;
     fn from_str(program: &str) -> Result<Self, Self::Err> {
         let instructions =
             program.split('\n').map(|instr| Instruction::from_str(instr)).collect::<Result<Vec<Instruction>, InstructionError>>()?;
 
-        Ok(VM { pc: 0, program: instructions, accumulator: 0, terminated: false })
+        Ok(RustyConsole { pc: 0, program: instructions, accumulator: 0, terminated: false })
     }
 }
 
