@@ -25,7 +25,7 @@ pub enum InstructionError {
 }
 
 impl VM {
-    pub fn process_instr(&mut self) {
+    pub fn step(&mut self) {
         let mut jmp = 1;
         match self.program[self.pc as usize] {
             Instruction::ACC(arg) => self.accumulator += arg,

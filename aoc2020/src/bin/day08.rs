@@ -14,7 +14,7 @@ fn p1(vm: &mut VM) -> (i32, bool) {
     let mut looped = false;
     let mut pcs = HashSet::new();
     while !vm.terminated && !looped {
-        vm.process_instr();
+        vm.step();
         looped = !pcs.insert(vm.pc);
     }
     (vm.accumulator, looped)
