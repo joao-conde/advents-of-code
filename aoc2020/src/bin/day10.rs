@@ -22,7 +22,7 @@ fn main() {
     for jolt in jolts {
         match jolt {
             0 => dp[jolt] = 1,
-            1 => dp[jolt] += dp[jolt - 1],
+            1 => dp[jolt] = 1,
             2 => dp[jolt] += dp[jolt - 1] + dp[jolt - 2],
             _ => dp[jolt] = dp[jolt - 1] + dp[jolt - 2] + dp[jolt - 3],
         }
