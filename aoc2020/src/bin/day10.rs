@@ -14,7 +14,7 @@ fn main() {
     });
     println!("Part1: {}", diffs[&1] * diffs[&3]);
 
-    // Part 2 example
+    // Part 2 example (sum last 3 numbers, not positions)
     // 0 1 4 5 6 7 10 11 12 15 16 19 22
     // 1 1 1 1 2 4  4  4  8  8  8  8  8
     let max = jolts[jolts.len() - 1];
