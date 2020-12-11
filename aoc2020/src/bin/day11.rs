@@ -53,10 +53,12 @@ fn visible2(seats: &Grid, i: usize, j: usize) -> Vec<&char> {
     [(-1, -1), (-1, 0), (-1, 1), (0, -1), (0, 1), (1, -1), (1, 0), (1, 1)]
         .iter()
         .map(|(di, dj)| {
-            let mut chars = vec![];
+            let mut visible = vec![];
             let mut mult = 1;
-            while let Some(c) = seats.get((i as i32 + di * mult) as usize).and_then(|row| row.get((j as i32 + dj * mult) as usize)) {
-                chars.push(c);
+            let i = (i as i32 + di * mult) as usize;
+            let j = (j as i32 + dj * mult) as usize;
+            while let Some(c) = seats.get(i).and_then(|row| row.get(j)) {
+                visible.push(c);
                 mult += 1;
                 match *c {
                     OCCUPIED => break,
@@ -64,7 +66,7 @@ fn visible2(seats: &Grid, i: usize, j: usize) -> Vec<&char> {
                     _ => continue,
                 }
             }
-            chars
+            visible
         })
         .flatten()
         .collect()
