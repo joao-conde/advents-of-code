@@ -55,9 +55,7 @@ fn visible2(seats: &Grid, i: usize, j: usize) -> Vec<&char> {
         .map(|(di, dj)| {
             let mut visible = vec![];
             let mut mult = 1;
-            let i = (i as i32 + di * mult) as usize;
-            let j = (j as i32 + dj * mult) as usize;
-            while let Some(c) = seats.get(i).and_then(|row| row.get(j)) {
+            while let Some(c) = seats.get((i as i32 + di * mult) as usize).and_then(|row| row.get((j as i32 + dj * mult) as usize)) {
                 visible.push(c);
                 mult += 1;
                 match *c {
