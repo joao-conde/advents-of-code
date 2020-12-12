@@ -6,11 +6,11 @@ type Entry = (usize, usize, char, String);
 fn main() {
     let input = fs::read_to_string("input/day02").expect("failure opening input file");
     let entries = parse_input(input);
-    println!("Part1: {}", solve(&entries, Box::new(policy1)));
-    println!("Part2: {}", solve(&entries, Box::new(policy2)));
+    println!("Part1: {}", solve(&entries, policy1));
+    println!("Part2: {}", solve(&entries, policy2));
 }
 
-fn solve(entries: &[Entry], policy: Box<dyn Fn(&Entry) -> bool>) -> usize {
+fn solve(entries: &[Entry], policy: fn(&Entry) -> bool) -> usize {
     entries.iter().filter(|entry| policy(entry)).count()
 }
 

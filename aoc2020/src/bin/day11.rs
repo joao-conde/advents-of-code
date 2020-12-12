@@ -1,8 +1,7 @@
 use std::fs;
 
 type Grid = Vec<Vec<char>>;
-type VisibleFn = dyn Fn(&Grid, usize, usize) -> Vec<&char>;
-type StepFn = dyn Fn(&Grid, &Box<VisibleFn>, usize) -> Grid;
+type VisibleFn = fn(&Grid, usize, usize) -> Vec<&char>;
 
 const OCCUPIED: char = '#';
 const EMPTY: char = 'L';
@@ -11,14 +10,14 @@ const FLOOR: char = '.';
 fn main() {
     let input = fs::read_to_string("input/day11").expect("failure opening input file");
     let seats = input.split('\n').map(|row| row.chars().collect()).collect::<Grid>();
-    println!("Part1: {}", stabilize(seats.clone(), Box::new(step), Box::new(visible1), 4));
-    println!("Part2: {}", stabilize(seats, Box::new(step), Box::new(visible2), 5));
+    println!("Part1: {}", stabilize(seats.clone(), visible1, 4));
+    println!("Part2: {}", stabilize(seats, visible2, 5));
 }
 
-fn stabilize(mut seats: Grid, step_fn: Box<StepFn>, visible_fn: Box<VisibleFn>, tolerance: usize) -> usize {
+fn stabilize(mut seats: Grid, visible_fn: VisibleFn, tolerance: usize) -> usize {
     let mut prev_count = seats.iter().flatten().filter(|c| **c == OCCUPIED).count();
     loop {
-        seats = step_fn(&mut seats, &visible_fn, tolerance);
+        seats = step(&mut seats, &visible_fn, tolerance);
         let occupied = seats.iter().flatten().filter(|c| **c == OCCUPIED).count();
         if occupied == prev_count {
             return prev_count;
@@ -27,7 +26,7 @@ fn stabilize(mut seats: Grid, step_fn: Box<StepFn>, visible_fn: Box<VisibleFn>, 
     }
 }
 
-fn step(seats: &Grid, visible_fn: &Box<VisibleFn>, tolerance: usize) -> Grid {
+fn step(seats: &Grid, visible_fn: &VisibleFn, tolerance: usize) -> Grid {
     let mut next_seats = seats.clone();
     for i in 0..seats.len() {
         for j in 0..seats[i].len() {
