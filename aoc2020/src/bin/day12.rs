@@ -8,26 +8,18 @@ fn main() {
 }
 
 fn p1(actions: &[(char, i32)]) -> i32 {
-    let dirs = [(1, 0), (0, -1), (-1, 0), (0, 1)];
-    let (mut x, mut y, mut cur_dir) = (0, 0, 0);
+    let (mut x, mut y, mut deg) = (0, 0, 0.0f32);
     for (action, value) in actions {
         match action {
             'N' => y += value,
             'S' => y -= value,
             'E' => x += value,
             'W' => x -= value,
+            'R' => deg -= *value as f32,
+            'L' => deg += *value as f32,
             'F' => {
-                let dir = dirs[cur_dir as usize];
-                x += dir.0 * value;
-                y += dir.1 * value;
-            }
-            'R' => {
-                cur_dir += value / 90;
-                cur_dir %= 4;
-            }
-            'L' => {
-                cur_dir -= value / 90;
-                cur_dir = (cur_dir + 4) % 4;
+                x += deg.to_radians().cos().round() as i32 * value;
+                y += deg.to_radians().sin().round() as i32 * value;
             }
             _ => panic!("invalid action"),
         }
@@ -36,39 +28,28 @@ fn p1(actions: &[(char, i32)]) -> i32 {
 }
 
 fn p2(actions: &[(char, i32)]) -> i32 {
-    let (mut wx, mut wy) = (10, 1);
-    let (mut x, mut y) = (0, 0);
+    let mut waypoint = (10, 1);
+    let mut ship = (0, 0);
     for (action, value) in actions {
         match action {
-            'N' => wy += value,
-            'S' => wy -= value,
-            'E' => wx += value,
-            'W' => wx -= value,
+            'N' => waypoint.1 += value,
+            'S' => waypoint.1 -= value,
+            'E' => waypoint.0 += value,
+            'W' => waypoint.0 -= value,
+            'R' => waypoint = rotate_point(waypoint.0, waypoint.1, -*value as f32),
+            'L' => waypoint = rotate_point(waypoint.0, waypoint.1, *value as f32),
             'F' => {
-                x += wx * value;
-                y += wy * value;
-            }
-            'R' => {
-                let (x, y) = rotate_clockwise(wx, wy, *value);
-                wx = x;
-                wy = y;
-            }
-            'L' => {
-                let (x, y) = rotate_clockwise(wx, wy, 360 - *value);
-                wx = x;
-                wy = y;
+                ship.0 += waypoint.0 * value;
+                ship.1 += waypoint.1 * value;
             }
             _ => panic!("invalid action"),
         }
     }
-    x.abs() + y.abs()
+    ship.0.abs() + ship.1.abs()
 }
 
-fn rotate_clockwise(mut x: i32, mut y: i32, deg: i32) -> (i32, i32) {
-    (0..deg / 90).for_each(|_| {
-        let tmp = x;
-        x = y;
-        y = -tmp;
-    });
-    (x, y)
+fn rotate_point(x: i32, y: i32, deg: f32) -> (i32, i32) {
+    let sin = deg.to_radians().sin().round() as i32;
+    let cos = deg.to_radians().cos().round() as i32;
+    (x * cos - y * sin, x * sin + y * cos)
 }
