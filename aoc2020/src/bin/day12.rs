@@ -8,23 +8,23 @@ fn main() {
 }
 
 fn p1(actions: &[(char, i32)]) -> i32 {
-    let (mut x, mut y, mut deg) = (0, 0, 0.0f32);
+    let mut ship = (0, 0, 0.0f32);
     for (action, value) in actions {
         match action {
-            'N' => y += value,
-            'S' => y -= value,
-            'E' => x += value,
-            'W' => x -= value,
-            'R' => deg -= *value as f32,
-            'L' => deg += *value as f32,
+            'N' => ship.1 += value,
+            'S' => ship.1 -= value,
+            'E' => ship.0 += value,
+            'W' => ship.0 -= value,
+            'R' => ship.2 -= *value as f32,
+            'L' => ship.2 += *value as f32,
             'F' => {
-                x += deg.to_radians().cos().round() as i32 * value;
-                y += deg.to_radians().sin().round() as i32 * value;
+                ship.0 += ship.2.to_radians().cos().round() as i32 * value;
+                ship.1 += ship.2.to_radians().sin().round() as i32 * value;
             }
             _ => panic!("invalid action"),
         }
     }
-    x.abs() + y.abs()
+    ship.0.abs() + ship.1.abs()
 }
 
 fn p2(actions: &[(char, i32)]) -> i32 {
