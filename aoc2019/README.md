@@ -3,7 +3,7 @@
 ## Why C++
 
 Felt like practicing the first programming language I learned.
-Next year I may take the time to learn Go or Rust as these are gradually overtaking C++ in systems programming.
+Next year I may take the time to learn Rust as it is gradually overtaking C++ in systems programming.
 
 ## Run solutions
 

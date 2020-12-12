@@ -28,8 +28,8 @@ fn p1(actions: &[(char, i32)]) -> i32 {
 }
 
 fn p2(actions: &[(char, i32)]) -> i32 {
-    let mut waypoint = (10, 1);
     let mut ship = (0, 0);
+    let mut waypoint = (10, 1);
     for (action, value) in actions {
         match action {
             'N' => waypoint.1 += value,
