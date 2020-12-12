@@ -17,7 +17,7 @@ fn main() {
 fn stabilize(mut seats: Grid, visible_fn: VisibleFn, tolerance: usize) -> usize {
     let mut prev_count = seats.iter().flatten().filter(|c| **c == OCCUPIED).count();
     loop {
-        seats = step(&mut seats, &visible_fn, tolerance);
+        seats = step(&seats, &visible_fn, tolerance);
         let occupied = seats.iter().flatten().filter(|c| **c == OCCUPIED).count();
         if occupied == prev_count {
             return prev_count;
@@ -27,7 +27,7 @@ fn stabilize(mut seats: Grid, visible_fn: VisibleFn, tolerance: usize) -> usize 
 }
 
 fn step(seats: &Grid, visible_fn: &VisibleFn, tolerance: usize) -> Grid {
-    let mut next_seats = seats.clone();
+    let mut next_seats = seats.to_owned();
     for i in 0..seats.len() {
         for j in 0..seats[i].len() {
             let occupied = visible_fn(seats, i, j).iter().filter(|c| ***c == OCCUPIED).count();
