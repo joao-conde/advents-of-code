@@ -1,13 +1,12 @@
 [package]
 name = "aoc2020"
-version = "0.12.0"
+version = "0.13.0"
 authors = ["João Conde <joaodiasconde@gmail.com>"]
 edition = "2018"
 default-run = "aoc2020"
 
 [dependencies]
 regex = "1"
-ring-algorithm = "0.2.2"
 
 [profile.dev]
 opt-level = 3

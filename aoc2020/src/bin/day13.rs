@@ -1,4 +1,4 @@
-use ring_algorithm;
+use aoc2020::crt::chinese_remainder;
 use std::fs;
 
 fn main() {
@@ -20,11 +20,12 @@ fn main() {
         .unwrap();
     println!("Part1: {}", p1);
 
-    let (ts, moduli): (Vec<_>, Vec<_>) = buses
+    let (residues, moduli): (Vec<_>, Vec<_>) = buses
         .split(',')
         .enumerate()
-        .filter_map(|(i, bus)| bus.parse::<u64>().ok().and_then(|bus| Some((i, bus))))
-        .map(|(i, bus_id)| (i as isize, bus_id as isize))
+        .filter_map(|(i, bus)| bus.parse::<u64>().ok().and_then(|bus| Some((i as i64, bus as i64))))
+        .map(|(i, bus_id)| (bus_id - i, bus_id))
         .unzip();
-    println!("Part2: {}", -ring_algorithm::chinese_remainder_theorem(&ts, &moduli).unwrap());
+
+    println!("Part2: {}", chinese_remainder(&residues, &moduli).unwrap());
 }
