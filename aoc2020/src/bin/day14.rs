@@ -28,8 +28,7 @@ fn execute(input: &str, update_mem: fn(&mut HashMap<usize, usize>, &str, usize, 
 }
 
 fn update_mem1(mem: &mut HashMap<usize, usize>, mask: &str, addr: usize, val: usize) {
-    let val = format!("{:036b}", val);
-    let val = val
+    let val = format!("{:036b}", val)
         .chars()
         .zip(mask.chars())
         .map(|(vc, mc)| match mc {
@@ -42,8 +41,7 @@ fn update_mem1(mem: &mut HashMap<usize, usize>, mask: &str, addr: usize, val: us
 }
 
 fn update_mem2(mem: &mut HashMap<usize, usize>, mask: &str, addr: usize, val: usize) {
-    let addr = format!("{:036b}", addr);
-    let addr = addr
+    let addr = format!("{:036b}", addr)
         .chars()
         .zip(mask.chars())
         .map(|(vc, mc)| match mc {
@@ -51,10 +49,10 @@ fn update_mem2(mem: &mut HashMap<usize, usize>, mask: &str, addr: usize, val: us
             _ => mc,
         })
         .collect::<String>();
-
-    combinations(&addr).iter().map(|addr| usize::from_str_radix(addr, 2).unwrap()).for_each(|addr| {
+    for addr in combinations(&addr) {
+        let addr = usize::from_str_radix(&addr, 2).unwrap();
         mem.insert(addr, val);
-    });
+    }
 }
 
 fn combinations(addr: &str) -> Vec<String> {
