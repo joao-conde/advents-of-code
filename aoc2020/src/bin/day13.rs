@@ -16,7 +16,7 @@ fn main() {
         .flat_map(|bus| bus.parse::<u64>().ok())
         .map(|bus| (bus - depart % bus, bus))
         .min()
-        .and_then(|(waiting, bus)| Some(bus * waiting))
+        .map(|(waiting, bus)| bus * waiting)
         .unwrap();
     println!("Part1: {}", p1);
 

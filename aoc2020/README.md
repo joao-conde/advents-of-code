@@ -23,4 +23,5 @@ $ cargo run --bin day[01-25]
 ## Running all
 
 ```
-$ for i in {01..13}; do cargo run --release --bin day$i; done;```
+$ for i in {01..14}; do cargo run --release --bin day$i; done;
+```
