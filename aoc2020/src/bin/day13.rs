@@ -23,7 +23,7 @@ fn main() {
     let (residues, moduli): (Vec<_>, Vec<_>) = buses
         .split(',')
         .enumerate()
-        .filter_map(|(i, bus)| bus.parse::<u64>().ok().and_then(|bus| Some((i as i64, bus as i64))))
+        .filter_map(|(i, bus)| bus.parse::<u64>().ok().map(|bus| (i as i64, bus as i64)))
         .map(|(i, bus_id)| (bus_id - i, bus_id))
         .unzip();
     println!("Part2: {}", chinese_remainder(&residues, &moduli).unwrap());
