@@ -1,5 +1,7 @@
 use std::{fs, ops::Range};
 
+const DEPARTURE_COLS: Range<usize> = 0..6;
+
 type Rule = Vec<Range<usize>>;
 type Ticket = Vec<usize>;
 
@@ -31,16 +33,16 @@ fn p2(rules: &[Rule], tickets: &[Ticket], ticket: &Ticket) -> usize {
 
     let mut col_to_rule = vec![usize::MAX; valid_tickets[0].len()];
     while col_to_rule.iter().any(|el| *el == usize::MAX) {
-        let (i, certain) = rules_per_col.iter().enumerate().find(|(_, x)| x.len() == 1).map(|(i, v)| (i, v[0])).unwrap();
-        col_to_rule[i] = certain;
-        rules_per_col.iter_mut().for_each(|l| {
-            if let Some(i) = l.iter().position(|x| *x == certain) {
-                l.remove(i);
+        let (i, rule) = rules_per_col.iter().enumerate().find(|(_, x)| x.len() == 1).map(|(i, rules)| (i, rules[0])).unwrap();
+        col_to_rule[i] = rule;
+        rules_per_col.iter_mut().for_each(|rules| {
+            if let Some(i) = rules.iter().position(|x| *x == rule) {
+                rules.remove(i);
             }
         });
     }
 
-    col_to_rule.iter().enumerate().filter(|(_, col)| (0..6).contains(*col)).map(|(pos, _)| pos).map(|i| ticket[i]).product()
+    col_to_rule.iter().enumerate().filter(|(_, col)| DEPARTURE_COLS.contains(*col)).map(|(pos, _)| ticket[pos]).product()
 }
 
 fn is_valid(num: &usize, rules: &[Rule]) -> bool {
