@@ -31,8 +31,8 @@ fn p2(rules: &[Rule], tickets: &[Ticket], ticket: &Ticket) -> usize {
         })
         .collect::<Vec<Vec<usize>>>();
 
-    let mut col_to_rule = vec![usize::MAX; valid_tickets[0].len()];
-    while col_to_rule.iter().any(|el| *el == usize::MAX) {
+    let mut col_to_rule = vec![0; valid_tickets[0].len()];
+    while rules_per_col.iter().any(|rules| rules.len() != 0) {
         let (i, rule) = rules_per_col.iter().enumerate().find(|(_, x)| x.len() == 1).map(|(i, rules)| (i, rules[0])).unwrap();
         col_to_rule[i] = rule;
         rules_per_col = rules_per_col.into_iter().map(|rules| rules.into_iter().filter(|r| *r != rule).collect()).collect();
