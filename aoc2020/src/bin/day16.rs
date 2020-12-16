@@ -17,7 +17,7 @@ fn p1(rules: &[Rule], tickets: &[Ticket]) -> usize {
 fn p2(rules: &[Rule], tickets: &[Ticket], ticket: &Ticket) -> usize {
     let valid_tickets = tickets.iter().filter(|t| t.iter().all(|num| is_valid(&num, &rules))).collect::<Vec<&Ticket>>();
 
-    let mut col_rules = (0..valid_tickets[0].len())
+    let mut rules_per_col = (0..valid_tickets[0].len())
         .map(|col_i| {
             let col = valid_tickets.iter().filter_map(|t| t.get(col_i)).collect::<Vec<&usize>>();
             (0..rules.len())
@@ -29,18 +29,18 @@ fn p2(rules: &[Rule], tickets: &[Ticket], ticket: &Ticket) -> usize {
         })
         .collect::<Vec<Vec<usize>>>();
 
-    let mut map = vec![usize::MAX; valid_tickets[0].len()];
-    while map.iter().any(|el| *el == usize::MAX) {
-        let (i, certain) = col_rules.iter().enumerate().find(|(_, x)| x.len() == 1).map(|(i, v)| (i, v[0])).unwrap();
-        map[i] = certain;
-        col_rules.iter_mut().for_each(|l| {
+    let mut col_to_rule = vec![usize::MAX; valid_tickets[0].len()];
+    while col_to_rule.iter().any(|el| *el == usize::MAX) {
+        let (i, certain) = rules_per_col.iter().enumerate().find(|(_, x)| x.len() == 1).map(|(i, v)| (i, v[0])).unwrap();
+        col_to_rule[i] = certain;
+        rules_per_col.iter_mut().for_each(|l| {
             if let Some(i) = l.iter().position(|x| *x == certain) {
                 l.remove(i);
             }
         });
     }
 
-    map.iter().enumerate().filter(|(_, col)| (0..6).contains(*col)).map(|(pos, _)| pos).map(|i| ticket[i]).product()
+    col_to_rule.iter().enumerate().filter(|(_, col)| (0..6).contains(*col)).map(|(pos, _)| pos).map(|i| ticket[i]).product()
 }
 
 fn is_valid(num: &usize, rules: &[Rule]) -> bool {
