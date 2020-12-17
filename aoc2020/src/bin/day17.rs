@@ -35,10 +35,10 @@ fn step_3D(prev: &Grid3D) -> Grid3D {
     let mut next = prev.clone();
     let dim = *prev.iter().map(|[x, y, z]| *[x, y, z].iter().max().unwrap()).max().unwrap();
     let deltas = (-1..2).cartesian_product((-1..2).cartesian_product(-1..2).collect_vec());
-    let deltas = deltas.map(|(dx, (dy, dz))| [dx, dy, dz]).filter(|[dx, dy, dz]| !(*dx == 0 && *dy == 0 && *dz == 0));
+    let deltas = deltas.filter(|(dx, (dy, dz))| !(*dx == 0 && *dy == 0 && *dz == 0));
     let cube_pos = (-dim..dim + 2).cartesian_product((-dim..dim + 2).cartesian_product(-dim..dim + 2).collect_vec());
     cube_pos.for_each(|(x, (y, z))| {
-        let active = deltas.clone().filter(|[dx, dy, dz]| prev.contains(&[x + dx, y + dy, z + dz])).count();
+        let active = deltas.clone().filter(|(dx, (dy, dz))| prev.contains(&[x + dx, y + dy, z + dz])).count();
         update_cube(&prev, &mut next, &[x, y, z], active);
     });
     next
@@ -48,10 +48,10 @@ fn step_4D(prev: &Grid4D) -> Grid4D {
     let mut next = prev.clone();
     let dim = *prev.iter().map(|[x, y, z, w]| *[x, y, z, w].iter().max().unwrap()).max().unwrap();
     let deltas = (-1..2).cartesian_product((-1..2).cartesian_product((-1..2).cartesian_product(-1..2)));
-    let deltas = deltas.map(|(dx, (dy, (dz, dw)))| [dx, dy, dz, dw]).filter(|[dx, dy, dz, dw]| !(*dx == 0 && *dy == 0 && *dz == 0 && *dw == 0));
+    let deltas = deltas.filter(|(dx, (dy, (dz, dw)))| !(*dx == 0 && *dy == 0 && *dz == 0 && *dw == 0));
     let cube_pos = (-dim..dim + 2).cartesian_product((-dim..dim + 2).cartesian_product((-dim..dim + 2).cartesian_product(-dim..dim + 2)).collect_vec());
     cube_pos.for_each(|(x, (y, (z, w)))| {
-        let active = deltas.clone().filter(|[dx, dy, dz, dw]| prev.contains(&[x + dx, y + dy, z + dz, w + dw])).count();
+        let active = deltas.clone().filter(|(dx, (dy, (dz, dw)))| prev.contains(&[x + dx, y + dy, z + dz, w + dw])).count();
         update_cube(&prev, &mut next, &[x, y, z, w], active);
     });
     next
