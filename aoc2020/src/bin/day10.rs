@@ -3,7 +3,7 @@ use std::fs;
 
 fn main() {
     let input = fs::read_to_string("input/day10").expect("failure opening input file");
-    let mut jolts = input.split('\n').flat_map(|line| line.parse()).collect::<Vec<usize>>();
+    let mut jolts = input.lines().flat_map(|line| line.parse()).collect::<Vec<usize>>();
     jolts.sort();
     jolts.insert(0, 0);
     jolts.push(jolts[jolts.len() - 1] + 3);

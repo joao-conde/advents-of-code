@@ -46,9 +46,9 @@ fn is_valid(num: &usize, rules: &[Rule]) -> bool {
 
 fn parse_input(input: &str) -> (Vec<Rule>, Ticket, Vec<Ticket>) {
     let mut input = input.split("\n\n");
-    let rules = input.next().unwrap().split('\n').map(parse_rule).collect::<Vec<Rule>>();
-    let ticket = input.next().unwrap().split('\n').nth(1).map(parse_ticket).unwrap();
-    let tickets = input.next().unwrap().split('\n').skip(1).map(parse_ticket).collect::<Vec<Ticket>>();
+    let rules = input.next().unwrap().lines().map(parse_rule).collect::<Vec<Rule>>();
+    let ticket = input.next().unwrap().lines().nth(1).map(parse_ticket).unwrap();
+    let tickets = input.next().unwrap().lines().skip(1).map(parse_ticket).collect::<Vec<Ticket>>();
     (rules, ticket, tickets)
 }
 

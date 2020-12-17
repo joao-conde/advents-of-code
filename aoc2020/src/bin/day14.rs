@@ -12,7 +12,7 @@ fn execute(input: &str, update_mem: fn(&mut HashMap<usize, usize>, &str, usize, 
     let re = Regex::new(r"mem\[(?P<addr>[0-9]*)\]").unwrap();
     let mut mem = HashMap::new();
     let mut mask = "";
-    for line in input.split('\n') {
+    for line in input.lines() {
         let mut instr = line.split(" = ");
         let (lhs, rhs) = (instr.next().unwrap(), instr.next().unwrap());
         match lhs {

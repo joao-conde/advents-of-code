@@ -6,7 +6,7 @@ fn main() {
     let input = fs::read_to_string("input/day06").expect("failure opening input file");
     let groups = input
         .split("\n\n")
-        .map(|group| group.split('\n').map(|vote| HashSet::from_iter(vote.chars())).collect())
+        .map(|group| group.lines().map(|vote| HashSet::from_iter(vote.chars())).collect())
         .collect::<Vec<Vec<HashSet<char>>>>();
 
     let p1 = groups.iter().map(|group| union_sets(group)).map(|s| s.len()).sum::<usize>();

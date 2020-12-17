@@ -2,7 +2,7 @@ use std::fs;
 
 fn main() {
     let input = fs::read_to_string("input/day03").expect("failure opening input file");
-    let map = input.split('\n').map(|line| line.chars().collect()).collect::<Vec<Vec<char>>>();
+    let map = input.lines().map(|line| line.chars().collect()).collect::<Vec<Vec<char>>>();
     println!("Part1: {}", trees_hit(&map, (3, 1)));
     println!("Part2: {}", part2(&map));
 }

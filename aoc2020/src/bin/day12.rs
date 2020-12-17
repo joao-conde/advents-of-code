@@ -2,7 +2,7 @@ use std::fs;
 
 fn main() {
     let input = fs::read_to_string("input/day12").expect("failure opening input file");
-    let actions = input.split('\n').map(|line| (line.chars().next().unwrap(), line[1..].parse().unwrap())).collect::<Vec<(char, i32)>>();
+    let actions = input.lines().map(|line| (line.chars().next().unwrap(), line[1..].parse().unwrap())).collect::<Vec<(char, i32)>>();
     println!("Part1: {}", p1(&actions));
     println!("Part2: {}", p2(&actions));
 }

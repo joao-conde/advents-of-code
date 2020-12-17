@@ -7,7 +7,7 @@ const PREAMBLE_SIZE: usize = 25;
 
 fn main() {
     let input = fs::read_to_string("input/day09").expect("failure opening input file");
-    let nums = input.split('\n').map(|num| num.parse().expect("not a number")).collect::<Vec<i64>>();
+    let nums = input.lines().map(|num| num.parse().expect("not a number")).collect::<Vec<i64>>();
     let p1_num = p1(&nums);
     println!("Part1: {}", p1_num);
     println!("Part2: {}", p2(&nums, p1_num));

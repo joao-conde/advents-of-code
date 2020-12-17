@@ -3,10 +3,10 @@ use std::fs;
 
 fn main() {
     let input = fs::read_to_string("input/day13").expect("failure opening input file");
-    let buses = input.split('\n').nth(1).expect("missing buses");
+    let buses = input.lines().nth(1).expect("missing buses");
 
     let depart = input
-        .split('\n')
+        .lines()
         .next()
         .expect("missing earliest depart timestamp")
         .parse::<u64>()

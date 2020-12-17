@@ -36,5 +36,5 @@ fn parse_input(input: String) -> Vec<Entry> {
         )
     }
     let re = Regex::new(r"(?P<min>[0-9]*)-(?P<max>[0-9]*) (?P<letter>[a-zA-Z]): (?P<password>.*)").expect("invalid regex expression");
-    input.split('\n').map(|x| parse_entry(x, &re)).collect::<Vec<Entry>>()
+    input.lines().map(|x| parse_entry(x, &re)).collect::<Vec<Entry>>()
 }

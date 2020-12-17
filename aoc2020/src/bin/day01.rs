@@ -3,7 +3,7 @@ use std::fs;
 
 fn main() {
     let input = fs::read_to_string("input/day01").expect("failure opening input file");
-    let nums = input.split('\n').map(|x| x.parse().expect("input entry should be a number")).collect::<HashSet<i32>>();
+    let nums = input.lines().map(|x| x.parse().expect("input entry should be a number")).collect::<HashSet<i32>>();
     println!("Part1: {}", p1(&nums, 2020));
     println!("Part2: {}", p2(&nums, 2020));
 }

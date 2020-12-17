@@ -9,7 +9,7 @@ const FLOOR: char = '.';
 
 fn main() {
     let input = fs::read_to_string("input/day11").expect("failure opening input file");
-    let seats = input.split('\n').map(|row| row.chars().collect()).collect::<Grid>();
+    let seats = input.lines().map(|row| row.chars().collect()).collect::<Grid>();
     println!("Part1: {}", stabilize(seats.clone(), visible1, 4));
     println!("Part2: {}", stabilize(seats, visible2, 5));
 }

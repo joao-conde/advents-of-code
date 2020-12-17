@@ -2,7 +2,7 @@ use std::fs;
 
 fn main() {
     let input = fs::read_to_string("input/day05").expect("failure opening input file");
-    let mut seats = input.split('\n').map(|seat| seat_id(&seat)).collect::<Vec<i32>>();
+    let mut seats = input.lines().map(|seat| seat_id(&seat)).collect::<Vec<i32>>();
 
     seats.sort();
     println!("Part1: {}", seats.last().expect("zero seat IDs provided"));
