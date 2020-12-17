@@ -34,13 +34,13 @@ fn step_3D(prev: &Grid3D) -> Grid3D {
     let mut next = prev.clone();
     let dim = *prev.keys().map(|(x, y, z)| *[x, y, z].iter().max().unwrap()).max().unwrap();
     let deltas3D = (-1..2).cartesian_product((-1..2).cartesian_product(-1..2).collect_vec());
-    let deltas3D = deltas3D.map(|(x, (y, z))| (x, y, z)).filter(|(x, y, z)| !(*x == 0 && *y == 0 && *z == 0)).collect_vec();
+    let deltas3D = deltas3D.filter(|(x, (y, z))| !(*x == 0 && *y == 0 && *z == 0)).collect_vec();
     for x in -dim..dim + 2 {
         for y in -dim..dim + 2 {
             for z in -dim..dim + 2 {
                 let active = deltas3D
                     .iter()
-                    .map(|(dx, dy, dz)| if *prev.get(&(x + dx, y + dy, z + dz)).unwrap_or(&'.') == '#' { 1 } else { 0 })
+                    .map(|(dx, (dy, dz))| if *prev.get(&(x + dx, y + dy, z + dz)).unwrap_or(&'.') == '#' { 1 } else { 0 })
                     .sum::<i32>();
                 match prev.get(&(x, y, z)).unwrap_or(&'.') {
                     '#' if active != 2 && active != 3 => next.insert((x, y, z), '.'),
@@ -57,15 +57,14 @@ fn step_4D(prev: &Grid4D) -> Grid4D {
     let mut next = prev.clone();
     let dim = *prev.keys().map(|(x, y, z, w)| *[x, y, z, w].iter().max().unwrap()).max().unwrap();
     let deltas4D = (-1..2).cartesian_product((-1..2).cartesian_product((-1..2).cartesian_product(-1..2)));
-    let deltas4D =
-        deltas4D.map(|(x, (y, (z, w)))| (x, y, z, w)).filter(|(x, y, z, w)| !(*x == 0 && *y == 0 && *z == 0 && *w == 0)).collect_vec();
+    let deltas4D = deltas4D.filter(|(x, (y, (z, w)))| !(*x == 0 && *y == 0 && *z == 0 && *w == 0)).collect_vec();
     for x in -dim..dim + 2 {
         for y in -dim..dim + 2 {
             for z in -dim..dim + 2 {
                 for w in -dim..dim + 2 {
                     let active = deltas4D
                         .iter()
-                        .map(|(dx, dy, dz, dw)| if *prev.get(&(x + dx, y + dy, z + dz, w + dw)).unwrap_or(&'.') == '#' { 1 } else { 0 })
+                        .map(|(dx, (dy, (dz, dw)))| if *prev.get(&(x + dx, y + dy, z + dz, w + dw)).unwrap_or(&'.') == '#' { 1 } else { 0 })
                         .sum::<i32>();
                     match prev.get(&(x, y, z, w)).unwrap_or(&'.') {
                         '#' if active != 2 && active != 3 => next.insert((x, y, z, w), '.'),
