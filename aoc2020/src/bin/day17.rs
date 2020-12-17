@@ -1,79 +1,66 @@
 use itertools::Itertools;
-use std::collections::HashMap;
+use std::collections::HashSet;
 use std::fs;
+use std::hash::Hash;
 
-type Grid3D = HashMap<(i32, i32, i32), char>;
-type Grid4D = HashMap<(i32, i32, i32, i32), char>;
+type Grid3D = HashSet<[i32; 3]>;
+type Grid4D = HashSet<[i32; 4]>;
 
 fn main() {
     let input = fs::read_to_string("input/day17").expect("failure opening input file");
 
-    let mut grid3D = HashMap::new();
-    input.lines().enumerate().for_each(|(y, line)| {
-        line.chars().enumerate().for_each(|(x, state)| {
-            grid3D.insert((x as i32, y as i32, 0), state);
-        })
-    });
+    let mut grid3D = input
+        .lines()
+        .enumerate()
+        .map(|(y, line)| line.chars().enumerate().filter(|(_, cell)| *cell == '#').map(|(x, _)| [x as i32, y as i32, 0]).collect_vec())
+        .flatten()
+        .collect::<Grid3D>();
 
-    let mut grid4D = HashMap::new();
-    input.lines().enumerate().for_each(|(y, line)| {
-        line.chars().enumerate().for_each(|(x, state)| {
-            grid4D.insert((x as i32, y as i32, 0, 0), state);
-        })
-    });
+    let mut grid4D = input
+        .lines()
+        .enumerate()
+        .map(|(y, line)| line.chars().enumerate().filter(|(_, cell)| *cell == '#').map(|(x, _)| [x as i32, y as i32, 0, 0]).collect_vec())
+        .flatten()
+        .collect::<Grid4D>();
 
     (0..6).for_each(|_| {
         grid3D = step_3D(&grid3D);
         grid4D = step_4D(&grid4D);
     });
-    println!("Part1: {}", grid3D.values().filter(|c| **c == '#').count());
-    println!("Part2: {}", grid4D.values().filter(|c| **c == '#').count());
+    println!("Part1: {}", grid3D.len());
+    println!("Part2: {}", grid4D.len());
 }
 
 fn step_3D(prev: &Grid3D) -> Grid3D {
     let mut next = prev.clone();
-    let dim = *prev.keys().map(|(x, y, z)| *[x, y, z].iter().max().unwrap()).max().unwrap();
+    let dim = *prev.iter().map(|[x, y, z]| *[x, y, z].iter().max().unwrap()).max().unwrap();
     let deltas = (-1..2).cartesian_product((-1..2).cartesian_product(-1..2).collect_vec());
-    let deltas = deltas.filter(|(x, (y, z))| !(*x == 0 && *y == 0 && *z == 0)).collect_vec();
-    for x in -dim..dim + 2 {
-        for y in -dim..dim + 2 {
-            for z in -dim..dim + 2 {
-                let active = deltas
-                    .iter()
-                    .map(|(dx, (dy, dz))| if *prev.get(&(x + dx, y + dy, z + dz)).unwrap_or(&'.') == '#' { 1 } else { 0 })
-                    .sum::<i32>();
-                match prev.get(&(x, y, z)).unwrap_or(&'.') {
-                    '#' if active != 2 && active != 3 => next.insert((x, y, z), '.'),
-                    '.' if active == 3 => next.insert((x, y, z), '#'),
-                    _ => None,
-                };
-            }
-        }
-    }
+    let deltas = deltas.map(|(dx, (dy, dz))| [dx, dy, dz]).filter(|[dx, dy, dz]| !(*dx == 0 && *dy == 0 && *dz == 0));
+    let cube_pos = (-dim..dim + 2).cartesian_product((-dim..dim + 2).cartesian_product(-dim..dim + 2).collect_vec());
+    cube_pos.for_each(|(x, (y, z))| {
+        let active = deltas.clone().filter(|[dx, dy, dz]| prev.contains(&[x + dx, y + dy, z + dz])).count();
+        update_cube(&prev, &mut next, &[x, y, z], active);
+    });
     next
 }
 
 fn step_4D(prev: &Grid4D) -> Grid4D {
     let mut next = prev.clone();
-    let dim = *prev.keys().map(|(x, y, z, w)| *[x, y, z, w].iter().max().unwrap()).max().unwrap();
+    let dim = *prev.iter().map(|[x, y, z, w]| *[x, y, z, w].iter().max().unwrap()).max().unwrap();
     let deltas = (-1..2).cartesian_product((-1..2).cartesian_product((-1..2).cartesian_product(-1..2)));
-    let deltas = deltas.filter(|(x, (y, (z, w)))| !(*x == 0 && *y == 0 && *z == 0 && *w == 0)).collect_vec();
-    for x in -dim..dim + 2 {
-        for y in -dim..dim + 2 {
-            for z in -dim..dim + 2 {
-                for w in -dim..dim + 2 {
-                    let active = deltas
-                        .iter()
-                        .map(|(dx, (dy, (dz, dw)))| if *prev.get(&(x + dx, y + dy, z + dz, w + dw)).unwrap_or(&'.') == '#' { 1 } else { 0 })
-                        .sum::<i32>();
-                    match prev.get(&(x, y, z, w)).unwrap_or(&'.') {
-                        '#' if active != 2 && active != 3 => next.insert((x, y, z, w), '.'),
-                        '.' if active == 3 => next.insert((x, y, z, w), '#'),
-                        _ => None,
-                    };
-                }
-            }
-        }
-    }
+    let deltas = deltas.map(|(dx, (dy, (dz, dw)))| [dx, dy, dz, dw]).filter(|[dx, dy, dz, dw]| !(*dx == 0 && *dy == 0 && *dz == 0 && *dw == 0));
+    let cube_pos = (-dim..dim + 2).cartesian_product((-dim..dim + 2).cartesian_product((-dim..dim + 2).cartesian_product(-dim..dim + 2)).collect_vec());
+    cube_pos.for_each(|(x, (y, (z, w)))| {
+        let active = deltas.clone().filter(|[dx, dy, dz, dw]| prev.contains(&[x + dx, y + dy, z + dz, w + dw])).count();
+        update_cube(&prev, &mut next, &[x, y, z, w], active);
+    });
     next
+}
+
+fn update_cube<T: Eq + Hash + Copy>(prev: &HashSet<T>, next: &mut HashSet<T>, key: &T, active: usize) {
+    match prev.contains(key) {
+        true if active != 2 && active != 3 => next.remove(key),
+        false if active == 3 => next.insert(*key),
+        _ => false,
+    };
 }
