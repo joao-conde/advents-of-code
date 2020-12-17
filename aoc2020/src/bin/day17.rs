@@ -8,14 +8,6 @@ type Grid4D = HashMap<(i32, i32, i32, i32), char>;
 fn main() {
     let input = fs::read_to_string("input/day17").expect("failure opening input file");
 
-    // let deltas3D = (-1..2).cartesian_product((-1..2).cartesian_product(-1..2).collect_vec());
-    // let deltas4D = (-1..2).cartesian_product(deltas3D.clone());
-    // let deltas3D = deltas3D.filter(|(x, (y, z))| !(*x == 0 && *y == 0 && *z == 0)).collect_vec();
-    // let deltas4D = deltas4D.filter(|(x, (y, (z, w)))| !(*x == 0 && *y == 0 && *z == 0 && *w == 0)).collect_vec();
-
-    // println!("{:?}", deltas3D.len());
-    // println!("{:?}", deltas4D.len());
-
     let mut grid3D = HashMap::new();
     input.lines().enumerate().for_each(|(y, line)| {
         line.chars().enumerate().for_each(|(x, state)| {
