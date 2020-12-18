@@ -8,6 +8,7 @@ type Grid4D = HashSet<[i32; 4]>;
 
 fn main() {
     let input = fs::read_to_string("input/day17").expect("failure opening input file");
+    let init_dim = input.lines().count() as i32;
 
     let mut grid3D = input
         .lines()
@@ -23,17 +24,16 @@ fn main() {
         .flatten()
         .collect::<Grid4D>();
 
-    (0..6).for_each(|_| {
-        grid3D = step_3D(&grid3D);
-        grid4D = step_4D(&grid4D);
+    (0..6).for_each(|iter| {
+        grid3D = step_3D(&grid3D, iter + init_dim);
+        grid4D = step_4D(&grid4D, iter + init_dim);
     });
     println!("Part1: {}", grid3D.len());
     println!("Part2: {}", grid4D.len());
 }
 
-fn step_3D(prev: &Grid3D) -> Grid3D {
+fn step_3D(prev: &Grid3D, dim: i32) -> Grid3D {
     let mut next = prev.clone();
-    let dim = *prev.iter().map(|[x, y, z]| *[x, y, z].iter().max().unwrap()).max().unwrap();
     let deltas = (-1..2).cartesian_product((-1..2).cartesian_product(-1..2).collect_vec());
     let deltas = deltas.filter(|(dx, (dy, dz))| !(*dx == 0 && *dy == 0 && *dz == 0));
     let coords = (-dim..dim + 2).cartesian_product((-dim..dim + 2).cartesian_product(-dim..dim + 2).collect_vec());
@@ -44,12 +44,12 @@ fn step_3D(prev: &Grid3D) -> Grid3D {
     next
 }
 
-fn step_4D(prev: &Grid4D) -> Grid4D {
+fn step_4D(prev: &Grid4D, dim: i32) -> Grid4D {
     let mut next = prev.clone();
-    let dim = *prev.iter().map(|[x, y, z, w]| *[x, y, z, w].iter().max().unwrap()).max().unwrap();
     let deltas = (-1..2).cartesian_product((-1..2).cartesian_product((-1..2).cartesian_product(-1..2)));
     let deltas = deltas.filter(|(dx, (dy, (dz, dw)))| !(*dx == 0 && *dy == 0 && *dz == 0 && *dw == 0));
-    let coords = (-dim..dim + 2).cartesian_product((-dim..dim + 2).cartesian_product((-dim..dim + 2).cartesian_product(-dim..dim + 2)).collect_vec());
+    let coords = (-dim..dim + 2)
+        .cartesian_product((-dim..dim + 2).cartesian_product((-dim..dim + 2).cartesian_product(-dim..dim + 2)).collect_vec());
     coords.for_each(|(x, (y, (z, w)))| {
         let active = deltas.clone().filter(|(dx, (dy, (dz, dw)))| prev.contains(&[x + dx, y + dy, z + dz, w + dw])).count();
         update_cube(&prev, &mut next, &[x, y, z, w], active);
