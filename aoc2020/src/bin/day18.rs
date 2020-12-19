@@ -2,6 +2,7 @@ use std::collections::VecDeque;
 use std::fs;
 
 type ProcessOpFn = fn(Token, &mut Vec<Token>, &mut VecDeque<Token>);
+
 #[derive(Debug)]
 enum Token {
     Val(usize),
@@ -46,26 +47,14 @@ fn shunting_yard(exp: &str, process_op_fn: ProcessOpFn) -> usize {
     while let Some(front) = dequeue.pop_front() {
         match front {
             Token::Add => {
-                let lhs = match stack.pop() {
-                    Some(Token::Val(lhs)) => lhs,
-                    _ => 0,
-                };
-                let rhs = match stack.pop() {
-                    Some(Token::Val(rhs)) => rhs,
-                    _ => 0,
-                };
-                stack.push(Token::Val(lhs + rhs));
+                if let (Some(Token::Val(lhs)), Some(Token::Val(rhs))) = (stack.pop(), stack.pop()) {
+                    stack.push(Token::Val(lhs + rhs));
+                }
             }
             Token::Mul => {
-                let lhs = match stack.pop() {
-                    Some(Token::Val(lhs)) => lhs,
-                    _ => 0,
-                };
-                let rhs = match stack.pop() {
-                    Some(Token::Val(rhs)) => rhs,
-                    _ => 0,
-                };
-                stack.push(Token::Val(lhs * rhs));
+                if let (Some(Token::Val(lhs)), Some(Token::Val(rhs))) = (stack.pop(), stack.pop()) {
+                    stack.push(Token::Val(lhs * rhs));
+                }
             }
             val => stack.push(val),
         }
