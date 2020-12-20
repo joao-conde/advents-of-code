@@ -33,11 +33,7 @@ fn expand(rules: &Rules, rule: String) -> String {
     if !tokens.chars().next().unwrap().is_alphabetic() {
         let re = tokens
             .split(" | ")
-            .map(|branch| {
-                let mut pattern = branch.split(' ').map(|rule| expand(&rules, rule.to_owned())).collect::<String>();
-                pattern.push('|');
-                pattern
-            })
+            .map(|branch| format!("{}|", branch.split(' ').map(|rule| expand(&rules, rule.to_owned())).collect::<String>()))
             .collect::<String>();
         format!("({})", &re[..re.len() - 1])
     } else {
