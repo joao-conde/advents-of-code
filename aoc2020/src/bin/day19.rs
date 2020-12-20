@@ -16,7 +16,8 @@ fn main() {
 
     println!("Part1: {}", solve(&rules, messages.clone()));
 
-    rules.insert("8".to_owned(), "42 | 42 42 | 42 42 42 | 42 42 42 42 | 42 42 42 42 42 | 42 42 42 42 42 42".to_owned());
+    // hackiest trial-and-error hack possible
+    rules.insert("8".to_owned(), "42 | 42 42 | 42 42 42 | 42 42 42 42 | 42 42 42 42 42".to_owned());
     rules.insert("11".to_owned(), "42 31 | 42 42 31 31 | 42 42 42 31 31 31 | 42 42 42 42 31 31 31 31".to_owned());
     println!("Part2: {}", solve(&rules, messages));
 }
