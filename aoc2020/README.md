@@ -20,20 +20,8 @@ To run the solution for a given day:
 $ cargo run --bin day[01-25]
 ```
 
-## Running all
+To run all the solutions:
 
-```
-$ for i in {01..17}; do cargo run --release --bin day$i; done;
-```
-
-or
-
-```
-$ for i in {01..17}; do cargo build --release --bin day$i; done;
-```
-
-\+
-
-```
-$ for i in {01..17}; do echo --Day $i--; ./target/release/day$i; done;
+```bash
+$ cargo run --bin all
 ```
