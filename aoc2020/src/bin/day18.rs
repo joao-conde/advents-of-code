@@ -1,9 +1,9 @@
-use std::collections::VecDeque;
+use std::collections::{HashMap, VecDeque};
 use std::fs;
 
-type ProcessOpFn = fn(Token, &mut Vec<Token>, &mut VecDeque<Token>);
+type Precedences = HashMap<Token, u8>;
 
-#[derive(Debug)]
+#[derive(Debug, PartialEq, Eq, Hash)]
 enum Token {
     Val(usize),
     Add,
@@ -14,21 +14,26 @@ enum Token {
 fn main() {
     let input = fs::read_to_string("input/day18").expect("failure opening input file");
 
-    let p1 = input.lines().map(|exp| shunting_yard(exp, process_p1)).sum::<usize>();
+    let mut precedences = HashMap::new();
+    precedences.insert(Token::Add, 1);
+    precedences.insert(Token::Mul, 1);
+    precedences.insert(Token::LeftP, 0);
+    let p1 = input.lines().map(|exp| shunting_yard(exp, &precedences)).sum::<usize>();
     println!("Part1: {}", p1);
 
-    let p2 = input.lines().map(|exp| shunting_yard(exp, process_p2)).sum::<usize>();
+    precedences.insert(Token::Add, 1);
+    precedences.insert(Token::Mul, 0);
+    precedences.insert(Token::LeftP, 0);
+    let p2 = input.lines().map(|exp| shunting_yard(exp, &precedences)).sum::<usize>();
     println!("Part2: {}", p2);
 }
 
-fn shunting_yard(exp: &str, process_op_fn: ProcessOpFn) -> usize {
+fn shunting_yard(exp: &str, precedences: &Precedences) -> usize {
     let tokens = exp.chars().filter(|c| !c.is_whitespace());
     let mut stack = vec![];
     let mut dequeue = VecDeque::new();
     for token in tokens {
         match token {
-            '+' => process_op_fn(Token::Add, &mut stack, &mut dequeue),
-            '*' => process_op_fn(Token::Mul, &mut stack, &mut dequeue),
             '(' => stack.push(Token::LeftP),
             ')' => loop {
                 match stack.pop() {
@@ -36,6 +41,8 @@ fn shunting_yard(exp: &str, process_op_fn: ProcessOpFn) -> usize {
                     Some(top) => dequeue.push_back(top),
                 }
             },
+            '+' => process_op(Token::Add, &mut stack, &mut dequeue, &precedences),
+            '*' => process_op(Token::Mul, &mut stack, &mut dequeue, &precedences),
             num => dequeue.push_back(Token::Val(num.to_digit(10).unwrap() as usize)),
         }
     }
@@ -66,17 +73,12 @@ fn shunting_yard(exp: &str, process_op_fn: ProcessOpFn) -> usize {
     }
 }
 
-fn process_p1(token: Token, stack: &mut Vec<Token>, dequeue: &mut VecDeque<Token>) {
-    while let Some(Token::Mul) | Some(Token::Add) = stack.last() {
-        dequeue.push_back(stack.pop().unwrap())
-    }
-    stack.push(token);
-}
-
-fn process_p2(token: Token, stack: &mut Vec<Token>, dequeue: &mut VecDeque<Token>) {
-    if let Token::Mul = token {
-        while let Some(Token::Add) = stack.last() {
-            dequeue.push_back(stack.pop().unwrap())
+fn process_op(token: Token, stack: &mut Vec<Token>, dequeue: &mut VecDeque<Token>, precedences: &Precedences) {
+    let precedence = precedences.get(&token).unwrap();
+    while let Some(token) = stack.last() {
+        match token {
+            Token::Add | Token::Mul if precedence <= precedences.get(token).unwrap() => dequeue.push_back(stack.pop().unwrap()),
+            _ => break,
         }
     }
     stack.push(token);
