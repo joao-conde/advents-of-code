@@ -4,41 +4,37 @@ use std::fs;
 
 fn main() {
     let input = fs::read_to_string("input/day21").expect("failure opening input file");
-
     let re = Regex::new(r"(.*) \(contains (.*)\)").unwrap();
 
-    let mut all_ingredients = HashMap::new();
-    let mut allerg_to_ing = HashMap::<&str, HashSet<&str>>::new();
-    for line in input.lines() {
+    let mut ings_freq = HashMap::new();
+    let mut allerg_to_ings = HashMap::<&str, HashSet<&str>>::new();
+    input.lines().for_each(|line| {
         let matches = re.captures(line).unwrap();
-        let ingredients = matches.get(1).unwrap().as_str().split(" ").collect::<HashSet<&str>>();
-
-        for i in &ingredients {
-            *all_ingredients.entry(*i).or_insert(0) += 1;
-        }
-
+        let ings = matches.get(1).unwrap().as_str().split(' ').collect::<HashSet<&str>>();
         let allergens = matches.get(2).unwrap().as_str().split(", ").collect::<Vec<&str>>();
-        for allergen in allergens {
-            if allerg_to_ing.contains_key(allergen) {
-                let cur = allerg_to_ing.get(allergen).unwrap().clone();
-                allerg_to_ing.insert(allergen, cur.intersection(&ingredients).copied().collect());
-            } else {
-                allerg_to_ing.insert(allergen, ingredients.clone());
-            }
-        }
-    }
+        ings.iter().for_each(|i| *ings_freq.entry(*i).or_insert(0) += 1);
+        allergens.iter().for_each(|allergen| {
+            match allerg_to_ings.get(allergen) {
+                Some(cur) => {
+                    let cur = cur.to_owned();
+                    allerg_to_ings.insert(allergen, cur.to_owned().intersection(&ings).copied().collect())
+                }
+                None => allerg_to_ings.insert(allergen, ings.clone()),
+            };
+        });
+    });
 
-    let mut not_allergen_ing = all_ingredients.keys().copied().collect::<HashSet<&str>>();
-    for ingredients in allerg_to_ing.values() {
-        not_allergen_ing = not_allergen_ing.difference(ingredients).copied().collect();
-    }
+    let mut not_allergen_ings = ings_freq.keys().copied().collect::<HashSet<&str>>();
+    allerg_to_ings.values().for_each(|ingredients| {
+        not_allergen_ings = not_allergen_ings.difference(ingredients).copied().collect();
+    });
 
-    let p1 = not_allergen_ing.iter().map(|i| all_ingredients.get(i).unwrap()).sum::<usize>();
+    let p1 = not_allergen_ings.iter().map(|i| ings_freq.get(i).unwrap()).sum::<usize>();
     println!("Part1: {}", p1);
 
-    while allerg_to_ing.values().any(|set| set.len() > 1) {
-        let allergen = allerg_to_ing.values().find(|set| set.len() == 1).unwrap().to_owned();
-        allerg_to_ing = allerg_to_ing
+    while allerg_to_ings.values().any(|set| set.len() > 1) {
+        let allergen = allerg_to_ings.values().find(|set| set.len() == 1).unwrap().to_owned();
+        allerg_to_ings = allerg_to_ings
             .into_iter()
             .map(|(i, s)| match s.len() {
                 1 => (i, s),
@@ -47,13 +43,12 @@ fn main() {
             .collect();
     }
 
-    let mut matches = allerg_to_ing.iter().map(|(k, v)| (k, v.iter().next().unwrap())).collect::<Vec<(&&str, &&str)>>();
+    let mut matches = allerg_to_ings.iter().map(|(k, v)| (k, v.iter().next().unwrap())).collect::<Vec<(&&str, &&str)>>();
     matches.sort();
 
     let p2 = matches.iter().fold(String::new(), |mut canonical, ing| {
         canonical = format!("{},{}", canonical, ing.1);
         canonical
     });
-
     println!("Part2: {}", &p2[1..]);
 }
