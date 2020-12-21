@@ -7,7 +7,7 @@ fn main() {
 
 fn compile_release() {
     println!("Compiling each day in release mode...");
-    for day in 1..20 {
+    for day in 1..22 {
         let file = format!("day{:02}", day);
         Command::new("cargo")
             .env("RUSTFLAGS", "-Awarnings")
@@ -24,7 +24,7 @@ fn compile_release() {
 
 fn run_all() {
     println!("Running each day...");
-    for day in 1..20 {
+    for day in 1..22 {
         let file = format!("day{:02}", day);
         println!("--Day {}--", day);
         Command::new(format!("./target/release/{}", file))
