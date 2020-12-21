@@ -6,7 +6,7 @@ fn main() {
     let input = fs::read_to_string("input/day21").expect("failure opening input file");
     let re = Regex::new(r"(.*) \(contains (.*)\)").unwrap();
 
-    let mut ings_freq = HashMap::new();
+    let mut ings_freq = HashMap::<&str, usize>::new();
     let mut allerg_to_ings = HashMap::<&str, HashSet<&str>>::new();
     input.lines().for_each(|line| {
         let matches = re.captures(line).unwrap();
@@ -31,11 +31,9 @@ fn main() {
 }
 
 fn p1(allerg_to_ings: &HashMap<&str, HashSet<&str>>, ings_freq: &HashMap<&str, usize>) -> usize {
-    let mut not_allergen_ings = ings_freq.keys().copied().collect::<HashSet<&str>>();
-    allerg_to_ings.values().for_each(|ingredients| {
-        not_allergen_ings = not_allergen_ings.difference(ingredients).copied().collect();
-    });
-    not_allergen_ings.iter().map(|i| ings_freq.get(i).unwrap()).sum()
+    let all_ings = ings_freq.keys().copied().collect::<HashSet<&str>>();
+    let possibly_allergenic = allerg_to_ings.values().fold(HashSet::<&str>::new(), |set, s| set.union(s).copied().collect());
+    all_ings.difference(&possibly_allergenic).map(|i| ings_freq.get(i).unwrap()).sum()
 }
 
 fn p2(mut allerg_to_ings: HashMap<&str, HashSet<&str>>) -> String {
