@@ -1,4 +1,6 @@
-use std::process::Command;
+use std::{ops::RangeInclusive, process::Command};
+
+const DAYS: RangeInclusive<usize> = 1..=22;
 
 fn main() {
     compile_release();
@@ -7,7 +9,7 @@ fn main() {
 
 fn compile_release() {
     println!("Compiling each day in release mode...");
-    for day in 1..=21 {
+    for day in DAYS {
         let file = format!("day{:02}", day);
         Command::new("cargo")
             .env("RUSTFLAGS", "-Awarnings")
@@ -24,7 +26,7 @@ fn compile_release() {
 
 fn run_all() {
     println!("Running each day...");
-    for day in 1..=21 {
+    for day in DAYS {
         let file = format!("day{:02}", day);
         println!("--Day {}--", day);
         Command::new(format!("./target/release/{}", file))
