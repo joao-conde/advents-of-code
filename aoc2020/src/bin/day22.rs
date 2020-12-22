@@ -15,13 +15,6 @@ fn main() {
     println!("Part2: {}", score(if deck1.is_empty() { &deck2 } else { &deck1 }));
 }
 
-fn build_decks(input: &str) -> (Deck, Deck) {
-    let mut input = input.split("\n\n");
-    let deck1 = input.next().unwrap().split('\n').skip(1).map(|card| card.parse().unwrap()).collect::<Deck>();
-    let deck2 = input.next().unwrap().split('\n').skip(1).map(|card| card.parse().unwrap()).collect::<Deck>();
-    (deck1, deck2)
-}
-
 fn combat(deck1: &mut Deck, deck2: &mut Deck) {
     while !deck1.is_empty() && !deck2.is_empty() {
         let draw1 = deck1.pop_front().unwrap();
@@ -70,4 +63,11 @@ fn rec_combat(deck1: &mut Deck, deck2: &mut Deck) -> bool {
 
 fn score(deck: &Deck) -> usize {
     deck.iter().rev().enumerate().map(|(i, card)| (i + 1) * card).sum()
+}
+
+fn build_decks(input: &str) -> (Deck, Deck) {
+    let mut input = input.split("\n\n");
+    let deck1 = input.next().unwrap().split('\n').skip(1).map(|card| card.parse().unwrap()).collect::<Deck>();
+    let deck2 = input.next().unwrap().split('\n').skip(1).map(|card| card.parse().unwrap()).collect::<Deck>();
+    (deck1, deck2)
 }
