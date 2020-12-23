@@ -1,4 +1,5 @@
 use std::{fs, mem::swap};
+use std::collections::HashMap;
 
 #[derive(Clone, Debug)]
 struct Tile {
@@ -25,14 +26,14 @@ fn main() {
         })
         .collect::<Vec<Tile>>();
 
-    // let size = f32::sqrt(tiles.len() as f32) as usize;
-
     let tiles = tiles.iter().map(|tile| rearrange(tile)).flatten().collect::<Vec<Tile>>();
-
+    
+   
     let mut corners = tiles.iter().filter(|tile| find_matches(tile, &tiles).len() == 2).map(|tile| tile.id).collect::<Vec<usize>>();
-
     corners.dedup();
-    println!("Part1: {}", corners.iter().product::<usize>());
+    println!("Part1: {} {:?}", corners.iter().product::<usize>());
+
+    // let size = f32::sqrt(tiles.len() as f32) as usize;
 }
 
 fn rearrange(original: &Tile) -> Vec<Tile> {
@@ -75,7 +76,7 @@ fn flip_y(tile: &mut Tile) {
     }
 }
 
-fn get_borders(tile: &Tile) -> Vec<Vec<char>> {
+fn get_edges(tile: &Tile) -> Vec<Vec<char>> {
     let mut borders = vec![];
     borders.push(tile.img[0][..].to_vec());
     borders.push(tile.img[tile.img.len() - 1][..].to_vec());
@@ -87,12 +88,12 @@ fn get_borders(tile: &Tile) -> Vec<Vec<char>> {
 }
 
 fn find_matches(tile: &Tile, tiles: &Vec<Tile>) -> Vec<Tile> {
-    let tile_borders = get_borders(tile);
+    let tile_borders = get_edges(tile);
     let mut matches = tiles
         .clone()
         .into_iter()
         .filter(|t| tile.id != t.id)
-        .filter(|t| get_borders(t).iter().any(|border| tile_borders.contains(border)))
+        .filter(|t| get_edges(t).iter().any(|border| tile_borders.contains(border)))
         .collect::<Vec<Tile>>();
 
     matches.dedup();
