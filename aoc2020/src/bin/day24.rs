@@ -1,12 +1,20 @@
-use std::fs;
 use std::collections::HashSet;
-
+use std::fs;
 
 fn main() {
     let input = fs::read_to_string("input/day24").expect("failure opening input file");
 
-    let (mut blacks, mut whites) = place_tiles(&input);
+    let mut blacks = place_tiles(&input);
     println!("Part1: {}", blacks.len());
+
+    let mut whites = HashSet::new();
+    for x in -300..300 {
+        for y in -300..300 {
+            if !blacks.contains(&(x, y)) {
+                whites.insert((x, y));
+            }
+        }
+    }
 
     let deltas = [(0, -1), (1, -1), (1, 0), (0, 1), (-1, 1), (-1, 0)];
     for _ in 0..100 {
@@ -34,24 +42,21 @@ fn main() {
         blacks = next_blacks;
         whites = next_whites;
     }
-    println!("Part1: {}", blacks.len());
+    println!("Part2: {}", blacks.len());
 }
 
-fn place_tiles(input: &str) -> (HashSet<(i32, i32)>, HashSet<(i32, i32)>) {
+fn place_tiles(input: &str) -> HashSet<(i32, i32)> {
     let mut blacks = HashSet::new();
-    let mut whites = HashSet::new();
     for line in input.lines() {
         let moves = parse_move(line);
         let tile = identify_tile(&moves);
         if blacks.contains(&tile) {
             blacks.remove(&tile);
-            whites.insert(tile);
         } else {
-            whites.remove(&tile);
             blacks.insert(tile);
         }
     }
-    (blacks, whites)
+    blacks
 }
 
 fn identify_tile(moves: &Vec<&str>) -> (i32, i32) {
@@ -59,12 +64,18 @@ fn identify_tile(moves: &Vec<&str>) -> (i32, i32) {
     for m in moves {
         match *m {
             "nw" => coords.1 -= 1,
-            "ne" => {coords.0 += 1; coords.1 -= 1}
-            "sw" => {coords.0 -= 1; coords.1 += 1}
+            "ne" => {
+                coords.0 += 1;
+                coords.1 -= 1
+            }
+            "sw" => {
+                coords.0 -= 1;
+                coords.1 += 1
+            }
             "se" => coords.1 += 1,
             "w" => coords.0 -= 1,
             "e" => coords.0 += 1,
-            _ => ()
+            _ => (),
         }
     }
     coords
@@ -75,19 +86,19 @@ fn parse_move(move_str: &str) -> Vec<&str> {
     let mut i = 0;
     while i < move_str.len() {
         if i == move_str.len() - 1 {
-            moves.push(&move_str[i..i+1]);
+            moves.push(&move_str[i..i + 1]);
             i += 1;
         } else {
-            match &move_str[i..i+2] {
+            match &move_str[i..i + 2] {
                 "nw" | "ne" | "sw" | "se" => {
-                    moves.push(&move_str[i..i+2]);
+                    moves.push(&move_str[i..i + 2]);
                     i += 2;
-                },
+                }
                 _ => {
-                    moves.push(&move_str[i..i+1]);
+                    moves.push(&move_str[i..i + 1]);
                     i += 1;
                 }
-            } 
+            }
         }
     }
     moves
