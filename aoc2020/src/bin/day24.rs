@@ -3,13 +3,29 @@ use std::fs;
 
 fn main() {
     let input = fs::read_to_string("input/day24").expect("failure opening input file");
-
-    let mut blacks = place_tiles(&input);
+    let blacks = p1(&input);
     println!("Part1: {}", blacks.len());
+    println!("Part2: {}", p2(blacks));
+}
 
+fn p1(input: &str) -> HashSet<(i32, i32)> {
+    let mut blacks = HashSet::new();
+    for line in input.lines() {
+        let moves = parse_move(line);
+        let tile = identify_tile(&moves);
+        if blacks.contains(&tile) {
+            blacks.remove(&tile);
+        } else {
+            blacks.insert(tile);
+        }
+    }
+    blacks
+}
+
+fn p2(mut blacks: HashSet<(i32, i32)>) -> usize {
     let mut whites = HashSet::new();
-    for x in -300..300 {
-        for y in -300..300 {
+    for x in -100..100 {
+        for y in -100..100 {
             if !blacks.contains(&(x, y)) {
                 whites.insert((x, y));
             }
@@ -42,24 +58,10 @@ fn main() {
         blacks = next_blacks;
         whites = next_whites;
     }
-    println!("Part2: {}", blacks.len());
+    blacks.len()
 }
 
-fn place_tiles(input: &str) -> HashSet<(i32, i32)> {
-    let mut blacks = HashSet::new();
-    for line in input.lines() {
-        let moves = parse_move(line);
-        let tile = identify_tile(&moves);
-        if blacks.contains(&tile) {
-            blacks.remove(&tile);
-        } else {
-            blacks.insert(tile);
-        }
-    }
-    blacks
-}
-
-fn identify_tile(moves: &Vec<&str>) -> (i32, i32) {
+fn identify_tile(moves: &[&str]) -> (i32, i32) {
     let mut coords = (0, 0);
     for m in moves {
         match *m {
@@ -75,29 +77,29 @@ fn identify_tile(moves: &Vec<&str>) -> (i32, i32) {
             "se" => coords.1 += 1,
             "w" => coords.0 -= 1,
             "e" => coords.0 += 1,
-            _ => (),
+            _ => panic!("invalid move"),
         }
     }
     coords
 }
 
 fn parse_move(move_str: &str) -> Vec<&str> {
-    let mut moves = vec![];
     let mut i = 0;
+    let mut moves = vec![];
     while i < move_str.len() {
         if i == move_str.len() - 1 {
             moves.push(&move_str[i..i + 1]);
             i += 1;
-        } else {
-            match &move_str[i..i + 2] {
-                "nw" | "ne" | "sw" | "se" => {
-                    moves.push(&move_str[i..i + 2]);
-                    i += 2;
-                }
-                _ => {
-                    moves.push(&move_str[i..i + 1]);
-                    i += 1;
-                }
+            continue;
+        }
+        match &move_str[i..i + 2] {
+            "nw" | "ne" | "sw" | "se" => {
+                moves.push(&move_str[i..i + 2]);
+                i += 2;
+            }
+            _ => {
+                moves.push(&move_str[i..i + 1]);
+                i += 1;
             }
         }
     }

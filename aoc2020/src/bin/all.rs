@@ -1,6 +1,6 @@
 use std::{ops::RangeInclusive, process::Command};
 
-const DAYS: RangeInclusive<usize> = 1..=23;
+const DAYS: RangeInclusive<usize> = 1..=24;
 
 fn main() {
     compile_release();
