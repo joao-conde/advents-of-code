@@ -10,32 +10,25 @@ fn main() {
     println!("Part2: {}", p2(&cups));
 }
 
-fn game(cups: &Vec<usize>, moves: usize) -> Vec<usize> {
+fn game(cups: &[usize], moves: usize) -> Vec<usize> {
     let min = *cups.iter().min().unwrap();
     let max = *cups.iter().max().unwrap();
 
-    // l[x] -> element to which 'x' is is connected
+    // l[x] -> element to which 'x' is connected
+    let ncups = cups.len();
     let mut list = vec![0; max + 1];
-    for i in 0..cups.len() {
-        list[cups[i]] = cups[(i + 1) % cups.len()];
-    }
+    (0..ncups).for_each(|i| list[cups[i]] = cups[(i + 1) % ncups]);
 
     let mut cur_cup = cups[0];
-    for m in 0..moves {
+    for _ in 0..moves {
         let p1 = list[cur_cup];
         let p2 = list[p1];
         let p3 = list[p2];
         list[cur_cup] = list[p3];
 
-        let mut dest_cup = cur_cup - 1;
-        if dest_cup < min {
-            dest_cup = max;
-        }
+        let mut dest_cup = if cur_cup > min { cur_cup - 1 } else { max };
         while [p1, p2, p3].contains(&dest_cup) || dest_cup < min || dest_cup > max {
-            dest_cup -= 1;
-            if dest_cup < min {
-                dest_cup = max;
-            }
+            dest_cup = if dest_cup > min { dest_cup - 1 } else { max };
         }
 
         let tmp = list[dest_cup];
@@ -50,7 +43,7 @@ fn game(cups: &Vec<usize>, moves: usize) -> Vec<usize> {
     list
 }
 
-fn p1(cups: &Vec<usize>) -> String {
+fn p1(cups: &[usize]) -> String {
     let list = game(&cups, 100);
     let mut p1 = String::new();
     let mut i = 1;
@@ -61,7 +54,7 @@ fn p1(cups: &Vec<usize>) -> String {
     p1
 }
 
-fn p2(cups: &Vec<usize>) -> usize {
+fn p2(cups: &[usize]) -> usize {
     let list = game(&cups, 10000000);
     let x = list[1];
     let y = list[x];
