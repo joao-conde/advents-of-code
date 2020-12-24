@@ -1,5 +1,5 @@
-use std::{fs, mem::swap};
 use std::collections::HashMap;
+use std::{fs, mem::swap};
 
 #[derive(Clone, Debug)]
 struct Tile {
@@ -25,15 +25,6 @@ fn main() {
             Tile { id: id, img: tile }
         })
         .collect::<Vec<Tile>>();
-
-    let tiles = tiles.iter().map(|tile| rearrange(tile)).flatten().collect::<Vec<Tile>>();
-    
-   
-    let mut corners = tiles.iter().filter(|tile| find_matches(tile, &tiles).len() == 2).map(|tile| tile.id).collect::<Vec<usize>>();
-    corners.dedup();
-    println!("Part1: {} {:?}", corners.iter().product::<usize>());
-
-    // let size = f32::sqrt(tiles.len() as f32) as usize;
 }
 
 fn rearrange(original: &Tile) -> Vec<Tile> {
