@@ -67,7 +67,7 @@ fn score(deck: &Deck) -> usize {
 
 fn build_decks(input: &str) -> (Deck, Deck) {
     let mut input = input.split("\n\n");
-    let deck1 = input.next().unwrap().split('\n').skip(1).map(|card| card.parse().unwrap()).collect::<Deck>();
-    let deck2 = input.next().unwrap().split('\n').skip(1).map(|card| card.parse().unwrap()).collect::<Deck>();
+    let deck1 = input.next().unwrap().lines().skip(1).map(|card| card.parse().unwrap()).collect::<Deck>();
+    let deck2 = input.next().unwrap().lines().skip(1).map(|card| card.parse().unwrap()).collect::<Deck>();
     (deck1, deck2)
 }

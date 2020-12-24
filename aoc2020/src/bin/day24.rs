@@ -11,8 +11,7 @@ fn main() {
 fn p1(input: &str) -> HashSet<(i32, i32)> {
     let mut blacks = HashSet::new();
     for line in input.lines() {
-        let moves = parse_move(line);
-        let tile = identify_tile(&moves);
+        let tile = identify_tile(&line);
         if blacks.contains(&tile) {
             blacks.remove(&tile);
         } else {
@@ -36,7 +35,6 @@ fn p2(mut blacks: HashSet<(i32, i32)>) -> usize {
     for _ in 0..100 {
         let mut next_blacks = HashSet::new();
         let mut next_whites = HashSet::new();
-
         for b in &blacks {
             let neighbors = deltas.iter().map(|d| (b.0 + d.0, b.1 + d.1)).filter(|n| blacks.contains(n)).count();
             if neighbors == 0 || neighbors > 2 {
@@ -45,7 +43,6 @@ fn p2(mut blacks: HashSet<(i32, i32)>) -> usize {
                 next_blacks.insert(*b);
             }
         }
-
         for w in &whites {
             let neighbors = deltas.iter().map(|d| (w.0 + d.0, w.1 + d.1)).filter(|n| blacks.contains(n)).count();
             if neighbors == 2 {
@@ -54,54 +51,47 @@ fn p2(mut blacks: HashSet<(i32, i32)>) -> usize {
                 next_whites.insert(*w);
             }
         }
-
         blacks = next_blacks;
         whites = next_whites;
     }
     blacks.len()
 }
 
-fn identify_tile(moves: &[&str]) -> (i32, i32) {
+fn identify_tile(moves: &str) -> (i32, i32) {
+    let mut i = 0;
     let mut coords = (0, 0);
-    for m in moves {
-        match *m {
-            "nw" => coords.1 -= 1,
-            "ne" => {
+    while i < moves.len() {
+        match moves.get(i..i + 2) {
+            Some("nw") => {
+                coords.1 -= 1;
+                i += 2
+            }
+            Some("ne") => {
                 coords.0 += 1;
-                coords.1 -= 1
+                coords.1 -= 1;
+                i += 2
             }
-            "sw" => {
+            Some("sw") => {
                 coords.0 -= 1;
-                coords.1 += 1
+                coords.1 += 1;
+                i += 2
             }
-            "se" => coords.1 += 1,
-            "w" => coords.0 -= 1,
-            "e" => coords.0 += 1,
-            _ => panic!("invalid move"),
+            Some("se") => {
+                coords.1 += 1;
+                i += 2
+            }
+            _ => match moves.get(i..i + 1) {
+                Some("w") => {
+                    coords.0 -= 1;
+                    i += 1
+                }
+                Some("e") => {
+                    coords.0 += 1;
+                    i += 1
+                }
+                _ => panic!("unrecognized direction"),
+            },
         }
     }
     coords
-}
-
-fn parse_move(move_str: &str) -> Vec<&str> {
-    let mut i = 0;
-    let mut moves = vec![];
-    while i < move_str.len() {
-        if i == move_str.len() - 1 {
-            moves.push(&move_str[i..i + 1]);
-            i += 1;
-            continue;
-        }
-        match &move_str[i..i + 2] {
-            "nw" | "ne" | "sw" | "se" => {
-                moves.push(&move_str[i..i + 2]);
-                i += 2;
-            }
-            _ => {
-                moves.push(&move_str[i..i + 1]);
-                i += 1;
-            }
-        }
-    }
-    moves
 }
