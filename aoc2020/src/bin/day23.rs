@@ -1,5 +1,7 @@
+use std::fs;
+
 fn main() {
-    let labels = "963275481";
+    let labels = fs::read_to_string("input/day23").expect("failure opening input file");
 
     let mut cups = labels.chars().map(|c| c.to_digit(10).unwrap() as usize).collect::<Vec<usize>>();
     println!("Part1: {}", p1(&cups));
@@ -20,9 +22,6 @@ fn game(cups: &Vec<usize>, moves: usize) -> Vec<usize> {
 
     let mut cur_cup = cups[0];
     for m in 0..moves {
-        if m % 1000000 == 0 {
-            println!("move {}", m + 1);
-        }
         let p1 = list[cur_cup];
         let p2 = list[p1];
         let p3 = list[p2];
@@ -66,6 +65,5 @@ fn p2(cups: &Vec<usize>) -> usize {
     let list = game(&cups, 10000000);
     let x = list[1];
     let y = list[x];
-    println!("{} {}", x, y);
     x * y
 }
