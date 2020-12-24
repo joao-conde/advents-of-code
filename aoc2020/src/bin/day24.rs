@@ -87,7 +87,7 @@ fn identify_tile(moves: &str) -> (i32, i32) {
                     coords.0 += 1;
                     i += 1
                 }
-                _ => panic!("unrecognized direction"),
+                _ => unreachable!("unrecognized direction"),
             },
         }
     }

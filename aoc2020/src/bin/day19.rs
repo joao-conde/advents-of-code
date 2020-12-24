@@ -29,7 +29,7 @@ fn solve(rules: &Rules, messages: Lines) -> usize {
 }
 
 fn expand(rules: &Rules, rule: String) -> String {
-    let tokens = rules.get(&rule).unwrap_or_else(|| panic!("no such rule {}", rule));
+    let tokens = rules.get(&rule).unwrap_or_else(|| unreachable!("no such rule {}", rule));
     if !tokens.chars().next().unwrap().is_alphabetic() {
         let re = tokens
             .split(" | ")

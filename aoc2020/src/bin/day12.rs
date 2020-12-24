@@ -21,7 +21,7 @@ fn p1(actions: &[(char, i32)]) -> i32 {
                 ship.0 += ship.2.to_radians().cos().round() as i32 * value;
                 ship.1 += ship.2.to_radians().sin().round() as i32 * value;
             }
-            _ => panic!("invalid action"),
+            _ => unreachable!("invalid action"),
         }
     }
     ship.0.abs() + ship.1.abs()
@@ -42,7 +42,7 @@ fn p2(actions: &[(char, i32)]) -> i32 {
                 ship.0 += waypoint.0 * value;
                 ship.1 += waypoint.1 * value;
             }
-            _ => panic!("invalid action"),
+            _ => unreachable!("invalid action"),
         }
     }
     ship.0.abs() + ship.1.abs()
