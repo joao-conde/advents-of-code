@@ -9,30 +9,28 @@ fn main() {
 }
 
 fn p1(input: &str) -> HashSet<(i32, i32)> {
-    let mut blacks = HashSet::new();
-    for line in input.lines() {
-        let tile = identify_tile(&line);
+    input.lines().map(|line| identify_tile(&line)).fold(HashSet::new(), |mut blacks, tile| {
         if blacks.contains(&tile) {
             blacks.remove(&tile);
         } else {
             blacks.insert(tile);
         }
-    }
-    blacks
+        blacks
+    })
 }
 
 fn p2(mut blacks: HashSet<(i32, i32)>) -> usize {
-    let mut whites = HashSet::new();
-    for x in -100..100 {
-        for y in -100..100 {
-            if !blacks.contains(&(x, y)) {
-                whites.insert((x, y));
-            }
-        }
-    }
+    let mut whites = (-100..100)
+        .map(|x| (-100..100).map(|y| (x, y)).collect::<Vec<(i32, i32)>>())
+        .flatten()
+        .filter(|p| !blacks.contains(p))
+        .fold(HashSet::new(), |mut whites, p| {
+            whites.insert(p);
+            whites
+        });
 
     let deltas = [(0, -1), (1, -1), (1, 0), (0, 1), (-1, 1), (-1, 0)];
-    for _ in 0..100 {
+    (0..100).for_each(|_| {
         let mut next_blacks = HashSet::new();
         let mut next_whites = HashSet::new();
         for b in &blacks {
@@ -53,7 +51,7 @@ fn p2(mut blacks: HashSet<(i32, i32)>) -> usize {
         }
         blacks = next_blacks;
         whites = next_whites;
-    }
+    });
     blacks.len()
 }
 
