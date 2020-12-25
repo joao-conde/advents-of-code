@@ -16,15 +16,28 @@ fn main() {
         let edges = get_edges(&tile);
         tiles.insert(id, tile);
         for edge in edges {
-            borders_to_tiles.entry(edge.clone()).or_insert(Vec::new()).push(id);
-            borders_to_tiles.entry(edge.into_iter().rev().collect()).or_insert(Vec::new()).push(id);
+            borders_to_tiles
+                .entry(edge.clone())
+                .or_insert(Vec::new())
+                .push(id);
+            borders_to_tiles
+                .entry(edge.into_iter().rev().collect())
+                .or_insert(Vec::new())
+                .push(id);
         }
     }
-    let count_map = borders_to_tiles.values().filter(|ids| ids.len() == 1).fold(HashMap::new(), |mut map, ids| {
-        *map.entry(ids[0]).or_insert(0) += 1;
-        map
-    });
-    let corners = count_map.iter().filter(|(_, v)| **v == 4).map(|(k, _)| *k).collect::<Vec<usize>>();
+    let count_map = borders_to_tiles.values().filter(|ids| ids.len() == 1).fold(
+        HashMap::new(),
+        |mut map, ids| {
+            *map.entry(ids[0]).or_insert(0) += 1;
+            map
+        },
+    );
+    let corners = count_map
+        .iter()
+        .filter(|(_, v)| **v == 4)
+        .map(|(k, _)| *k)
+        .collect::<Vec<usize>>();
     // println!("Part1: {:?}", corners);
 
     let size = 3;
@@ -96,7 +109,12 @@ fn main() {
 // }
 
 fn get_edges(tile: &Tile) -> Vec<Vec<char>> {
-    vec![get_top(&tile), get_right(&tile), get_bot(&tile), get_left(&tile)]
+    vec![
+        get_top(&tile),
+        get_right(&tile),
+        get_bot(&tile),
+        get_left(&tile),
+    ]
 }
 
 // fn find_matches(tile: &Tile, tiles: &Vec<Tile>) -> Vec<Tile> {
@@ -125,5 +143,7 @@ fn get_left(tile: &Tile) -> Vec<char> {
 }
 
 fn get_right(tile: &Tile) -> Vec<char> {
-    (0..tile.len()).map(|i| tile[i][tile[i].len() - 1]).collect()
+    (0..tile.len())
+        .map(|i| tile[i][tile[i].len() - 1])
+        .collect()
 }

@@ -48,10 +48,16 @@ impl RustyConsole {
 impl FromStr for RustyConsole {
     type Err = InstructionError;
     fn from_str(program: &str) -> Result<Self, Self::Err> {
-        let instructions =
-            program.split('\n').map(|instr| Instruction::from_str(instr)).collect::<Result<Vec<Instruction>, InstructionError>>()?;
+        let instructions = program
+            .split('\n')
+            .map(|instr| Instruction::from_str(instr))
+            .collect::<Result<Vec<Instruction>, InstructionError>>()?;
 
-        Ok(RustyConsole { pc: 0, program: instructions, accumulator: 0 })
+        Ok(RustyConsole {
+            pc: 0,
+            program: instructions,
+            accumulator: 0,
+        })
     }
 }
 
@@ -61,7 +67,9 @@ impl FromStr for Instruction {
         let mut fields = instruction.split(' ');
         let op = fields.next().ok_or(InstructionError::MissingOperation)?;
         let arg = fields.next().ok_or(InstructionError::MissingArgument)?;
-        let arg = arg.parse::<i32>().map_err(InstructionError::InvalidArgument)?;
+        let arg = arg
+            .parse::<i32>()
+            .map_err(InstructionError::InvalidArgument)?;
         match op {
             "acc" => Ok(Instruction::Acc(arg)),
             "jmp" => Ok(Instruction::Jmp(arg)),
