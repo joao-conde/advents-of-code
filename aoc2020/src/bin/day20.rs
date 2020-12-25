@@ -1,4 +1,5 @@
-use std::collections::HashMap;
+use std::mem::swap;
+use std::collections::{HashSet, HashMap};
 use std::fs;
 
 type Tile = Vec<Vec<char>>;
@@ -25,10 +26,12 @@ fn main() {
         map
     });
     let corners = count_map.iter().filter(|(_, v)| **v == 4).map(|(k, _)| *k).collect::<Vec<usize>>();
-    // println!("Part1: {:?}", corners);
+    println!("Part1: {:?} {:?}", corners, corners.iter().product::<usize>());
 
     let size = 3;
     let mut img = vec![vec![usize::MAX; size]; size];
+
+    let mut used = HashSet::new();
 
     // top left corner
     for corner in &corners {
@@ -37,20 +40,65 @@ fn main() {
         let left = get_left(tile);
         if borders_to_tiles[&top].len() == 1 && borders_to_tiles[&left].len() == 1 {
             img[0][0] = *corner;
+            used.insert(*corner);
             break;
         }
     }
 
-    for i in 1..size {
-        let left_id = img[0][i - 1];
+    // first row
+    for j in 1..size {
+        let left_id = img[0][j - 1];
         let left_tile = &tiles[&left_id];
         let border = get_right(&left_tile);
         let tiles = &borders_to_tiles[&border];
         let next = tiles.iter().filter(|tid| **tid != left_id).next().unwrap();
-        img[0][i] = *next;
+        img[0][j] = *next;
+        used.insert(*next);
     }
 
-    for x in img {
+    // first col 
+    for i in 1..size {
+        let top_id = img[i - 1][0];
+        let top_tile = &tiles[&top_id];
+        let border = get_bot(&top_tile);
+        let tiles = &borders_to_tiles[&border];
+        let next = tiles.iter().filter(|tid| **tid != top_id).next().unwrap();
+        img[i][0] = *next;
+        used.insert(*next);
+    }
+
+    // other rows
+    for i in 1..size {
+        for j in 1..size {
+            let top_id = img[i - 1][j];
+            let left_id = img[i][j - 1];
+
+            let top_tile = &tiles[&top_id];
+            let left_tile = &tiles[&left_id];
+
+            let bot_border = get_bot(&top_tile);
+            let right_border = get_right(&left_tile);
+
+            let tiles1 = &borders_to_tiles[&bot_border];
+            let tiles2 = &borders_to_tiles[&right_border];
+
+            let tiles1 = tiles1.clone();
+            let tiles2 = tiles2.clone();
+            let tot = vec![tiles1, tiles2];
+            let next = tot.iter().flatten().filter(|tid| **tid != top_id && **tid != left_id && !used.contains(tid)).next().unwrap();
+            img[i][j] = *next;
+            used.insert(*next);
+        }
+    }
+    
+    for x in &img {
+        println!("{:?}", x);
+    }
+    println!("\n\n");
+    rotate_90(&mut img);
+    rotate_90(&mut img);
+    flip_y(&mut img);
+    for x in &img {
         println!("{:?}", x);
     }
 }
@@ -71,46 +119,45 @@ fn main() {
 //     combinations
 // }
 
-// fn rotate_90(tile: &mut Tile) {
-//     tranpose(tile);
-//     flip_y(tile);
-// }
+fn rotate_90<T: Clone + Copy + Default>(tile: &mut Vec<Vec<T>>) {
+    tranpose(tile);
+    flip_y(tile);
+}
 
-// fn tranpose(tile: &mut Tile) {
-//     let mut tmp = vec![vec!['0'; tile[0].len()]; tile..len()];
-//     for i in 0..tile..len() {
-//         for j in 0..tile[i].len() {
-//             tmp[j][i] = tile[i][j];
-//         }
-//     }
-//     swap(&mut tile., &mut tmp);
-// }
+fn tranpose<T: Clone + Copy + Default>(tile: &mut Vec<Vec<T>>) {
+    let mut tmp = vec![vec![T::default(); tile[0].len()]; tile.len()];
+    for i in 0..tile.len() {
+        for j in 0..tile[i].len() {
+            tmp[j][i] = tile[i][j];
+        }
+    }
+    swap(tile, &mut &mut tmp);
+}
 
-// fn flip_y(tile: &mut Tile) {
-//     let size = tile[0].len();
-//     for i in 0..tile..len() {
-//         for j in 0..size / 2 {
-//             tile[i].swap(j, size - 1 - j);
-//         }
-//     }
-// }
+fn flip_y<T>(tile: &mut Vec<Vec<T>>) {
+    let size = tile[0].len();
+    for i in 0..tile.len() {
+        for j in 0..size / 2 {
+            tile[i].swap(j, size - 1 - j);
+        }
+    }
+}
 
 fn get_edges(tile: &Tile) -> Vec<Vec<char>> {
     vec![get_top(&tile), get_right(&tile), get_bot(&tile), get_left(&tile)]
 }
 
-// fn find_matches(tile: &Tile, tiles: &Vec<Tile>) -> Vec<Tile> {
-//     let tile_borders = get_edges(tile);
-//     let mut matches = tiles
-//         .clone()
-//         .into_iter()
-//         .filter(|t| tile.id != t.id)
-//         .filter(|t| get_edges(t).iter().any(|border| tile_borders.contains(border)))
-//         .collect::<Vec<Tile>>();
-
-//     matches.dedup();
-//     matches
-// }
+fn strip_borders<T: Copy>(tile: &Vec<Vec<T>>) -> Vec<Vec<T>> {
+    let mut new = vec![];
+    for i in 1..tile.len()-1 {
+        let mut row = vec![];
+        for j in 1..tile[i].len()-1 {
+            row.push(tile[i][j]);
+        }
+        new.push(row);
+    }
+    new
+}
 
 fn get_top(tile: &Tile) -> Vec<char> {
     tile[0][..].to_vec()
