@@ -1,38 +1,13 @@
 use std::{ops::RangeInclusive, process::Command};
 
-const DAYS: RangeInclusive<usize> = 1..=24;
+const DAYS: RangeInclusive<usize> = 1..=25;
 
 fn main() {
-    compile_release();
-    run_all();
-}
-
-fn compile_release() {
-    println!("Compiling each day in release mode...");
-    for day in DAYS {
-        let file = format!("day{:02}", day);
-        Command::new("cargo")
-            .env("RUSTFLAGS", "-Awarnings")
-            .arg("build")
-            .arg("--release")
-            .arg("--bin")
-            .arg(file)
-            .spawn()
-            .expect("command failed to start")
-            .wait()
-            .expect("command wasn't running");
-    }
-}
-
-fn run_all() {
-    println!("Running each day...");
-    for day in DAYS {
-        let file = format!("day{:02}", day);
-        println!("--Day {}--", day);
-        Command::new(format!("./target/release/{}", file))
-            .spawn()
-            .expect("command failed to start")
-            .wait()
-            .expect("command wasn't running");
-    }
+    println!("| Advent of Code 2020 |\n");
+    println!("Compiling...\n");
+    DAYS.for_each(|day| {
+        let cmd = Command::new("cargo").args(&["run", "--release", "--bin", &format!("day{:02}", day)]).output().unwrap();
+        let out = String::from_utf8(cmd.stdout).unwrap();
+        println!("> Day {}\n{}", day, out);
+    })
 }

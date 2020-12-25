@@ -1,6 +1,6 @@
-use std::mem::swap;
-use std::collections::{HashSet, HashMap};
+use std::collections::{HashMap, HashSet};
 use std::fs;
+use std::mem::swap;
 
 type Tile = Vec<Vec<char>>;
 
@@ -26,7 +26,7 @@ fn main() {
         map
     });
     let corners = count_map.iter().filter(|(_, v)| **v == 4).map(|(k, _)| *k).collect::<Vec<usize>>();
-    println!("Part1: {:?} {:?}", corners, corners.iter().product::<usize>());
+    // println!("Part1: {:?}", corners);
 
     let size = 3;
     let mut img = vec![vec![usize::MAX; size]; size];
@@ -56,7 +56,7 @@ fn main() {
         used.insert(*next);
     }
 
-    // first col 
+    // first col
     for i in 1..size {
         let top_id = img[i - 1][0];
         let top_tile = &tiles[&top_id];
@@ -90,7 +90,7 @@ fn main() {
             used.insert(*next);
         }
     }
-    
+
     for x in &img {
         println!("{:?}", x);
     }
@@ -149,9 +149,9 @@ fn get_edges(tile: &Tile) -> Vec<Vec<char>> {
 
 fn strip_borders<T: Copy>(tile: &Vec<Vec<T>>) -> Vec<Vec<T>> {
     let mut new = vec![];
-    for i in 1..tile.len()-1 {
+    for i in 1..tile.len() - 1 {
         let mut row = vec![];
-        for j in 1..tile[i].len()-1 {
+        for j in 1..tile[i].len() - 1 {
             row.push(tile[i][j]);
         }
         new.push(row);
