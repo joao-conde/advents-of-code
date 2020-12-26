@@ -1,4 +1,4 @@
-use std::collections::{HashMap, HashSet};
+use std::collections::HashMap;
 use std::fs;
 
 #[derive(Clone, Debug, Default)]
@@ -78,8 +78,9 @@ fn main() {
     println!("Part1: {:?} {}", corners, corners.iter().product::<usize>());
     ////////////////////
 
-    let mut image = vec![vec![Tile::default(); 3]; 3];
-    
+    let size = f32::sqrt(tiles.len() as f32) as usize;
+    let mut image = vec![vec![Tile::default(); size]; size];
+
     // place top-left
     let mut corner = tiles[&corners[0]].clone();
     while find_match(&corner, &borders_to_tiles, "top").is_some() || find_match(&corner, &borders_to_tiles, "left").is_some() {
@@ -87,15 +88,40 @@ fn main() {
     }
     image[0][0] = corner;
 
-    // println!("{:?}", image.iter().map(|x| x.iter().map(|y| y.id).collect()).collect::<Vec<Vec<usize>>>());
+    // remaining first col
+    for i in 1..size {
+        let above_tile = image[i - 1][0].clone();
+
+        let match_id = find_match(&above_tile, &borders_to_tiles, "bot").unwrap();
+        let mut match_tile = tiles[&match_id].clone();
+
+        while find_match(&match_tile, &borders_to_tiles, "top") != Some(above_tile.id) {
+            match_tile.rotate_90();
+        }
+
+        if match_tile.m[0] != above_tile.m[above_tile.m.len() - 1] {
+            for s in &mut match_tile.m {
+                s.reverse()
+            }
+        }
+
+        image[i][0] = match_tile;
+    }
+
+    for x in image.iter().map(|x| x.iter().map(|y| y.id).collect()).collect::<Vec<Vec<usize>>>() {
+        println!("{:?}", x);
+    }
 }
 
 fn find_match(tile: &Tile, borders_to_tiles: &HashMap<Vec<char>, Vec<usize>>, dir: &str) -> Option<usize> {
     match dir {
         "top" => &borders_to_tiles[&tile.m[0]],
         "right" => &borders_to_tiles[&tile.get_right()],
-        "bot" => &borders_to_tiles[&tile.m[tile.m.len()-1]],
+        "bot" => &borders_to_tiles[&tile.m[tile.m.len() - 1]],
         "left" => &borders_to_tiles[&tile.get_left()],
         _ => unreachable!(),
-    }.iter().find(|&&id| id != tile.id).copied()
+    }
+    .iter()
+    .find(|&&id| id != tile.id)
+    .copied()
 }
