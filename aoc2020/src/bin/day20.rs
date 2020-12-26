@@ -53,18 +53,18 @@ fn main() {
             borders_to_tiles.entry(edge.into_iter().rev().collect()).or_insert(Vec::new()).push(id);
         }
     }
-    let unique_edge_count = borders_to_tiles.values().filter(|ids| ids.len() == 1).fold(HashMap::new(), |mut map, ids| {
-        *map.entry(ids[0]).or_insert(0) += 1;
+    let unique_edge_count = borders_to_tiles.values().filter(|tids| tids.len() == 1).fold(HashMap::new(), |mut map, tids| {
+        *map.entry(tids[0]).or_insert(0) += 1;
         map
     });
     let corners = unique_edge_count.iter().filter(|(_, v)| **v == 4).map(|(k, _)| *k).collect::<Vec<usize>>();
-    // println!("Part1: {}", corners.iter().product::<usize>());
+    println!("Part1: {:?} {}", corners, corners.iter().product::<usize>());
 
     let size = f32::sqrt(tiles.len() as f32) as usize;
     let mut image = vec![vec![Tile::default(); size]; size];
 
     // place top-left
-    let mut corner = tiles[&corners[0]].clone();
+    let mut corner = tiles[&2753].clone();
     while find_match(&corner, &borders_to_tiles, "top").is_some() || find_match(&corner, &borders_to_tiles, "left").is_some() {
         corner.rotate_90();
     }
@@ -135,7 +135,6 @@ fn main() {
 
     loop {
         let num_monsters = count_monsters(&final_image, &monster_coords);
-        println!("Part2: {}", num_monsters);
         if num_monsters != 0 {
             let p2 = total_hashtags - num_monsters * monster_coords.len();
             println!("Part2: {}", p2);
@@ -143,8 +142,6 @@ fn main() {
         }
         final_image = rotate_90_matrix(&final_image);
     }
-
-    println!("{:?} {:?}", final_image.len(), final_image[0].len());
 }
 
 fn count_monsters(image: &Vec<Vec<char>>, monster_coords: &HashSet<(isize, isize)>) -> usize {
@@ -179,4 +176,15 @@ fn rotate_90_matrix<T: Clone + Default>(m: &Vec<Vec<T>>) -> Vec<Vec<T>> {
         }
     }
     rot
+}
+
+fn flip_y<T: Clone>(tile: &Vec<Vec<T>>) -> Vec<Vec<T>> {
+    let mut tile = tile.clone();
+    let size = tile[0].len();
+    for i in 0..tile.len() {
+        for j in 0..size / 2 {
+            tile[i].swap(j, size - 1 - j);
+        }
+    }
+    tile
 }
