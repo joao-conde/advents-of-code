@@ -9,14 +9,7 @@ struct Tile {
 
 impl Tile {
     fn rotate_90(&mut self) {
-        let (h, w) = (self.m.len(), self.m[0].len());
-        let mut rot = vec![vec!['\0'; w]; h];
-        for i in 0..self.m.len() {
-            for j in 0..self.m[i].len() {
-                rot[j][self.m[0].len() - 1 - i] = self.m[i][j];
-            }
-        }
-        self.m = rot
+        self.m = rotate_90_matrix(&self.m);
     }
 
     fn get_edges(&self) -> Vec<Vec<char>> {
@@ -91,7 +84,6 @@ fn main() {
     // remaining first col
     for i in 1..size {
         let above_tile = image[i - 1][0].clone();
-
         let match_id = find_match(&above_tile, &borders_to_tiles, "bot").unwrap();
         let mut match_tile = tiles[&match_id].clone();
 
@@ -99,6 +91,7 @@ fn main() {
             match_tile.rotate_90();
         }
 
+        // check if match flipped
         if match_tile.m[0] != above_tile.m[above_tile.m.len() - 1] {
             for s in &mut match_tile.m {
                 s.reverse()
@@ -108,6 +101,31 @@ fn main() {
         image[i][0] = match_tile;
     }
 
+    // for all rows x cols, except first col
+    for i in 0..size {
+        for j in 1..size {
+            let left_tile = image[i][j - 1].clone();
+            let match_id = find_match(&left_tile, &borders_to_tiles, "right").unwrap();
+            let mut match_tile = tiles[&match_id].clone();
+
+            while find_match(&match_tile, &borders_to_tiles, "left") != Some(left_tile.id) {
+                match_tile.rotate_90();
+            }
+
+            // check if match flipped
+            let len = left_tile.m.len();
+            if (0..len).any(|i| left_tile.m[i][len - 1] != match_tile.m[i][0]) {
+                for i in 0..match_tile.m[0].len() / 2 {
+                    // println!("swapping {} {}", i, len - 1 - i);
+                    match_tile.m[i][0] = match_tile.m[len - 1 - i][0];
+                }
+            }
+
+            image[i][j] = match_tile;
+        }
+    }
+
+    image = rotate_90_matrix(&image);
     for x in image.iter().map(|x| x.iter().map(|y| y.id).collect()).collect::<Vec<Vec<usize>>>() {
         println!("{:?}", x);
     }
@@ -124,4 +142,15 @@ fn find_match(tile: &Tile, borders_to_tiles: &HashMap<Vec<char>, Vec<usize>>, di
     .iter()
     .find(|&&id| id != tile.id)
     .copied()
+}
+
+fn rotate_90_matrix<T: Clone + Default>(m: &Vec<Vec<T>>) -> Vec<Vec<T>> {
+    let (h, w) = (m.len(), m[0].len());
+    let mut rot = vec![vec![T::default(); w]; h];
+    for i in 0..h {
+        for j in 0..w {
+            rot[j][w - 1 - i] = m[i][j].clone();
+        }
+    }
+    rot
 }
