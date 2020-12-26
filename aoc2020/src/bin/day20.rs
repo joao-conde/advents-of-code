@@ -1,5 +1,7 @@
-use std::collections::HashMap;
+use std::collections::{HashMap, HashSet};
 use std::fs;
+
+const MONSTER: [&str; 3] = ["                  # ", "#    ##    ##    ###", " #  #  #  #  #  #   "];
 
 #[derive(Clone, Debug, Default)]
 struct Tile {
@@ -30,18 +32,6 @@ impl Tile {
 
     fn get_left(&self) -> Vec<char> {
         (0..self.m.len()).map(|i| self.m[i][0]).collect()
-    }
-
-    fn strip_borders(&mut self) {
-        let mut new = vec![];
-        for i in 1..self.m.len() - 1 {
-            let mut row = vec![];
-            for j in 1..self.m[i].len() - 1 {
-                row.push(self.m[i][j]);
-            }
-            new.push(row);
-        }
-        self.m = new;
     }
 }
 
@@ -124,7 +114,6 @@ fn main() {
         }
     }
 
-    
     // build image by replacing tile IDs by char maps
     let width = image[0][0].m.len();
     let trimmed_width = width - 2;
@@ -137,11 +126,33 @@ fn main() {
             }
         }
     }
-    // println!("{:?}", final_image);
-    // image = rotate_90_matrix(&image);
-    for x in final_image {
-        println!("{:?}", x);
+
+    let total_hashtags = final_image.iter().flatten().filter(|c| **c == '#').count();
+    let monster_coords = MONSTER
+        .iter()
+        .enumerate()
+        .flat_map(|(i, row)| row.chars().enumerate().filter(|&(_, c)| c == '#').map(move |(j, _)| (i as isize - 1, j as isize)))
+        .collect::<HashSet<(isize, isize)>>();
+
+    loop {
+        let num_monsters = count_monsters(&final_image, &monster_coords);
+        if num_monsters != 0 {
+            let p2 = total_hashtags - num_monsters * monster_coords.len();
+            println!("Part2: {:?}", p2);
+            break;
+        }
+        final_image = rotate_90_matrix(&final_image);
     }
+}
+
+fn count_monsters(image: &Vec<Vec<char>>, monster_coords: &HashSet<(isize, isize)>) -> usize {
+    let hashtags = image
+        .iter()
+        .enumerate()
+        .flat_map(|(i, row)| row.iter().enumerate().filter(|&(_, &c)| c == '#').map(move |(j, _)| (i as isize, j as isize)))
+        .collect::<HashSet<(isize, isize)>>();
+
+    hashtags.iter().filter(|(i, j)| monster_coords.iter().map(|(di, dj)| (i + di, j + dj)).all(|pos| hashtags.contains(&pos))).count()
 }
 
 fn find_match(tile: &Tile, borders_to_tiles: &HashMap<Vec<char>, Vec<usize>>, dir: &str) -> Option<usize> {
