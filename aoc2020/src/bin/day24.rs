@@ -9,17 +9,14 @@ fn main() {
 }
 
 fn p1(input: &str) -> HashSet<(i32, i32)> {
-    input
-        .lines()
-        .map(|line| identify_tile(&line))
-        .fold(HashSet::new(), |mut blacks, tile| {
-            if blacks.contains(&tile) {
-                blacks.remove(&tile);
-            } else {
-                blacks.insert(tile);
-            }
-            blacks
-        })
+    input.lines().map(|line| identify_tile(&line)).fold(HashSet::new(), |mut blacks, tile| {
+        if blacks.contains(&tile) {
+            blacks.remove(&tile);
+        } else {
+            blacks.insert(tile);
+        }
+        blacks
+    })
 }
 
 fn p2(mut blacks: HashSet<(i32, i32)>) -> usize {
@@ -37,11 +34,7 @@ fn p2(mut blacks: HashSet<(i32, i32)>) -> usize {
         let mut next_blacks = HashSet::new();
         let mut next_whites = HashSet::new();
         for b in &blacks {
-            let neighbors = deltas
-                .iter()
-                .map(|d| (b.0 + d.0, b.1 + d.1))
-                .filter(|n| blacks.contains(n))
-                .count();
+            let neighbors = deltas.iter().map(|d| (b.0 + d.0, b.1 + d.1)).filter(|n| blacks.contains(n)).count();
             if neighbors == 0 || neighbors > 2 {
                 next_whites.insert(*b);
             } else {
@@ -49,11 +42,7 @@ fn p2(mut blacks: HashSet<(i32, i32)>) -> usize {
             }
         }
         for w in &whites {
-            let neighbors = deltas
-                .iter()
-                .map(|d| (w.0 + d.0, w.1 + d.1))
-                .filter(|n| blacks.contains(n))
-                .count();
+            let neighbors = deltas.iter().map(|d| (w.0 + d.0, w.1 + d.1)).filter(|n| blacks.contains(n)).count();
             if neighbors == 2 {
                 next_blacks.insert(*w);
             } else {

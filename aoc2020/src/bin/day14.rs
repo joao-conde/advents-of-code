@@ -57,13 +57,7 @@ fn update_mem2(mem: &mut HashMap<usize, usize>, mask: &str, addr: usize, val: us
 
 fn combinations(addr: &str) -> Vec<String> {
     if addr.contains('X') {
-        vec![
-            combinations(&addr.replacen("X", "0", 1)),
-            combinations(&addr.replacen("X", "1", 1)),
-        ]
-        .into_iter()
-        .flatten()
-        .collect()
+        vec![combinations(&addr.replacen("X", "0", 1)), combinations(&addr.replacen("X", "1", 1))].into_iter().flatten().collect()
     } else {
         vec![addr.to_owned()]
     }

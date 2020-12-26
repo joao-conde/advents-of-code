@@ -1,6 +1,7 @@
 use std::collections::{HashMap, HashSet};
 use std::fs;
 
+#[derive(Clone, Debug, Default)]
 struct Tile {
     id: usize,
     m: Vec<Vec<char>>,
@@ -19,12 +20,7 @@ impl Tile {
     }
 
     fn get_edges(&self) -> Vec<Vec<char>> {
-        vec![
-            self.get_top(),
-            self.get_right(),
-            self.get_bot(),
-            self.get_left(),
-        ]
+        vec![self.get_top(), self.get_right(), self.get_bot(), self.get_left()]
     }
 
     fn get_top(&self) -> Vec<char> {
@@ -32,9 +28,7 @@ impl Tile {
     }
 
     fn get_right(&self) -> Vec<char> {
-        (0..self.m.len())
-            .map(|i| self.m[i][self.m[i].len() - 1])
-            .collect()
+        (0..self.m.len()).map(|i| self.m[i][self.m[i].len() - 1]).collect()
     }
 
     fn get_bot(&self) -> Vec<char> {
@@ -60,40 +54,48 @@ impl Tile {
 
 fn main() {
     let input = fs::read_to_string("input/day20").expect("failure opening input file");
-
+    let mut tiles = HashMap::new();
+    ////////////////////part1
     let mut borders_to_tiles = HashMap::new();
     for tile in input.split("\n\n") {
         let mut lines = tile.lines();
         let id = lines.next().unwrap();
         let id = id[5..id.len() - 1].parse::<usize>().unwrap();
-        let m = lines
-            .map(|line| line.chars().collect())
-            .collect::<Vec<Vec<char>>>();
+        let m = lines.map(|line| line.chars().collect()).collect::<Vec<Vec<char>>>();
 
         let tile = Tile { id, m };
+        tiles.insert(id, tile.clone());
         for edge in tile.get_edges() {
-            borders_to_tiles
-                .entry(edge.clone())
-                .or_insert(Vec::new())
-                .push(id);
-            borders_to_tiles
-                .entry(edge.into_iter().rev().collect())
-                .or_insert(Vec::new())
-                .push(id);
+            borders_to_tiles.entry(edge.clone()).or_insert(Vec::new()).push(id);
+            borders_to_tiles.entry(edge.into_iter().rev().collect()).or_insert(Vec::new()).push(id);
         }
     }
-    let count_map = borders_to_tiles.values().filter(|ids| ids.len() == 1).fold(
-        HashMap::new(),
-        |mut map, ids| {
-            *map.entry(ids[0]).or_insert(0) += 1;
-            map
-        },
-    );
-    println!("{:?}", count_map);
-    let corners = count_map
-        .iter()
-        .filter(|(_, v)| **v == 4)
-        .map(|(k, _)| *k)
-        .collect::<Vec<usize>>();
+    let unique_edge_count = borders_to_tiles.values().filter(|ids| ids.len() == 1).fold(HashMap::new(), |mut map, ids| {
+        *map.entry(ids[0]).or_insert(0) += 1;
+        map
+    });
+    let corners = unique_edge_count.iter().filter(|(_, v)| **v == 4).map(|(k, _)| *k).collect::<Vec<usize>>();
     println!("Part1: {:?} {}", corners, corners.iter().product::<usize>());
+    ////////////////////
+
+    let mut image = vec![vec![Tile::default(); 3]; 3];
+    
+    // place top-left
+    let mut corner = tiles[&corners[0]].clone();
+    while find_match(&corner, &borders_to_tiles, "top").is_some() || find_match(&corner, &borders_to_tiles, "left").is_some() {
+        corner.rotate_90();
+    }
+    image[0][0] = corner;
+
+    // println!("{:?}", image.iter().map(|x| x.iter().map(|y| y.id).collect()).collect::<Vec<Vec<usize>>>());
+}
+
+fn find_match(tile: &Tile, borders_to_tiles: &HashMap<Vec<char>, Vec<usize>>, dir: &str) -> Option<usize> {
+    match dir {
+        "top" => &borders_to_tiles[&tile.m[0]],
+        "right" => &borders_to_tiles[&tile.get_right()],
+        "bot" => &borders_to_tiles[&tile.m[tile.m.len()-1]],
+        "left" => &borders_to_tiles[&tile.get_left()],
+        _ => unreachable!(),
+    }.iter().find(|&&id| id != tile.id).copied()
 }

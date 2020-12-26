@@ -3,21 +3,15 @@ use std::fs;
 
 fn main() {
     let input = fs::read_to_string("input/day10").expect("failure opening input file");
-    let mut jolts = input
-        .lines()
-        .flat_map(|line| line.parse())
-        .collect::<Vec<usize>>();
+    let mut jolts = input.lines().flat_map(|line| line.parse()).collect::<Vec<usize>>();
     jolts.sort();
     jolts.insert(0, 0);
     jolts.push(jolts[jolts.len() - 1] + 3);
 
-    let diffs = jolts[..].windows(2).map(|chunk| chunk[1] - chunk[0]).fold(
-        HashMap::new(),
-        |mut map, diff| {
-            *map.entry(diff).or_insert(0) += 1;
-            map
-        },
-    );
+    let diffs = jolts[..].windows(2).map(|chunk| chunk[1] - chunk[0]).fold(HashMap::new(), |mut map, diff| {
+        *map.entry(diff).or_insert(0) += 1;
+        map
+    });
     println!("Part1: {}", diffs[&1] * diffs[&3]);
 
     // Part 2 example (sum last 3 numbers, not positions)

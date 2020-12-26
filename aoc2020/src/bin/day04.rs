@@ -10,10 +10,7 @@ fn main() {
 
 fn p1(passports: &[&str]) -> usize {
     let keys = ["byr", "iyr", "eyr", "hgt", "hcl", "ecl", "pid"];
-    passports
-        .iter()
-        .filter(|passport| keys.iter().all(|key| passport.contains(key)))
-        .count()
+    passports.iter().filter(|passport| keys.iter().all(|key| passport.contains(key))).count()
 }
 
 fn p2(passports: &[&str]) -> usize {
@@ -28,8 +25,5 @@ fn p2(passports: &[&str]) -> usize {
     ]
     .iter()
     .map(|re_str| Regex::new(re_str).expect("invalid regex expression"));
-    passports
-        .iter()
-        .filter(|passport| regexes.clone().all(move |re| re.is_match(passport)))
-        .count()
+    passports.iter().filter(|passport| regexes.clone().all(move |re| re.is_match(passport))).count()
 }

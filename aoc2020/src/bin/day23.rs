@@ -3,10 +3,7 @@ use std::fs;
 fn main() {
     let labels = fs::read_to_string("input/day23").expect("failure opening input file");
 
-    let mut cups = labels
-        .chars()
-        .map(|c| c.to_digit(10).unwrap() as usize)
-        .collect::<Vec<usize>>();
+    let mut cups = labels.chars().map(|c| c.to_digit(10).unwrap() as usize).collect::<Vec<usize>>();
     println!("Part1: {}", p1(&cups));
 
     (10..1000000 + 1).for_each(|x| cups.push(x));

@@ -8,17 +8,11 @@ fn main() {
 
     let (mut deck1, mut deck2) = build_decks(&input);
     combat(&mut deck1, &mut deck2);
-    println!(
-        "Part1: {}",
-        score(if deck1.is_empty() { &deck2 } else { &deck1 })
-    );
+    println!("Part1: {}", score(if deck1.is_empty() { &deck2 } else { &deck1 }));
 
     let (mut deck1, mut deck2) = build_decks(&input);
     rec_combat(&mut deck1, &mut deck2);
-    println!(
-        "Part2: {}",
-        score(if deck1.is_empty() { &deck2 } else { &deck1 })
-    );
+    println!("Part2: {}", score(if deck1.is_empty() { &deck2 } else { &deck1 }));
 }
 
 fn combat(deck1: &mut Deck, deck2: &mut Deck) {
@@ -68,28 +62,12 @@ fn rec_combat(deck1: &mut Deck, deck2: &mut Deck) -> bool {
 }
 
 fn score(deck: &Deck) -> usize {
-    deck.iter()
-        .rev()
-        .enumerate()
-        .map(|(i, card)| (i + 1) * card)
-        .sum()
+    deck.iter().rev().enumerate().map(|(i, card)| (i + 1) * card).sum()
 }
 
 fn build_decks(input: &str) -> (Deck, Deck) {
     let mut input = input.split("\n\n");
-    let deck1 = input
-        .next()
-        .unwrap()
-        .lines()
-        .skip(1)
-        .map(|card| card.parse().unwrap())
-        .collect::<Deck>();
-    let deck2 = input
-        .next()
-        .unwrap()
-        .lines()
-        .skip(1)
-        .map(|card| card.parse().unwrap())
-        .collect::<Deck>();
+    let deck1 = input.next().unwrap().lines().skip(1).map(|card| card.parse().unwrap()).collect::<Deck>();
+    let deck2 = input.next().unwrap().lines().skip(1).map(|card| card.parse().unwrap()).collect::<Deck>();
     (deck1, deck2)
 }

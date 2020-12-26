@@ -18,19 +18,13 @@ fn main() {
     precedences.insert(Token::Add, 1);
     precedences.insert(Token::Mul, 1);
     precedences.insert(Token::LeftP, 0);
-    let p1 = input
-        .lines()
-        .map(|exp| shunting_yard(exp, &precedences))
-        .sum::<usize>();
+    let p1 = input.lines().map(|exp| shunting_yard(exp, &precedences)).sum::<usize>();
     println!("Part1: {}", p1);
 
     precedences.insert(Token::Add, 1);
     precedences.insert(Token::Mul, 0);
     precedences.insert(Token::LeftP, 0);
-    let p2 = input
-        .lines()
-        .map(|exp| shunting_yard(exp, &precedences))
-        .sum::<usize>();
+    let p2 = input.lines().map(|exp| shunting_yard(exp, &precedences)).sum::<usize>();
     println!("Part2: {}", p2);
 }
 
@@ -79,18 +73,11 @@ fn shunting_yard(exp: &str, precedences: &Precedences) -> usize {
     }
 }
 
-fn process_op(
-    token: Token,
-    stack: &mut Vec<Token>,
-    dequeue: &mut VecDeque<Token>,
-    precedences: &Precedences,
-) {
+fn process_op(token: Token, stack: &mut Vec<Token>, dequeue: &mut VecDeque<Token>, precedences: &Precedences) {
     let precedence = precedences.get(&token).unwrap();
     while let Some(token) = stack.last() {
         match token {
-            Token::Add | Token::Mul if precedence <= precedences.get(token).unwrap() => {
-                dequeue.push_back(stack.pop().unwrap())
-            }
+            Token::Add | Token::Mul if precedence <= precedences.get(token).unwrap() => dequeue.push_back(stack.pop().unwrap()),
             _ => break,
         }
     }
