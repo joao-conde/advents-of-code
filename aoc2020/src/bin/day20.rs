@@ -38,7 +38,7 @@ impl Tile {
 fn main() {
     let input = fs::read_to_string("input/day20").expect("failure opening input file");
     let mut tiles = HashMap::new();
-    ////////////////////part1
+
     let mut borders_to_tiles = HashMap::new();
     for tile in input.split("\n\n") {
         let mut lines = tile.lines();
@@ -58,8 +58,7 @@ fn main() {
         map
     });
     let corners = unique_edge_count.iter().filter(|(_, v)| **v == 4).map(|(k, _)| *k).collect::<Vec<usize>>();
-    println!("Part1: {:?} {}", corners, corners.iter().product::<usize>());
-    ////////////////////
+    // println!("Part1: {}", corners.iter().product::<usize>());
 
     let size = f32::sqrt(tiles.len() as f32) as usize;
     let mut image = vec![vec![Tile::default(); size]; size];
@@ -136,13 +135,16 @@ fn main() {
 
     loop {
         let num_monsters = count_monsters(&final_image, &monster_coords);
+        println!("Part2: {}", num_monsters);
         if num_monsters != 0 {
             let p2 = total_hashtags - num_monsters * monster_coords.len();
-            println!("Part2: {:?}", p2);
+            println!("Part2: {}", p2);
             break;
         }
         final_image = rotate_90_matrix(&final_image);
     }
+
+    println!("{:?} {:?}", final_image.len(), final_image[0].len());
 }
 
 fn count_monsters(image: &Vec<Vec<char>>, monster_coords: &HashSet<(isize, isize)>) -> usize {
