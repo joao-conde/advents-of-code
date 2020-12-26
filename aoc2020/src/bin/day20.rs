@@ -116,7 +116,6 @@ fn main() {
             let len = left_tile.m.len();
             if (0..len).any(|i| left_tile.m[i][len - 1] != match_tile.m[i][0]) {
                 for i in 0..match_tile.m[0].len() / 2 {
-                    // println!("swapping {} {}", i, len - 1 - i);
                     match_tile.m[i][0] = match_tile.m[len - 1 - i][0];
                 }
             }
@@ -125,8 +124,22 @@ fn main() {
         }
     }
 
-    image = rotate_90_matrix(&image);
-    for x in image.iter().map(|x| x.iter().map(|y| y.id).collect()).collect::<Vec<Vec<usize>>>() {
+    
+    // build image by replacing tile IDs by char maps
+    let width = image[0][0].m.len();
+    let trimmed_width = width - 2;
+    let mut final_image = vec![Vec::<char>::new(); trimmed_width * size];
+    for i in 0..size {
+        for j in 0..size {
+            let tile = &image[i][j];
+            for k in 1..width - 1 {
+                final_image[i * trimmed_width + (k - 1)].extend(&tile.m[k][1..width - 1]);
+            }
+        }
+    }
+    // println!("{:?}", final_image);
+    // image = rotate_90_matrix(&image);
+    for x in final_image {
         println!("{:?}", x);
     }
 }
