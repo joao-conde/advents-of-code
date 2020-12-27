@@ -2,8 +2,9 @@ use std::collections::{HashMap, HashSet};
 use std::fs;
 use std::iter::FromIterator;
 
-const MONSTER_POS: [(isize, isize); 15] =
-    [(0, 17), (0, 0), (0, 18), (-1, 18), (1, 10), (0, 5), (0, 11), (1, 7), (1, 16), (0, 6), (1, 4), (0, 12), (1, 13), (0, 19), (1, 1)];
+// (0, 0) as the first # in second line
+const MONSTER_DELTAS: [(isize, isize); 15] =
+    [(-1, 18), (0, 0), (0, 5), (0, 6), (0, 11), (0, 12), (0, 17), (0, 18), (0, 19), (1, 1), (1, 4), (1, 7), (1, 10), (1, 13), (1, 16)];
 
 #[derive(Clone, Default)]
 struct Tile {
@@ -43,7 +44,8 @@ fn main() {
     let mut tiles = HashMap::new();
     let mut borders_to_tiles = HashMap::new();
 
-    // save all tiles and build a map of border (and reverse) to tile IDs that have it
+    // save all tiles
+    // build a map of border (and reverse) to tile IDs that have it
     for tile in input.split("\n\n") {
         let mut lines = tile.lines();
         let id = lines.next().unwrap();
@@ -61,21 +63,8 @@ fn main() {
     let corners = find_corners(&borders_to_tiles);
     println!("Part1: {}", corners.iter().product::<usize>());
 
-    let mut image = build_image(&tiles, &borders_to_tiles, corners[0]);
-    let total_hashtags = image.iter().flatten().filter(|&&c| c == '#').count();
-    let monster_coords = HashSet::from_iter(MONSTER_POS.iter().cloned());
-    for r in 0..8 {
-        let num_monsters = count_monsters(&image, &monster_coords);
-        if num_monsters != 0 {
-            let water_roughness = total_hashtags - num_monsters * monster_coords.len();
-            println!("Part2: {}", water_roughness);
-            break;
-        }
-        image = rotate_90_matrix(&image);
-        if r == 3 {
-            image = flip_y(&image);
-        }
-    }
+    let image = build_image(&tiles, &borders_to_tiles, corners[0]);
+    println!("Part2: {}", compute_roughness(image));
 }
 
 fn find_corners(borders_to_tiles: &HashMap<Vec<char>, Vec<usize>>) -> Vec<usize> {
@@ -156,7 +145,23 @@ fn build_image(tiles: &HashMap<usize, Tile>, borders_to_tiles: &HashMap<Vec<char
     final_image
 }
 
-fn count_monsters(image: &Vec<Vec<char>>, monster_coords: &HashSet<(isize, isize)>) -> usize {
+fn compute_roughness(mut image: Vec<Vec<char>>) -> usize {
+    let total_hashtags = image.iter().flatten().filter(|&&c| c == '#').count();
+    let monster_coords = HashSet::from_iter(MONSTER_DELTAS.iter().cloned());
+    for r in 0..8 {
+        let num_monsters = count_monsters(&image, &monster_coords);
+        if num_monsters != 0 {
+            return total_hashtags - num_monsters * monster_coords.len();
+        }
+        image = rotate_90_matrix(&image);
+        if r == 3 {
+            image = flip_y(&image);
+        }
+    }
+    unreachable!()
+}
+
+fn count_monsters(image: &[Vec<char>], monster_coords: &HashSet<(isize, isize)>) -> usize {
     let hashtags = image
         .iter()
         .enumerate()
@@ -179,7 +184,7 @@ fn find_match(tile: &Tile, borders_to_tiles: &HashMap<Vec<char>, Vec<usize>>, di
     .copied()
 }
 
-fn rotate_90_matrix<T: Clone + Default>(m: &Vec<Vec<T>>) -> Vec<Vec<T>> {
+fn rotate_90_matrix<T: Clone + Default>(m: &[Vec<T>]) -> Vec<Vec<T>> {
     let (h, w) = (m.len(), m[0].len());
     let mut rot = vec![vec![T::default(); w]; h];
     for i in 0..h {
@@ -190,12 +195,12 @@ fn rotate_90_matrix<T: Clone + Default>(m: &Vec<Vec<T>>) -> Vec<Vec<T>> {
     rot
 }
 
-fn flip_y<T: Clone>(tile: &Vec<Vec<T>>) -> Vec<Vec<T>> {
-    let mut tile = tile.clone();
+fn flip_y<T: Clone>(tile: &[Vec<T>]) -> Vec<Vec<T>> {
+    let mut tile = tile.to_vec();
     let size = tile[0].len();
-    for i in 0..tile.len() {
+    for row in &mut tile {
         for j in 0..size / 2 {
-            tile[i].swap(j, size - 1 - j);
+            row.swap(j, size - 1 - j);
         }
     }
     tile
