@@ -38,14 +38,14 @@ fn p2(console: &RustyConsole) -> (i32, bool) {
         .expect("no fix for the infinite loop")
 }
 
-#[derive(Clone, Debug)]
+#[derive(Clone)]
 pub struct RustyConsole {
     pub pc: i32,
     pub program: Vec<Instruction>,
     pub accumulator: i32,
 }
 
-#[derive(Clone, Copy, Debug)]
+#[derive(Clone, Copy)]
 pub enum Instruction {
     Acc(i32),
     Jmp(i32),

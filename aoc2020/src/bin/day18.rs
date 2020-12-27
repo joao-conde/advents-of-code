@@ -3,7 +3,7 @@ use std::fs;
 
 type Precedences = HashMap<Token, u8>;
 
-#[derive(Debug, PartialEq, Eq, Hash)]
+#[derive(PartialEq, Eq, Hash)]
 enum Token {
     Val(usize),
     Add,
