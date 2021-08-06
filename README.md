@@ -12,8 +12,6 @@ My goals are simply to learn or practice a new programming language (or ideally 
 
 Some years I don't finish during the advent due to time constraints, but once in a while I solve one problem of a past year.
 
-I started in 2017 but I plan on doing previous editions.
-
 ## Language used for each year
 
 | Year | Language   | Completion |
