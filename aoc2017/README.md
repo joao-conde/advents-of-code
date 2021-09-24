@@ -1,14 +1,23 @@
 # [Advent of Code 2017](https://adventofcode.com/2017)
 
-## Why Python(3)
+## Why Python
 
 - Widely used across several computer science domains
-- Very fun readable language
+- Great syntax, very readable
 - Superb one-liners
-- Wanted to learn it
 
-## Run solutions
+## Running solutions
 
-Run with any version of python3:
+The following assumes you are at the project root level (same as this `README.md`).
 
-`python dayXX.py`
+To run the solution for a given day:
+
+```bash
+$ python src/day[01-25].py
+```
+
+To run all the solutions:
+
+```bash
+$ python src/all.py
+```

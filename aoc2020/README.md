@@ -10,7 +10,7 @@ However, after programming for a while in C++, I ran into some classic problems 
 
 <img src="https://rustacean.net/assets/cuddlyferris.png" width=50% height=50%>
 
-## Running each solution
+## Running solutions
 
 The following assumes you are at the project root level (same as `Cargo.toml` and this `README.md`).
 
