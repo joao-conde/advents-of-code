@@ -1,7 +1,9 @@
-#Link to problem: https://adventofcode.com/2017/day/8
+input_file = open("input/day08")
+instructions_list = input_file.read().split("\n")
+input_file.close()
 
-class Register():
 
+class Register:
     def __init__(self, name):
         self.name = name
         self.cash = 0
@@ -13,28 +15,20 @@ class Register():
         self.cash -= cash
 
 
-#Comparison operations dictionary
 ops = {
-    ">": (lambda x,y: x > y),
-    "<": (lambda x,y: x < y),
-    ">=": (lambda x,y: x >= y),
-    "<=": (lambda x,y: x <= y),
-    "==": (lambda x,y: x == y),
-    "!=": (lambda x,y: x != y)
+    ">": (lambda x, y: x > y),
+    "<": (lambda x, y: x < y),
+    ">=": (lambda x, y: x >= y),
+    "<=": (lambda x, y: x <= y),
+    "==": (lambda x, y: x == y),
+    "!=": (lambda x, y: x != y),
 }
 
-#For current repos config path is '../res/d08.txt'
-input_file = open(input("Input file path + extension (e.g.: /dir/file.txt): "))
-instructions_list= input_file.read().split('\n')
-input_file.close()
-
-
-#PART1 - could do all in one cycle but since the complexity of O(n) is similiar to O(2n) I didn't bother to much since its a small data set
-
+# PART1 - could do all in one cycle but since the complexity of O(n) is similiar to O(2n) I didn't bother to much since its a small data set
 registers = []
 max_value_held = "none"
 
-#build registers
+# build registers
 for instruction in instructions_list:
     instruction = instruction.split()
 
@@ -44,17 +38,16 @@ for instruction in instructions_list:
     register1 = [reg for reg in registers if reg.name == left_operand]
     register2 = [reg for reg in registers if reg.name == target_reg]
 
-    #if it gets and empty list it means there is no register yet with that name so we create one
-    if len(register1) == 0 :
+    # if it gets and empty list it means there is no register yet with that name so we create one
+    if len(register1) == 0:
         register1 = Register(left_operand)
         registers.append(register1)
 
-    if len(register2) == 0 :
+    if len(register2) == 0:
         register2 = Register(target_reg)
         registers.append(register2)
 
-
-#perform instructions
+# perform instructions
 for instruction in instructions_list:
     instruction = instruction.split()
 
@@ -64,7 +57,7 @@ for instruction in instructions_list:
 
     reg_cash = [reg.cash for reg in registers if reg.name == left_operand][0]
 
-    if not(ops[operation](reg_cash, right_operand)) :
+    if not (ops[operation](reg_cash, right_operand)):
         continue
 
     target_reg = [reg for reg in registers if reg.name == instruction[0]][0]
@@ -77,12 +70,13 @@ for instruction in instructions_list:
     if method == "dec":
         target_reg.cash_out(cash)
 
+    # PART2
+    if max_value_held == "none" or max_value_held < target_reg.cash:
+        max_value_held = target_reg.cash
 
-    #PART2
-    if max_value_held == "none" or max_value_held < target_reg.cash : max_value_held = target_reg.cash
-
-
-#getting max value
 cashes = [reg.cash for reg in registers]
-print("The largest value in any register after completing the instructions is", max(cashes))
+print(
+    "The largest value in any register after completing the instructions is",
+    max(cashes),
+)
 print("Maximum value held during transactions was", max_value_held)

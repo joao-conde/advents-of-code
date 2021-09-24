@@ -1,7 +1,11 @@
-#Link to problem: https://adventofcode.com/2017/day/18
+if __name__ == "__main__":
+    input_file = open("input/day18")
+    instructions = input_file.read().split("\n")
+    input_file.close()
+
 
 class Program(object):
-    def __init__(self, registers, instructions = [], instr_ptr = 0):
+    def __init__(self, registers, instructions=[], instr_ptr=0):
         self.registers = registers
         self.instructions = instructions
         self.instr_ptr = instr_ptr
@@ -49,12 +53,15 @@ class Program(object):
     def execute_mod(self, x, y):
         self.registers[x] %= self.get_arg_value(y)
 
-    def execute_snd(self, x): pass
+    def execute_snd(self, x):
+        pass
 
-    def execute_rcv(self, x): pass
+    def execute_rcv(self, x):
+        pass
+
 
 class SoundProgram(Program):
-    def __init__(self, registers, instructions = [], instr_ptr = 0):
+    def __init__(self, registers, instructions=[], instr_ptr=0):
         super().__init__(registers, instructions, instr_ptr)
         self.last_played_frequency = None
 
@@ -62,7 +69,8 @@ class SoundProgram(Program):
         while not self.done():
             instr = instructions[self.instr_ptr].split()
             self.execute_instr(instr)
-            if "rcv" in instr: return self.last_played_frequency
+            if "rcv" in instr:
+                return self.last_played_frequency
 
     def execute_snd(self, x):
         self.last_played_frequency = self.get_arg_value(x)
@@ -71,8 +79,9 @@ class SoundProgram(Program):
         if self.get_arg_value(x) != 0:
             return self.last_played_frequency
 
+
 class MessageProgram(Program):
-    def __init__(self, registers, instructions = [], instr_ptr = 0):
+    def __init__(self, registers, instructions=[], instr_ptr=0):
         super().__init__(registers, instructions, instr_ptr)
         self.msg_queue = []
         self.other_msg_program = None
@@ -89,40 +98,41 @@ class MessageProgram(Program):
             self.registers[x] = self.msg_queue[0]
             self.msg_queue = self.msg_queue[1:]
         else:
-            self.instr_ptr -= 1 # prevent point advance
+            self.instr_ptr -= 1  # prevent point advance
             self.awaiting_msg = True
 
 
-def main(instructions):
+if __name__ == "__main__":
     # PART 1
     registers = {}
-    for i in range(26): registers[chr(ord('a')+i)] = 0
+    for i in range(26):
+        registers[chr(ord("a") + i)] = 0
     p = SoundProgram(registers, instructions)
-    print(f'(Part1) First recovered frequency: {p.run()}')
+    print(f"First recovered frequency: {p.run()}")
 
     # PART 2
     p0_registers, p1_registers = {}, {}
     for i in range(26):
-        p0_registers[chr(ord('a')+i)] = 0
-        p1_registers[chr(ord('a')+i)] = 0
+        p0_registers[chr(ord("a") + i)] = 0
+        p1_registers[chr(ord("a") + i)] = 0
     p1_registers["p"] = 1
 
-    p0, p1 = MessageProgram(p0_registers, instructions), MessageProgram(p1_registers, instructions)
+    p0, p1 = MessageProgram(p0_registers, instructions), MessageProgram(
+        p1_registers, instructions
+    )
     p0.other_msg_program = p1
     p1.other_msg_program = p0
 
-    while not (p0.awaiting_msg and len(p0.msg_queue) == 0 and p1.awaiting_msg and len(p1.msg_queue) == 0):
+    while not (
+        p0.awaiting_msg
+        and len(p0.msg_queue) == 0
+        and p1.awaiting_msg
+        and len(p1.msg_queue) == 0
+    ):
         instr = instructions[p0.instr_ptr].split()
         p0.execute_instr(instr)
 
         instr = instructions[p1.instr_ptr].split()
         p1.execute_instr(instr)
 
-    print(f'(Part2) Messages sent by program 1: {p1.sent_msgs}')
-
-if __name__ == "__main__":
-    src = "../res/d18"
-    input_file = open(src)
-    instructions = input_file.read().split('\n')
-    input_file.close()
-    main(instructions)
+    print(f"Messages sent by program 1: {p1.sent_msgs}")

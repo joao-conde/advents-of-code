@@ -1,9 +1,12 @@
-#Link to problem: https://adventofcode.com/2017/day/23
-
 from day18 import Program
 
+input_file = open("input/day23")
+instructions = input_file.read().split("\n")
+input_file.close()
+
+
 class CoprocessorProgram(Program):
-    def __init__(self, registers, instructions = [], instr_ptr = 0):
+    def __init__(self, registers, instructions=[], instr_ptr=0):
         super().__init__(registers, instructions, instr_ptr)
         self.mult_instr_cnt = 0
 
@@ -38,26 +41,22 @@ class CoprocessorProgram(Program):
         self.registers[x] -= self.get_arg_value(y)
 
 
-src = "../res/d23"
-input_file = open(src)
-instructions = input_file.read().split('\n')
-input_file.close()
-
 # PART 1
 registers = {}
-for i in range(8): registers[chr(ord('a')+i)] = 0
+for i in range(8):
+    registers[chr(ord("a") + i)] = 0
 p = CoprocessorProgram(registers, instructions)
 p.run()
-print(f'(Part1) Number of mult instructions: {p.mult_instr_cnt}')
+print(f"Number of mult instructions: {p.mult_instr_cnt}")
 
-# PART 2 (check under res/d23-brainstorm to "understand" conversion)
+# PART 2
 b = 107_900
 c = b + 17_000
 non_prime = 0
 for i in range(b, c + 1, 17):
     for j in range(2, i):
-        if i % j == 0: 
+        if i % j == 0:
             non_prime += 1
             break
-        
-print(f'(Part2) Register \'h\' contains how many non-primes from {b} to {c} exist: {non_prime}')
+
+print(f"Register 'h' contains how many non-primes from {b} to {c} exist: {non_prime}")

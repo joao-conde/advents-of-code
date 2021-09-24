@@ -1,25 +1,21 @@
-#Link to problem: https://adventofcode.com/2017/day/17
-
-#deque acts as a list but with better performance
-#list incur O(n) memory movement costs for pop and insert
-#deque's guarantee O(1)
 from collections import deque
+
+input_file = open("input/day17")
+step = int(input_file.read())
+input_file.close()
+
 
 def spin(insertions, step):
     spinlock = deque([0])
     for i in range(insertions):
         spinlock.rotate(-step)
-        spinlock.append(i+1)
+        spinlock.append(i + 1)
     return spinlock
 
 
-#PART 1 & 2
-step = int(input("Spin step size: "))
-
-print("\nWait a minute. Computing values for both parts...\n")
-
+# PART 1 & 2
 spinlock1 = spin(2017, step)
-spinlock2 = spin(50_000_000, step)
-
 print("Value after 2017:", spinlock1[0])
+
+spinlock2 = spin(50_000_000, step)
 print("Value after 0:", spinlock2[spinlock2.index(0) + 1])

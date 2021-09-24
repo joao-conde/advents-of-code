@@ -1,33 +1,27 @@
-#Link to problem: https://adventofcode.com/2017/day/4
-
-#For current repos config path is '../res/d04.txt'
-input_file = open(input("Input file path + extension (e.g.: /dir/file.txt): "))
+input_file = open("input/day04")
 lines = input_file.readlines()
 input_file.close()
 
-#PART1
-
+# PART1
 def valid_pass_p1(pp):
-    words = pp.split(' ')
-
+    words = pp.split(" ")
     for word in words:
-        if words.count(word) > 1 : return False
-
+        if words.count(word) > 1:
+            return False
     return True
 
 
-validPPs1 = 0
-
-#PART2
-
-#checks if 2 words are anagrams of each other ; true if so false if not
+# PART2
 def is_anagram(word1, word2):
-    if len(word1) != len(word2) : return False
+    if len(word1) != len(word2):
+        return False
 
     for letter in word1:
-        if word2.count(letter) == 0 : return False
+        if word2.count(letter) == 0:
+            return False
 
     return True
+
 
 def valid_pass_p2(pp):
     wordsList = pp.split()
@@ -35,22 +29,22 @@ def valid_pass_p2(pp):
     while len(wordsList) > 1:
         head = wordsList[0]
         tail = wordsList[1:]
-
         for word in tail:
-            if(is_anagram(head, word)) : return False
-
+            if is_anagram(head, word):
+                return False
         wordsList = tail
 
     return True
 
 
+validPPs1 = 0
 validPPs2 = 0
-
 for line in lines:
-    line = line.replace('\n', '')
-    if valid_pass_p1(line) : validPPs1 += 1
-    if valid_pass_p2(line) : validPPs2 += 1
+    line = line.replace("\n", "")
+    if valid_pass_p1(line):
+        validPPs1 += 1
+    if valid_pass_p2(line):
+        validPPs2 += 1
 
-#Results print
 print("P1 valid passphrases: " + str(validPPs1))
 print("P2 valid passphrases: " + str(validPPs2))
