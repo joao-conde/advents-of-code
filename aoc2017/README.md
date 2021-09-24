@@ -1,11 +1,5 @@
 # [Advent of Code 2017](https://adventofcode.com/2017)
 
-## Why Python
-
-- Widely used across several computer science domains
-- Great syntax, very readable
-- Superb one-liners
-
 ## Running solutions
 
 The following assumes you are at the project root level (same as this `README.md`).
@@ -21,3 +15,9 @@ To run all the solutions:
 ```bash
 $ python src/all.py
 ```
+
+## Why Python
+
+- Widely used across several computer science domains
+- Great syntax, very readable
+- Superb one-liners
