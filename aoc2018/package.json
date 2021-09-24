@@ -1,17 +1,15 @@
 {
   "name": "aoc2018",
-  "repository": "advents-of-code",
-  "version": "1.0.0",
   "description": "Advent of code 2018 solutions",
+  "version": "1.0.0",
+  "license": "MIT",
+  "author": "João Conde <joaodiasconde@gmail.com> (https://github.com/joao-conde)",
   "main": "index.js",
+  "repository": "https://github.com/joao-conde/advents-of-code",
   "dependencies": {},
   "devDependencies": {
     "eslint": "^5.9.0",
     "eslint-config-google": "^0.11.0"
   },
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "author": "",
-  "license": "ISC"
+  "scripts": {}
 }

@@ -1,10 +1,5 @@
-/* Link to problem: https://adventofcode.com/2018/day/4 */
 const input = require('fs').readFileSync('../res/d04').toString().split('\n').sort();
 
-/*
- * Updates the current records for a guard that slept from [asleep, wakes[
- * 'records' is a map with guardID's to a 60 minute wide array with 1 point per day he slept on that minute
- */
 const updateRecords = (records, guardID, asleep, wakes) => {
     if (!records[guardID]) records[guardID] = new Array(60).fill(0);
     for (let minute = asleep; minute < wakes; minute++) records[guardID][minute]++;
@@ -29,10 +24,6 @@ input.forEach((record) => {
     }
 });
 
-/*
- * Identifies which guard splees more often and when (minute)
- * Identifies the guard that is most frequently asleep in a minute
- */
 let sleepiestGuard = [undefined, 0, 0]; // guardID, totalSleep, minuteMaxSleep
 let lazyHour = [undefined, 0, 0]; // guardID, freqAsleep, minute
 for (const k in records) {

@@ -1,4 +1,3 @@
-/* Link to problem: https://adventofcode.com/2018/day/11 */
 const input = parseInt(require('fs').readFileSync('../res/d11').toString());
 
 const computePowerLvl = (x, y, serial) => {
@@ -6,15 +5,6 @@ const computePowerLvl = (x, y, serial) => {
     const powerLvl = ((rackID * y) + serial) * rackID;
     return ((powerLvl % 1000 - powerLvl % 100) / 100) - 5;
 };
-
-
-
-
-
-
-
-
-
 
 // tests
 // console.log(computePowerLvl(3, 5, 8));

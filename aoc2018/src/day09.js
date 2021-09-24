@@ -1,4 +1,3 @@
-/* Link to problem: https://adventofcode.com/2018/day/9 */
 const input = require('fs').readFileSync('../res/d09').toString();
 const MULTIPLE = 23;
 const numMarbles = parseInt(input.match('[0-9]*(?= points)')[0]); // not counting 0

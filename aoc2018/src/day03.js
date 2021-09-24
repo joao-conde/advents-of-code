@@ -1,7 +1,5 @@
-/* Link to problem: https://adventofcode.com/2018/day/3 */
 const input = require('fs').readFileSync('../res/d03').toString().split('\n');
 
-/* Adds claim ID's to each fabric cell */
 const updateFabric = (fabric, id, [x, y], [width, height]) => {
     for (let i = x; i < x + width; i++) {
         for (let j = y; j < y + height; j++) {
@@ -23,10 +21,6 @@ input.forEach((claim) => {
         claim.split(' ')[3].split('x').map((x) => parseInt(x)));
 });
 
-/*
- * Calculates conflicts or reused area from fabric and removes
- * areas with multiple claims, leaving the only that does not
- */
 let conflicts = 0;
 for (const cell in fabric) {
     if (fabric[cell].length >= 2) {

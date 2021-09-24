@@ -1,4 +1,3 @@
-/* Link to problem: https://adventofcode.com/2018/day/8 */
 const input = require('fs').readFileSync('../res/d08').toString().split(' ').map((x) => parseInt(x));
 
 const parseTree = (nodeID, info) => {
