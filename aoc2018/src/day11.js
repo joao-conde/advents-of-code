@@ -1,9 +1,9 @@
 const input = parseInt(require('fs').readFileSync('../res/d11').toString());
 
 const computePowerLvl = (x, y, serial) => {
-    const rackID = x + 10;
-    const powerLvl = ((rackID * y) + serial) * rackID;
-    return ((powerLvl % 1000 - powerLvl % 100) / 100) - 5;
+  const rackID = x + 10;
+  const powerLvl = (rackID * y + serial) * rackID;
+  return ((powerLvl % 1000) - (powerLvl % 100)) / 100 - 5;
 };
 
 // tests

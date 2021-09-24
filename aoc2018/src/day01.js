@@ -1,14 +1,15 @@
 const input = require('fs').readFileSync('../res/d01').toString().split('\n');
 
 const resultingFreq = input.map(Number).reduce((acc, currVal) => acc + currVal);
-console.log('P1 - Resulting frequency is ' + resultingFreq);
+console.log(`P1 - Resulting frequency is ${resultingFreq}`);
 
 const previousFreqVals = new Set();
-let frequency = 0, i = 0;
+let frequency = 0;
+let i = 0;
 while (!previousFreqVals.has(frequency)) {
-    previousFreqVals.add(frequency);
-    frequency += parseInt(input[i]);
-    if (i + 1 == input.length) i = 0;
-    else i++;
+  previousFreqVals.add(frequency);
+  frequency += parseInt(input[i]);
+  if (i + 1 == input.length) i = 0;
+  else i++;
 }
-console.log('P2 - First repeated frequency is ' + frequency);
+console.log(`P2 - First repeated frequency is ${frequency}`);
