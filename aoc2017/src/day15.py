@@ -15,7 +15,7 @@ def generator(start_val, factor, divisor, multiple=1):
 
 
 print(
-    "\nWait a moment. Computing judge points for both parts, this may take several minutes...\n"
+    "Wait a moment. Computing judge points for both parts, this may take several minutes..."
 )
 
 # PART 1

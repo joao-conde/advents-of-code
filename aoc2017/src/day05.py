@@ -7,7 +7,7 @@ input_file.close()
 offsets = [int(n) for n in offsets]
 offsets2 = list(offsets)
 
-print("\nWait a few seconds. Calculating steps...\n")
+print("Wait a few seconds. Calculating steps...")
 sys.stdout.flush()
 
 # PART1
