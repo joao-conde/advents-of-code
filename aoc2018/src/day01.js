@@ -12,4 +12,5 @@ while (!previousFreqVals.has(frequency)) {
     if (i + 1 === input.length) i = 0;
     else i += 1;
 }
+
 console.log(`P2 - First repeated frequency is ${frequency}`);

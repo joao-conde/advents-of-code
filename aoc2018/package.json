@@ -16,6 +16,7 @@
         "prettier-config-hive": "^0.1.7"
     },
     "scripts": {
+        "start": "node src/all.js",
         "lint": "eslint \"./**/*.js\"",
         "lint-fix": "eslint \"./**/*.js\" --fix",
         "prettier": "prettier \"./**/*.{js,json}\" --write",
