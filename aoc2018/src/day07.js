@@ -1,4 +1,4 @@
-const input = require("fs").readFileSync("../res/d07").toString().split("\n");
+const input = require("fs").readFileSync("input/day07").toString().split("\n");
 
 const WORKERS = 5;
 const BASE_AMOUNT = 60;

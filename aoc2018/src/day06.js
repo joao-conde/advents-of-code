@@ -1,4 +1,4 @@
-const input = require("fs").readFileSync("../res/d06").toString().split("\n");
+const input = require("fs").readFileSync("input/day06").toString().split("\n");
 
 const SAFE_THRESHOLD = 10000;
 

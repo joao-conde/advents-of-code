@@ -1,4 +1,4 @@
-const input = require("fs").readFileSync("../res/d04").toString().split("\n").sort();
+const input = require("fs").readFileSync("input/day04").toString().split("\n").sort();
 
 const updateRecords = (records, guardID, asleep, wakes) => {
     if (!records[guardID]) records[guardID] = new Array(60).fill(0);
@@ -41,5 +41,5 @@ for (const k in records) {
     if (maxAsleep > lazyHour[1]) lazyHour = [k, maxAsleep, records[k].indexOf(maxAsleep)];
 }
 
-console.log(`P1: - ${parseInt(sleepiestGuard[0]) * sleepiestGuard[2]}`);
-console.log(`P2: - ${parseInt(lazyHour[0]) * lazyHour[2]}`);
+console.log(`P1 - ${parseInt(sleepiestGuard[0]) * sleepiestGuard[2]}`);
+console.log(`P2 - ${parseInt(lazyHour[0]) * lazyHour[2]}`);

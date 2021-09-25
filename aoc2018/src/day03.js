@@ -1,4 +1,4 @@
-const input = require("fs").readFileSync("../res/d03").toString().split("\n");
+const input = require("fs").readFileSync("input/day03").toString().split("\n");
 
 const updateFabric = (fabric, id, [x, y], [width, height]) => {
     for (let i = x; i < x + width; i += 1) {

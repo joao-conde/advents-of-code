@@ -1,4 +1,4 @@
-const input = require("fs").readFileSync("../res/d02").toString().split("\n");
+const input = require("fs").readFileSync("input/day02").toString().split("\n");
 
 const buildOccurMap = word => {
     const map = {};
@@ -23,9 +23,7 @@ const getCommonSubstring = (str1, str2) => {
 };
 
 const twos = input.filter(word => containsNOccur(2, buildOccurMap(word))).length;
-
 const threes = input.filter(word => containsNOccur(3, buildOccurMap(word))).length;
-
 console.log(`P1 - Checksum is ${twos * threes}`);
 
 let largestCommonStr = "";
@@ -37,5 +35,4 @@ input.forEach(str1 =>
         }
     })
 );
-
 console.log(`P2 - Common letters between correct box ID's are ${largestCommonStr}`);

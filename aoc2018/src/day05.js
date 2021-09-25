@@ -1,4 +1,4 @@
-const input = require("fs").readFileSync("../res/d05").toString();
+const input = require("fs").readFileSync("input/day05").toString();
 
 const unitsReact = (unit1, unit2) => unit1.toUpperCase() === unit2.toUpperCase() && unit1 !== unit2;
 

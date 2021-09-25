@@ -1,5 +1,5 @@
 const input = require("fs")
-    .readFileSync("../res/d08")
+    .readFileSync("input/day08")
     .toString()
     .split(" ")
     .map(x => parseInt(x));
