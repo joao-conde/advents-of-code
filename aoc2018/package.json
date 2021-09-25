@@ -1,25 +1,24 @@
 {
-  "name": "aoc2018",
-  "description": "Advent of code 2018 solutions",
-  "version": "1.0.0",
-  "license": "MIT",
-  "author": "João Conde <joaodiasconde@gmail.com> (https://github.com/joao-conde)",
-  "repository": "https://github.com/joao-conde/advents-of-code",
-  "main": "index.js",
-  "files": [
-    "src/**/*.js"
-  ],
-  "devDependencies": {
-    "eslint": "^7.32.0",
-    "eslint-config-airbnb-base": "^14.2.1",
-    "eslint-plugin-import": "^2.24.2",
-    "prettier": "^2.4.1",
-    "prettier-airbnb-config": "^1.0.0"
-  },
-  "scripts": {
-    "lint": "eslint \"./**/*.js\"",
-    "lint-fix": "eslint \"./**/*.js\" --fix",
-    "prettier": "prettier \"./**/*.{js,json}\" --write",
-    "pretty": "yarn run prettier && yarn run lint-fix"
-  }
+    "name": "aoc2018",
+    "description": "Advent of code 2018 solutions",
+    "version": "1.0.0",
+    "license": "MIT",
+    "author": "João Conde <joaodiasconde@gmail.com> (https://github.com/joao-conde)",
+    "repository": "https://github.com/joao-conde/advents-of-code",
+    "main": "index.js",
+    "files": [
+        "src/**/*.js"
+    ],
+    "devDependencies": {
+        "eslint": "^7.32.0",
+        "eslint-config-hive": "^0.5.3",
+        "prettier": "^2.4.1",
+        "prettier-config-hive": "^0.1.7"
+    },
+    "scripts": {
+        "lint": "eslint \"./**/*.js\"",
+        "lint-fix": "eslint \"./**/*.js\" --fix",
+        "prettier": "prettier \"./**/*.{js,json}\" --write",
+        "pretty": "yarn run prettier && yarn run lint-fix"
+    }
 }

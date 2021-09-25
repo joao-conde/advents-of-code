@@ -1,4 +1,1 @@
-module.exports = {
-  ...require('prettier-airbnb-config'),
-  tabWidth: 2,
-};
+module.exports = require("prettier-config-hive");

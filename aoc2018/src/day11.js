@@ -1,9 +1,11 @@
-const input = parseInt(require('fs').readFileSync('../res/d11').toString());
+const input = require("fs").readFileSync("input/day11").toString();
+
+const puzzleInput = parseInt(input);
 
 const computePowerLvl = (x, y, serial) => {
-  const rackID = x + 10;
-  const powerLvl = (rackID * y + serial) * rackID;
-  return ((powerLvl % 1000) - (powerLvl % 100)) / 100 - 5;
+    const rackID = x + 10;
+    const powerLvl = (rackID * y + serial) * rackID;
+    return ((powerLvl % 1000) - (powerLvl % 100)) / 100 - 5;
 };
 
 // tests

@@ -1,3 +1,3 @@
 module.exports = {
-  extends: ['airbnb-base'],
+    extends: ["hive", "hive/prettier"]
 };
