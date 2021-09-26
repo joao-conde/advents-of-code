@@ -16,6 +16,13 @@ To run all the solutions:
 $ python src/all.py
 ```
 
+Solutions developed with:
+
+```bash
+$ python --version
+Python 3.8.10
+```
+
 ## Why Python
 
 - Widely used across several computer science domains
