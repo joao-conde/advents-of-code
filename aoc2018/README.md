@@ -13,7 +13,14 @@ $ node src/day[01-25].js
 To run all the solutions:
 
 ```bash
-$ cargo src/all.js
+$ node src/all.js
+```
+
+Solutions developed with:
+
+```bash
+$ node --version
+v14.15.1
 ```
 
 ## Why JavaScript
