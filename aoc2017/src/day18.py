@@ -1,9 +1,3 @@
-if __name__ == "__main__":
-    input_file = open("input/day18")
-    instructions = input_file.read().split("\n")
-    input_file.close()
-
-
 class Program(object):
     def __init__(self, registers, instructions=[], instr_ptr=0):
         self.registers = registers
@@ -103,6 +97,10 @@ class MessageProgram(Program):
 
 
 if __name__ == "__main__":
+    input_file = open("input/day18")
+    instructions = input_file.read().split("\n")
+    input_file.close()
+
     # PART 1
     registers = {}
     for i in range(26):

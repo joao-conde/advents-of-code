@@ -1,8 +1,3 @@
-input_file = open("input/day10")
-raw_lenghts = input_file.read()
-input_file.close()
-
-
 def knot_hash(raw_lenghts):
     ascii_lenghts = [ord(x) for x in [c for c in raw_lenghts]]
     ascii_lenghts = ascii_lenghts + [17, 31, 73, 47, 23]
@@ -44,10 +39,15 @@ def reverse_portion_circular_list(l, start, end):
     return l
 
 
-# PART 1
-lengths = [int(length) for length in raw_lenghts.split(",")]
-l, _, _ = knot_hash_logic([x for x in range(256)], lengths)
-print(f"Result of multiplying the first two numbers in the list: {l[0] * l[1]}")
+if __name__ == "__main__":
+    input_file = open("input/day10")
+    raw_lenghts = input_file.read()
+    input_file.close()
 
-# PART 2
-print(f"Knot hash: {knot_hash(raw_lenghts)}")
+    # PART 1
+    lengths = [int(length) for length in raw_lenghts.split(",")]
+    l, _, _ = knot_hash_logic([x for x in range(256)], lengths)
+    print(f"Result of multiplying the first two numbers in the list: {l[0] * l[1]}")
+
+    # PART 2
+    print(f"Knot hash: {knot_hash(raw_lenghts)}")
