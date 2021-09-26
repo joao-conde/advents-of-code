@@ -1,23 +1,28 @@
 # [Advent of Code 2019](https://adventofcode.com/2019)
 
+## Running solutions
+
+The following assumes you are at the project root level (same as this `README.md`).
+
+To run the solution for a given day:
+
+```bash
+$ g++ ...
+```
+
+To run all the solutions:
+
+```bash
+$ g++ ...
+```
+
+Solutions developed with:
+
+```bash
+$ g++ --version
+...
+```
+
 ## Why C++
 
-Felt like practicing the first programming language I learned.
-Next year I may take the time to learn Rust as it is gradually overtaking C++ in systems programming.
-
-## Run solutions
-
-Compiled using g++ version:
-```
-g++ (GCC) 9.2.0
-```
-
-Using:
-```
-g++ day<DAY_NUMBER>.cpp -o exe
-```
-
-And running with
-```
-./exe
-```
+Felt like practicing one of the first programming languages I learned. Besides that, it is a systems programming language thus allowing users to write performant software. I also use it in competitive programming exercises and contests.
