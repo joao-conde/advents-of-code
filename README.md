@@ -8,7 +8,7 @@ From the [Advent Of Code](https://adventofcode.com/about) page on December 2017:
 
 ## About
 
-My goals are simply to learn or practice a new programming language (ideally even a new paradigm) and to have fun solving puzzle-like challenges. 
+My goals are simply to learn or practice a new programming language (ideally even a new paradigm) and to have fun solving puzzle-like challenges.
 
 Some years I don't finish during the advent due to time constraints, but once in a while I solve one problem of a past year.
 
