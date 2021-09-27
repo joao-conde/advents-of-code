@@ -8,8 +8,9 @@ int main(){
     for(int d = 1; d <= 14; d++) {
         cout << "> Day " << d << endl;
         string day = (d < 10) ? "0" + to_string(d) : to_string(d);
-        string command = "g++ src/day" + day + ".cpp -o exe";
+        string command = "g++ src/day" + day + ".cpp -o day";
         system(command.c_str());
-        system("exe");
+        system("./day");
+        cout << endl;
     }
 }
