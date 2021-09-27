@@ -18,16 +18,17 @@ double angleBetweenVectors(int x1, int y1, int x2, int y2){
     // cos(alpha) = a·b / |a|·|b| ----> b = (0, -1)
     // becomes y of vec a dividing by 1 (unit vectors)
     // alpha = acos(-a.y / 1) = acos(a.y)
-    double angle = round(acos(-normalizedVector.second) * 1000) / 1000; //round to 3 decimal place
+    double angle = round(acos(-normalizedVector.second) * 1000) / 1000;
     return (normalizedVector.first < 0 ? 2 * M_PI - angle : angle);
 }
 
 doubleIntPairMap getVisibleAsteroids(const vector<string> &map, int x, int y){
-    doubleIntPairMap asteroidAngles; //angles of lines of sight vectors from (x, y) that intersect another asteroid
+    // angles of lines of sight vectors from (x, y) that intersect another asteroid
+    doubleIntPairMap asteroidAngles; 
     for(int i = 0; i < map.size(); i++){
         for(int j = 0; j < map[i].size(); j++){
-            if(i == y && j == x) continue; //self
-            if(map[i][j] == '.') continue; //no asteroid
+            if(i == y && j == x) continue;
+            if(map[i][j] == '.') continue;
             asteroidAngles[angleBetweenVectors(j, i, x, y)] = make_pair(j, i);
         }
     }
@@ -36,7 +37,7 @@ doubleIntPairMap getVisibleAsteroids(const vector<string> &map, int x, int y){
 
 int main(){
     vector<string> map;
-    ifstream input("../res/day10");
+    ifstream input("input/day10");
     string line;
     while(getline(input, line)) map.push_back(line);
 

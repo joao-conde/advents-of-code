@@ -44,14 +44,14 @@ void printBoard(const vector<vector<lli>> &board, int width, int height){
 }
 
 int main(){
-    vector<lli> intcode = readIntcodeFile("../res/day13");
+    vector<lli> intcode = readIntcodeFile("input/day13");
 
     IntcodeProgram gameCopy1(intcode, intcode.size());
     lli width = 0, height = 0;
     while(!gameCopy1.halt){
         width = max(gameCopy1.execute(), width);
         height = max(gameCopy1.execute(), height);
-        gameCopy1.execute(); //disregard tileID for now
+        gameCopy1.execute();
     }
 
     vector<vector<lli>> board(width + 1, vector<lli>(height + 1, 0));
@@ -70,7 +70,7 @@ int main(){
     cout << "Part1: " << accumulate(blockRowCnt.begin(), blockRowCnt.end(), 0) << " block tiles" << endl;
 
 
-    intcode[0] = 2; //play for free
+    intcode[0] = 2;
     IntcodeProgram gameCopy3(intcode, intcode.size());
     vector<vector<lli>> boardFree(width + 1, vector<lli>(height + 1, 0));
     lli ballX = 0, paddleX = 0, joystick = 0, score;

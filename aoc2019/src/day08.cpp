@@ -20,7 +20,7 @@ int computePixelColor(const vector<vector<vector<int>>> &image, int w, int h){
 }
 
 int main(){
-    ifstream input("../res/day08");
+    ifstream input("input/day08");
     int width = 25, height = 6; //image: (25 x 6) px
     vector<vector<vector<int>>> image;
     while(input.peek() != EOF){

@@ -45,7 +45,7 @@ string deepestCommonAncestor(vector<string> s1, vector<string> s2){
 
 int main(){
     string line;
-    ifstream input("../res/day06");
+    ifstream input("input/day06");
     unordered_map<string, Node> nodes;
     unordered_map<string, int> depths;
     while(getline(input, line)){

@@ -46,7 +46,7 @@ int computeMinimumORE(const unordered_map<string, int> &inputs, const reactionsL
 
 int main(){
     //TODO: refactor to a tree structure and walk it since FUEL and continuously update ore needed
-    ifstream file("../res/day14");
+    ifstream file("input/day14");
     string line;
     reactionsList reactions;
     while(getline(file, line)){

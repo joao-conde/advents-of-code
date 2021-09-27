@@ -27,17 +27,14 @@ unordered_map<pair<int,int>, char, PointHash> buildPointColorMap(vector<long lon
         int paintWhite = program.execute({curColor == '#'});
         int turnRight = program.execute();
 
-        //paint
         pointColorMap[curPoint] = (paintWhite ? '#' : '.');
 
-        //rotate
         if(turnRight) curDir++;
         else curDir--;
 
         if(curDir < 0) curDir = 3;
         if(curDir > 3) curDir = 0;
 
-        //move
         switch(dirs[curDir]){
             case '^': curPoint.second++; break;
             case 'v': curPoint.second--; break;
@@ -51,7 +48,7 @@ unordered_map<pair<int,int>, char, PointHash> buildPointColorMap(vector<long lon
 
 int main(){
     vector<long long int> intcode;
-    ifstream input("../res/day11");
+    ifstream input("input/day11");
     while(!input.eof()){
         long long int code;
         input >> code;

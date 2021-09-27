@@ -61,7 +61,7 @@ coordsDistanceMap computeCoords(string wire){
 }
 
 int main(){
-    ifstream input("../res/day03");
+    ifstream input("input/day03");
     string wire1, wire2;
     getline(input, wire1);
     getline(input, wire2);

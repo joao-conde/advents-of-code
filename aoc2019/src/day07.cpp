@@ -21,7 +21,7 @@ vector<long long int> readIntcode(string filePath){
 }
 
 int main(){
-    vector<long long int> intcode = readIntcode("../res/day07");
+    vector<long long int> intcode = readIntcode("input/day07");
     vector<int> phases = {0, 1, 2, 3, 4};
 
     int maxThrust = -1;

@@ -40,7 +40,7 @@ int computeOutput(vector<int> intcode){
 }
 
 int main(){
-    vector<int> intcode = readInputInCppOmegaLuL("../res/day02");
+    vector<int> intcode = readInputInCppOmegaLuL("input/day02");
     intcode[1] = 12;
     intcode[2] = 2;
     cout << "Part1 - " << computeOutput(intcode) << endl;

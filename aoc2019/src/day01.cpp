@@ -15,20 +15,20 @@ int calculateTotalFuel(vector<int> &mass){
 }
 
 int main(){
-    //read mass file to vector
+    // read mass file to vector
     vector<int> mass;
-    ifstream input("../res/day01");
+    ifstream input("input/day01");
     istream_iterator<int> iit(input), eos;
     copy(iit, eos, back_inserter(mass));
     input.close();
 
-    //Part1
-    //map -> reduce
+    // Part1
+    // map -> reduce
     int totalFuel = calculateTotalFuel(mass);
     cout << "Part1: " << totalFuel << endl;
 
-    //Part2
-    //map -> reduce -> filter -> map -> ... -> reduce
+    // Part2
+    // map -> reduce -> filter -> map -> ... -> reduce
     while(!mass.empty()) totalFuel += calculateTotalFuel(mass);
     cout << "Part2: " << totalFuel << endl;
 }

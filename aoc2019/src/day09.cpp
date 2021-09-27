@@ -8,7 +8,7 @@ using namespace std;
 
 int main(){
     vector<long long int> intcode;
-    ifstream input("../res/day09");
+    ifstream input("input/day09");
     while(!input.eof()){
         long long int code;
         input >> code;
