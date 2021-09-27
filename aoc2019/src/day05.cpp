@@ -2,6 +2,9 @@
 #include <iostream>
 #include <vector>
 
+#define INPUT_P1 1
+#define INPUT_P2 5
+
 using namespace std;
 
 vector<int> readIntcode(string filePath){
@@ -49,8 +52,7 @@ int computeOutputP1(vector<int> intcode){
                 pc_inc = 4;
                 break;
             case 3:
-                int input; cout << "PROGRAM INPUT: "; cin >> input;
-                intcode[intcode[i+1]] = input;
+                intcode[intcode[i+1]] = INPUT_P1;
                 pc_inc = 2;
                 break;
             case 4:
@@ -58,7 +60,6 @@ int computeOutputP1(vector<int> intcode){
                 pc_inc = 2;
                 break;
             case 99:
-                cout << "HALT" << endl;
                 halt = 1;
                 break;
             default:
@@ -91,8 +92,7 @@ int computeOutputP2(vector<int> intcode){
                 i += 4;
                 break;
             case 3:
-                int input; cout << "PROGRAM INPUT: "; cin >> input;
-                intcode[intcode[i+1]] = input;
+                intcode[intcode[i+1]] = INPUT_P2;
                 i += 2;
                 break;
             case 4:
@@ -114,7 +114,6 @@ int computeOutputP2(vector<int> intcode){
                 i += 4;
                 break;
             case 99:
-                cout << "HALT" << endl;
                 halt = 1;
                 break;
             default:
