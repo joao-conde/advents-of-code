@@ -20,9 +20,9 @@ Solutions developed with:
 
 ```bash
 $ g++ --version
-g++.exe (MinGW.org GCC Build-20200227-1) 9.2.0
+g++ (GCC) 11.1.0
 ```
 
 ## Why C++
 
-Felt like practicing one of the first programming languages I learned. Besides that, it is a systems programming language thus allowing users to write performant software. I also use it in competitive programming exercises and contests.
+Felt like practicing one of the first programming languages I learned. Besides that, it is a systems programming language thus allowing users to write performant software, suitable for my competitive programming exercises and contests.
