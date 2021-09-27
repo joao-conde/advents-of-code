@@ -7,10 +7,10 @@
 
 using namespace std;
 
-vector<int> readIntcode(string filePath){
+vector<int> readIntcode(string filePath) {
     vector<int> inputVec;
     ifstream input(filePath);
-    while(!input.eof()){
+    while (!input.eof()) {
         int code;
         input >> code;
         input.ignore();
@@ -20,8 +20,8 @@ vector<int> readIntcode(string filePath){
     return inputVec;
 }
 
-vector<int> getParameterModes(int opcode){
-    vector<int> modes; 
+vector<int> getParameterModes(int opcode) {
+    vector<int> modes;
     modes.push_back(opcode % 100);
     modes.push_back(opcode / 100 % 10);
     modes.push_back(opcode / 1000 % 10);
@@ -29,20 +29,20 @@ vector<int> getParameterModes(int opcode){
     return modes;
 }
 
-int computeOutputP1(vector<int> intcode){
+int computeOutputP1(vector<int> intcode) {
     int i = 0, halt = 0;
-    while(!halt && i < intcode.size()){
+    while (!halt && i < intcode.size()) {
         int pc_inc;
         int arg1, arg2, arg3;
         vector<int> modes = getParameterModes(intcode[i]);
 
-        try{
+        try {
             arg1 = (modes[1] ? intcode.at(i+1) : intcode.at(intcode.at(i+1)));
             arg2 = (modes[2] ? intcode.at(i+2) : intcode.at(intcode.at(i+2)));
             arg3 = (modes[3] ? intcode.at(i+3) : intcode.at(intcode.at(i+3)));
-        } catch(const out_of_range &e){}
+        } catch (const out_of_range &e) {}
 
-        switch(modes[0]){
+        switch (modes[0]) {
             case 1:
                 intcode[intcode[i+3]] = arg1 + arg2;
                 pc_inc = 4;
@@ -71,18 +71,18 @@ int computeOutputP1(vector<int> intcode){
     return intcode[0];
 }
 
-int computeOutputP2(vector<int> intcode){
+int computeOutputP2(vector<int> intcode) {
     int i = 0, halt = 0;
-    while(!halt && i < intcode.size()){
+    while (!halt && i < intcode.size()) {
         int arg1, arg2, arg3;
         vector<int> modes = getParameterModes(intcode[i]);
-        try{
+        try {
             arg1 = (modes[1] ? intcode.at(i+1) : intcode.at(intcode.at(i+1)));
             arg2 = (modes[2] ? intcode.at(i+2) : intcode.at(intcode.at(i+2)));
             arg3 = (modes[3] ? intcode.at(i+3) : intcode.at(intcode.at(i+3)));
-        } catch(const out_of_range &e){} //no more args
+        } catch (const out_of_range &e) {}
 
-        switch(modes[0]){
+        switch (modes[0]) {
             case 1:
                 intcode[intcode[i+3]] = arg1 + arg2;
                 i += 4;
@@ -100,10 +100,16 @@ int computeOutputP2(vector<int> intcode){
                 i += 2;
                 break;
             case 5:
-                if(arg1) i = arg2; else i += 3;
+                if (arg1)
+                    i = arg2;
+                else
+                    i += 3;
                 break;
             case 6:
-                if(!arg1) i = arg2; else i += 3;
+                if (!arg1)
+                    i = arg2;
+                else
+                    i += 3;
                 break;
             case 7:
                 intcode[intcode[i+3]] = arg1 < arg2;
@@ -124,7 +130,7 @@ int computeOutputP2(vector<int> intcode){
     return intcode[0];
 }
 
-int main(){
+int main() {
     vector<int> intcode = readIntcode("input/day05");
 
     cout << "----Part1 program----" << endl;

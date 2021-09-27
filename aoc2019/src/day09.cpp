@@ -6,11 +6,11 @@
 
 using namespace std;
 
-int main(){
-    vector<long long int> intcode;
+int main() {
+    vector<int64_t> intcode;
     ifstream input("input/day09");
-    while(!input.eof()){
-        long long int code;
+    while (!input.eof()) {
+        int64_t code;
         input >> code;
         input.ignore();
         intcode.push_back(code);

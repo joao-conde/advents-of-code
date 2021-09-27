@@ -8,13 +8,13 @@
 
 using namespace std;
 
-int calculateTotalFuel(vector<int> &mass){
+int calculateTotalFuel(vector<int> &mass) {
     transform(mass.begin(), mass.end(), mass.begin(), [](int m){ return m/3 - 2;});
-    mass.erase(remove_if(mass.begin(), mass.end(), [](int m){return m <= 0;}), mass.end()); //for part2 recursion
+    mass.erase(remove_if(mass.begin(), mass.end(), [](int m){return m <= 0;}), mass.end());
     return accumulate(mass.begin(), mass.end(), 0, [](int m1, int m2){return m1 + m2;});
 }
 
-int main(){
+int main() {
     // read mass file to vector
     vector<int> mass;
     ifstream input("input/day01");
@@ -29,6 +29,6 @@ int main(){
 
     // Part2
     // map -> reduce -> filter -> map -> ... -> reduce
-    while(!mass.empty()) totalFuel += calculateTotalFuel(mass);
+    while (!mass.empty()) totalFuel += calculateTotalFuel(mass);
     cout << "Part2: " << totalFuel << endl;
 }

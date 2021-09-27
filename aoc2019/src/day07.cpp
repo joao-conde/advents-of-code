@@ -7,10 +7,10 @@
 
 using namespace std;
 
-vector<long long int> readIntcode(string filePath){
-    vector<long long int> inputVec;
+vector<int64_t> readIntcode(string filePath) {
+    vector<int64_t> inputVec;
     ifstream input(filePath);
-    while(!input.eof()){
+    while (!input.eof()) {
         int code;
         input >> code;
         input.ignore();
@@ -20,14 +20,14 @@ vector<long long int> readIntcode(string filePath){
     return inputVec;
 }
 
-int main(){
-    vector<long long int> intcode = readIntcode("input/day07");
+int main() {
+    vector<int64_t> intcode = readIntcode("input/day07");
     vector<int> phases = {0, 1, 2, 3, 4};
 
     int maxThrust = -1;
     do {
         int thrust = 0;
-        for(int i = 0; i < 5; i++){
+        for (int i = 0; i < 5; i++) {
             IntcodeProgram program(intcode);
             thrust = program.execute({phases[i], thrust});
         }
@@ -47,14 +47,14 @@ int main(){
         int outE = pE.execute({phases[4], outD});
         int lastEOut = outE;
 
-        while(true){
+        while (true) {
             outA = pA.execute({outE});
             outB = pB.execute({outA});
             outC = pC.execute({outB});
             outD = pD.execute({outC});
             outE = pE.execute({outD});
 
-            if(pA.halt || pB.halt || pC.halt || pD.halt || pE.halt)
+            if (pA.halt || pB.halt || pC.halt || pD.halt || pE.halt)
                 break;
             else
                 lastEOut = max(lastEOut, outE);
