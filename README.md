@@ -1,6 +1,6 @@
 # Advents of Code
 
-Repository to host solutions for the [yearly advent of code challenges](https://adventofcode.com/2021/events).
+Repository to host solutions for the [yearly advent of code challenges](https://adventofcode.com/events).
 
 From the [Advent Of Code](https://adventofcode.com/about) page on December 2017:
 
