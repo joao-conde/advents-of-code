@@ -14,10 +14,10 @@ Some years I don't finish during the advent due to time constraints.
 
 ## Language used for each year
 
-| Year | Language   | Completion |
-| ---- | ---------- | ---------- |
-| [2017](https://adventofcode.com/2017) | Python     | 46/50      |
-| [2018](https://adventofcode.com/2018) | JavaScript | 18/50      |
-| [2019](https://adventofcode.com/2019) | C++        | 25/50      |
-| [2020](https://adventofcode.com/2020) | Rust       | 50/50      |
+| Year                                  | Language   | Completion |
+|---------------------------------------|------------|------------|
 | [2021](https://adventofcode.com/2021) | ??         | ??/50      |
+| [2020](https://adventofcode.com/2020) | Rust       | 50/50      |
+| [2019](https://adventofcode.com/2019) | C++        | 25/50      |
+| [2018](https://adventofcode.com/2018) | JavaScript | 18/50      |
+| [2017](https://adventofcode.com/2017) | Python     | 46/50      |
