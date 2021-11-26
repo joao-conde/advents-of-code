@@ -4,21 +4,30 @@
 
 The following assumes you are at the project root level (same as this `README.md`).
 
+First install TypeScript dependencies and transpile to JavaScript with:
+
 ```bash
-$ ??? run --bin day[01-25]
+$ npm install
+$ npm run build
+```
+
+Then, to run the solution for a given day:
+
+```bash
+$ node dist/day[01-25].js
 ```
 
 To run all the solutions:
 
 ```bash
-$ ??? run --bin all
+$ node dist/all.js
 ```
 
 Solutions developed with:
 
 ```bash
-$ ??? --version
-???
+$ node --version
+v16.13.0
 ```
 
 ## Why TypeScript
