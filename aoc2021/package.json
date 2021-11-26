@@ -1,0 +1,28 @@
+{
+    "name": "aoc2021",
+    "version": "1.0.0",
+    "description": "Advent of code 2021 solutions",
+    "repository": "https://github.com/joao-conde/advents-of-code",
+    "license": "MIT",
+    "author": "João Conde <joaodiasconde@gmail.com> (https://github.com/joao-conde)",
+    "files": [
+        "src/**/*.js"
+    ],
+    "scripts": {
+        "build": "tsc -p tsconfig.json",
+        "lint": "eslint \"./**/*.{js,ts}\"",
+        "lint-fix": "eslint \"./**/*.{js,ts}\" --fix",
+        "prettier": "prettier \"./**/*.{js,ts,json}\" --write",
+        "pretty": "yarn run prettier && yarn run lint-fix",
+        "start": "node dist/all.js"
+    },
+    "devDependencies": {
+        "@typescript-eslint/eslint-plugin": "^5.4.0",
+        "@typescript-eslint/parser": "^5.4.0",
+        "typescript": "^4.5.2",
+        "eslint": "^8.3.0",
+        "eslint-config-hive": "^0.5.3",
+        "prettier": "^2.5.0",
+        "prettier-config-hive": "^0.1.7"
+    }
+}

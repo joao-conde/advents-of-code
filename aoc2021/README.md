@@ -21,4 +21,6 @@ $ ??? --version
 ???
 ```
 
-## Why ??
+## Why TypeScript
+
+...
