@@ -15,12 +15,13 @@
         "pretty": "yarn run prettier && yarn run lint-fix"
     },
     "devDependencies": {
+        "@types/node": "^16.11.10",
         "@typescript-eslint/eslint-plugin": "^5.4.0",
         "@typescript-eslint/parser": "^5.4.0",
-        "typescript": "^4.5.2",
         "eslint": "^8.3.0",
         "eslint-config-hive": "^0.5.3",
         "prettier": "^2.5.0",
-        "prettier-config-hive": "^0.1.7"
+        "prettier-config-hive": "^0.1.7",
+        "typescript": "^4.5.2"
     }
 }
