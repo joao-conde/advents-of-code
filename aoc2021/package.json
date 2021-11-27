@@ -5,9 +5,6 @@
     "repository": "https://github.com/joao-conde/advents-of-code",
     "license": "MIT",
     "author": "João Conde <joaodiasconde@gmail.com> (https://github.com/joao-conde)",
-    "files": [
-        "src/**/*.ts"
-    ],
     "scripts": {
         "build": "tsc -p tsconfig.json",
         "watch": "tsc -w -p tsconfig.json",

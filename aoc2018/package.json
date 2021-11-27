@@ -5,9 +5,6 @@
     "license": "MIT",
     "author": "João Conde <joaodiasconde@gmail.com> (https://github.com/joao-conde)",
     "repository": "https://github.com/joao-conde/advents-of-code",
-    "files": [
-        "src/**/*.js"
-    ],
     "scripts": {
         "start": "node src/all.js",
         "lint": "eslint \"./**/*.js\"",
