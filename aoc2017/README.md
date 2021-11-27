@@ -22,9 +22,3 @@ Solutions developed with:
 $ python --version
 Python 3.8.10
 ```
-
-## Why Python
-
-- Widely used across several computer science domains
-- Great syntax, very readable
-- Superb one-liners

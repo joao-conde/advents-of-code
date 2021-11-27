@@ -29,7 +29,3 @@ Solutions developed with:
 $ node --version
 v16.13.0
 ```
-
-## Why TypeScript
-
-...

@@ -22,13 +22,3 @@ Solutions developed with:
 $ node --version
 v14.15.1
 ```
-
-## Why JavaScript
-
-Widely used across the industry. In order to improve my skills I decided to do AoC2018 in JavaScript with no frameworks. Pure vanilla js.
-
-As [Jeff Atwood](https://en.wikipedia.org/wiki/Jeff_Atwood) said:
-
-> “Any application that can be written in JavaScript, will eventually be written in JavaScript.”
-
-It also challenges me to keep the code clean and organized.

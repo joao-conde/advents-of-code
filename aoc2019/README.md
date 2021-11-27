@@ -22,7 +22,3 @@ Solutions developed with:
 $ g++ --version
 g++ (GCC) 11.1.0
 ```
-
-## Why C++
-
-Felt like practicing one of the first programming languages I learned. Besides that, it is a systems programming language thus allowing users to write performant software, suitable for my competitive programming exercises and contests.

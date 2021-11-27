@@ -22,11 +22,3 @@ Solutions developed with:
 $ rustc --version
 rustc 1.50.0
 ```
-
-## Why Rust
-
-In university, I was taught [C++](https://www.cplusplus.com/) as my second programming language. C++ was my language of choice for writing programs whose efficiency mattered. Examples of such are my [competitive programming exercises and contest problems](https://github.com/joao-conde/competitive-programming), where speed and fine-grained memory control was a necessity. I can't write Python or Java programs in this context because booting up their VMs alone would take too much time and resources.
-
-However, after programming for a while in C++, I ran into some classic problems with languages that give you fine-grained control over memory management (like C). **Issues like dangling pointers, use-after-frees, double frees, data races, and others. Rust introduces an ownership and borrowing memory model which completely eradicates these issues.** I don't know about you, but after knowing about this, how can I ever go back to C or C++?
-
-<img src="https://rustacean.net/assets/cuddlyferris.png" width=50% height=50%>
