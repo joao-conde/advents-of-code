@@ -10,11 +10,12 @@
     ],
     "scripts": {
         "build": "tsc -p tsconfig.json",
+        "watch": "tsc -w -p tsconfig.json",
+        "start": "node dist/all.js",
         "lint": "eslint \"./**/*.{js,ts}\"",
         "lint-fix": "eslint \"./**/*.{js,ts}\" --fix",
         "prettier": "prettier \"./**/*.{js,ts,json}\" --write",
-        "pretty": "yarn run prettier && yarn run lint-fix",
-        "start": "node dist/all.js"
+        "pretty": "yarn run prettier && yarn run lint-fix"
     },
     "devDependencies": {
         "@typescript-eslint/eslint-plugin": "^5.4.0",
