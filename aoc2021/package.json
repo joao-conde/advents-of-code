@@ -6,7 +6,7 @@
     "license": "MIT",
     "author": "João Conde <joaodiasconde@gmail.com> (https://github.com/joao-conde)",
     "files": [
-        "src/**/*.js"
+        "src/**/*.ts"
     ],
     "scripts": {
         "build": "tsc -p tsconfig.json",
