@@ -10,12 +10,6 @@ To run the solution for a given day:
 $ g++ src/day[01-25].cpp -o day && ./day
 ```
 
-To run all the solutions:
-
-```bash
-$ g++ src/all.cpp -o all && ./all
-```
-
 Solutions developed with:
 
 ```bash
