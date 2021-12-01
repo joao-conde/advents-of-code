@@ -10,12 +10,6 @@ To run the solution for a given day:
 $ python src/day[01-25].py
 ```
 
-To run all the solutions:
-
-```bash
-$ python src/all.py
-```
-
 Solutions developed with:
 
 ```bash
