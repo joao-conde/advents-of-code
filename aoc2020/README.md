@@ -10,12 +10,6 @@ To run the solution for a given day:
 $ cargo run --bin day[01-25]
 ```
 
-To run all the solutions:
-
-```bash
-$ cargo run --bin all
-```
-
 Solutions developed with:
 
 ```bash

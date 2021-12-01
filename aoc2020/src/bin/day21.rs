@@ -10,16 +10,30 @@ fn main() {
     let mut allerg_to_ings = HashMap::<&str, HashSet<&str>>::new();
     input.lines().for_each(|line| {
         let matches = re.captures(line).unwrap();
-        let ings = matches.get(1).unwrap().as_str().split(' ').collect::<HashSet<&str>>();
-        let allergens = matches.get(2).unwrap().as_str().split(", ").collect::<Vec<&str>>();
+        let ings = matches
+            .get(1)
+            .unwrap()
+            .as_str()
+            .split(' ')
+            .collect::<HashSet<&str>>();
+        let allergens = matches
+            .get(2)
+            .unwrap()
+            .as_str()
+            .split(", ")
+            .collect::<Vec<&str>>();
 
-        ings.iter().for_each(|i| *ings_freq.entry(*i).or_insert(0) += 1);
+        ings.iter()
+            .for_each(|i| *ings_freq.entry(*i).or_insert(0) += 1);
 
         for allergen in allergens {
             match allerg_to_ings.get(allergen) {
                 Some(cur) => {
                     let cur = cur.to_owned();
-                    allerg_to_ings.insert(allergen, cur.to_owned().intersection(&ings).copied().collect())
+                    allerg_to_ings.insert(
+                        allergen,
+                        cur.to_owned().intersection(&ings).copied().collect(),
+                    )
                 }
                 None => allerg_to_ings.insert(allergen, ings.clone()),
             };
@@ -32,13 +46,24 @@ fn main() {
 
 fn p1(allerg_to_ings: &HashMap<&str, HashSet<&str>>, ings_freq: &HashMap<&str, usize>) -> usize {
     let all_ings = ings_freq.keys().copied().collect::<HashSet<&str>>();
-    let possibly_allergenic = allerg_to_ings.values().fold(HashSet::<&str>::new(), |set, s| set.union(s).copied().collect());
-    all_ings.difference(&possibly_allergenic).map(|i| ings_freq.get(i).unwrap()).sum()
+    let possibly_allergenic = allerg_to_ings
+        .values()
+        .fold(HashSet::<&str>::new(), |set, s| {
+            set.union(s).copied().collect()
+        });
+    all_ings
+        .difference(&possibly_allergenic)
+        .map(|i| ings_freq.get(i).unwrap())
+        .sum()
 }
 
 fn p2(mut allerg_to_ings: HashMap<&str, HashSet<&str>>) -> String {
     while allerg_to_ings.values().any(|set| set.len() > 1) {
-        let allergen = allerg_to_ings.values().find(|set| set.len() == 1).unwrap().to_owned();
+        let allergen = allerg_to_ings
+            .values()
+            .find(|set| set.len() == 1)
+            .unwrap()
+            .to_owned();
         allerg_to_ings = allerg_to_ings
             .into_iter()
             .map(|(i, s)| match s.len() {
@@ -48,7 +73,10 @@ fn p2(mut allerg_to_ings: HashMap<&str, HashSet<&str>>) -> String {
             .collect();
     }
 
-    let mut matches = allerg_to_ings.iter().map(|(k, v)| (k, v.iter().next().unwrap())).collect::<Vec<(&&str, &&str)>>();
+    let mut matches = allerg_to_ings
+        .iter()
+        .map(|(k, v)| (k, v.iter().next().unwrap()))
+        .collect::<Vec<(&&str, &&str)>>();
     matches.sort();
     matches.iter().fold(String::new(), |mut canonical, ing| {
         canonical = format!("{},{}", canonical, ing.1);
