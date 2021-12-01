@@ -10,7 +10,5 @@ const input = readFileSync("input/day01").toString();
 const measures = input.split("\n").map(x => parseInt(x));
 console.log("Part1: " + countIncreases(measures));
 
-const windowMeasures = measures.map((_, i) =>
-    i + 3 <= measures.length ? sum(measures.slice(i, i + 3)) : 0
-);
+const windowMeasures = measures.slice(0, -2).map((_, i) => sum(measures.slice(i, i + 3)));
 console.log("Part2: " + countIncreases(windowMeasures));
