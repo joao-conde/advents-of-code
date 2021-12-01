@@ -1,14 +1,18 @@
 import { readFileSync } from "fs";
 
-const input = readFileSync("input/day01").toString().split("\n");
-const measures = input.map(x => parseInt(x));
+const input = readFileSync("input/day01").toString();
+const measures = input.split("\n").map(x => parseInt(x));
 
-const difs = measures.slice(1).map((m, i) => m - measures[i]);
-const increases = difs.filter(d => d > 0).length;
-console.log("Part1: " + increases);
+const sum = (array: number[]): number => array.reduce((acc, cur) => acc + cur, 0);
+const countIncreases = (measures: number[]): number =>
+    measures
+        .slice(1)
+        .map((m, i) => m - measures[i])
+        .filter(d => d > 0).length;
 
-const windows = measures.map((m, i) => (i + 3 <= measures.length ? measures.slice(i, i + 3) : []));
-const windowMeasures = windows.map(w => w.reduce((acc, cur) => acc + cur, 0));
-const windowDifs = windowMeasures.slice(1).map((m, i) => m - windowMeasures[i]);
-const windowIncreases = windowDifs.filter(d => d > 0).length;
-console.log("Part2: " + windowIncreases);
+console.log("Part1: " + countIncreases(measures));
+
+const windowMeasures = measures.map((_, i) =>
+    i + 3 <= measures.length ? sum(measures.slice(i, i + 3)) : 0
+);
+console.log("Part2: " + countIncreases(windowMeasures));
