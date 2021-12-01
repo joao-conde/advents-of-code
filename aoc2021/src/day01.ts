@@ -1,12 +1,9 @@
 import { readFileSync } from "fs";
 
-const sum = (array: number[]): number => array.reduce((acc, cur) => acc + cur, 0);
+const sum = (array: number[]): number => array.reduce((acc, cur) => acc + cur);
 
 const countIncreases = (measures: number[]): number =>
-    measures
-        .slice(1)
-        .map((m, i) => m - measures[i])
-        .filter(d => d > 0).length;
+    measures.slice(1).filter((m, i) => m > measures[i]).length;
 
 const input = readFileSync("input/day01").toString();
 
