@@ -6,7 +6,6 @@ const countIncreases = (measures: number[]): number =>
     measures.slice(1).filter((m, i) => m > measures[i]).length;
 
 const input = readFileSync("input/day01").toString();
-
 const measures = input.split("\n").map(x => parseInt(x));
 console.log("Part1: " + countIncreases(measures));
 
