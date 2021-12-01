@@ -17,15 +17,14 @@ Then, to run the solution for a given day:
 $ node dist/day[01-25].js
 ```
 
-To run all the solutions:
-
-```bash
-$ node dist/all.js
-```
-
 Solutions developed with:
 
 ```bash
 $ node --version
 v16.13.0
+```
+
+```bash
+$ tsc --version
+Version 4.5.2
 ```

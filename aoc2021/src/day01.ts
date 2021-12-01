@@ -1,2 +1,4 @@
-console.log("P1 - ???");
-console.log("P2 - ???");
+import { readFileSync } from "fs";
+
+const input = readFileSync("input/day01").toString();
+console.log(input);
