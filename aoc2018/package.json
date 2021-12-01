@@ -6,7 +6,6 @@
     "author": "João Conde <joaodiasconde@gmail.com> (https://github.com/joao-conde)",
     "repository": "https://github.com/joao-conde/advents-of-code",
     "scripts": {
-        "start": "node src/all.js",
         "lint": "eslint \"./**/*.js\"",
         "lint-fix": "eslint \"./**/*.js\" --fix",
         "prettier": "prettier \"./**/*.{js,json}\" --write",

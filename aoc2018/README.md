@@ -10,12 +10,6 @@ To run the solution for a given day:
 $ node src/day[01-25].js
 ```
 
-To run all the solutions:
-
-```bash
-$ node src/all.js
-```
-
 Solutions developed with:
 
 ```bash
