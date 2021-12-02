@@ -12,10 +12,10 @@ const commands: [string, number][] = input
 const position = directionTotal(commands, "forward");
 const downs = directionTotal(commands, "down");
 const ups = directionTotal(commands, "up");
-const depthP1 = downs - ups;
-console.log("Part1: " + depthP1 * position);
+const depth1 = downs - ups;
+console.log("Part1: " + depth1 * position);
 
-const [depthP2, _] = commands.reduce(
+const [depth2, _] = commands.reduce(
     ([depth, aim], [dir, val]) => {
         if (dir === "forward") depth += aim * val;
         if (dir === "down") aim += val;
@@ -24,4 +24,4 @@ const [depthP2, _] = commands.reduce(
     },
     [0, 0]
 );
-console.log("Part2: " + depthP2 * position);
+console.log("Part2: " + depth2 * position);
