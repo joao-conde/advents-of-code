@@ -8,8 +8,8 @@
     "scripts": {
         "build": "tsc -p tsconfig.json",
         "watch": "tsc -w -p tsconfig.json",
-        "lint": "eslint \"./**/*.ts\" --fix",
-        "prettier": "prettier \"./**/*.{ts,json}\" --write",
+        "lint": "eslint \"./**/*.{ts,js}\" --fix",
+        "prettier": "prettier \"./**/*.{ts,js,json}\" --write",
         "pretty": "yarn prettier && yarn lint"
     },
     "devDependencies": {
