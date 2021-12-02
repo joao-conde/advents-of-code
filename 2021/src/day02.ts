@@ -10,10 +10,8 @@ const commands: [string, number][] = input
     .map(([dir, val]) => [dir, parseInt(val)]);
 
 const position = directionTotal(commands, "forward");
-const downs = directionTotal(commands, "down");
-const ups = directionTotal(commands, "up");
-const depth1 = downs - ups;
-console.log("Part1: " + depth1 * position);
+const depth1 = directionTotal(commands, "down") - directionTotal(commands, "up");
+console.log("Part1: " + position * depth1);
 
 const [depth2, _] = commands.reduce(
     ([depth, aim], [dir, val]) => {
@@ -24,4 +22,4 @@ const [depth2, _] = commands.reduce(
     },
     [0, 0]
 );
-console.log("Part2: " + depth2 * position);
+console.log("Part2: " + position * depth2);
