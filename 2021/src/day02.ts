@@ -1,7 +1,7 @@
 import { readFileSync } from "fs";
 
-const input = readFileSync("input/day02").toString();
-const commands: [string, number][] = input
+const commands: [string, number][] = readFileSync("input/day02")
+    .toString()
     .split("\n")
     .map(c => c.split(" "))
     .map(([dir, val]) => [dir, parseInt(val)]);
@@ -18,5 +18,5 @@ const [position, depth, aim] = commands.reduce(
     },
     [0, 0, 0]
 );
-console.log("Part1:" + position * aim);
-console.log("Part2:" + position * depth);
+console.log("Part1:", position * aim);
+console.log("Part2:", position * depth);
