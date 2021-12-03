@@ -18,5 +18,5 @@ const [position, depth, aim] = commands.reduce(
     },
     [0, 0, 0]
 );
-console.log("Part1: " + position * aim);
-console.log("Part2: " + position * depth);
+console.log("Part1:" + position * aim);
+console.log("Part2:" + position * depth);
