@@ -15,16 +15,16 @@ const cardComplete = (card: Card): boolean => {
     const complete = (xs: Row) => xs.every(x => x === null);
     const rowComplete = card.some(r => complete(r));
     const colComplete = range(0, card.length)
-        .map(c => card.map(l => l[c]))
+        .map(c => card.map(r => r[c]))
         .some(c => complete(c));
     return rowComplete || colComplete;
 };
 
 const input = readFileSync("input/day04").toString().split("\n\n");
 const drawn = input[0].split(",").map(n => parseInt(n));
-const cards: Card[] = input.slice(1).map(b =>
-    b.split("\n").map(l =>
-        l
+const cards = input.slice(1).map(c =>
+    c.split("\n").map(r =>
+        r
             .split(" ")
             .map(n => parseInt(n))
             .filter(n => !isNaN(n))
