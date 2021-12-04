@@ -3,70 +3,45 @@ import { readFileSync } from "fs";
 import { range, sum } from "./utils";
 
 type Row = (number | null)[];
-type Board = Row[];
+type Card = Row[];
 
-const parseInput = (): [number[], Board[]] => {
-    const input = readFileSync("input/day04").toString().split("\n\n");
-    const drawn = input[0].split(",").map(n => parseInt(n));
-    const boards = input.slice(1).map(b =>
-        b.split("\n").map(l =>
-            l
-                .split(" ")
-                .map(n => parseInt(n))
-                .filter(n => !isNaN(n))
-        )
-    );
-    return [drawn, boards];
-};
+const filterCard = (card: Card, draw: number): Card =>
+    card.map(row => row.map(n => (n !== draw ? n : null)));
 
-const boardComplete = (board: Board): boolean => {
+const cardComplete = (card: Card): boolean => {
     const complete = (xs: Row) => xs.every(x => x === null);
-    const rowComplete = board.some(r => complete(r));
-    const cols = range(0, board.length).map(c => board.map(l => l[c]));
-    const colComplete = cols.some(c => complete(c));
+    const rowComplete = card.some(r => complete(r));
+    const colComplete = range(0, card.length)
+        .map(c => card.map(l => l[c]))
+        .some(c => complete(c));
     return rowComplete || colComplete;
 };
 
-const p1 = (drawn: number[], boards: Board[]): number | undefined => {
-    for (const d of drawn) {
-        for (let i = 0; i < boards.length; i++) {
-            boards[i] = range(0, boards[i].length).map(j =>
-                boards[i][j].map(n => (n !== d ? n : null))
-            );
+const scoreCard = (card: Card, draw: number): number =>
+    draw * sum(card.flat().filter(n => n !== null) as number[]);
 
-            if (boardComplete(boards[i])) {
-                const sum = boards[i].reduce((sum, line) => {
-                    const l = line.reduce((sum, x) => (sum || 0) + (x || 0));
-                    return sum + (l || 0);
-                }, 0);
-                return d * sum;
-            }
+const input = readFileSync("input/day04").toString().split("\n\n");
+const drawn = input[0].split(",").map(n => parseInt(n));
+const cards: Card[] = input.slice(1).map(b =>
+    b.split("\n").map(l =>
+        l
+            .split(" ")
+            .map(n => parseInt(n))
+            .filter(n => !isNaN(n))
+    )
+);
+
+const results = [];
+for (const d of drawn) {
+    for (let i = 0; i < cards.length; i++) {
+        cards[i] = filterCard(cards[i], d);
+        if (cardComplete(cards[i])) {
+            results.push(scoreCard(cards[i], d));
+            cards.splice(i, 1);
+            i -= 1;
         }
     }
-};
+}
 
-const p2 = (drawn: number[], boards: Board[]): number | undefined => {
-    let result = 0;
-    for (const d of drawn) {
-        for (let i = 0; i < boards.length; i++) {
-            boards[i] = range(0, boards[i].length).map(j =>
-                boards[i][j].map(n => (n !== d ? n : null))
-            );
-
-            if (boardComplete(boards[i])) {
-                result =
-                    d *
-                    boards[i].reduce((t, line) => {
-                        return t + sum(line.filter(x => x !== null) as number[]);
-                    }, 0);
-
-                boards.splice(i, 1);
-                i -= 1;
-            }
-        }
-    }
-    return result;
-};
-
-console.log("Part1:", p1(...parseInput()));
-console.log("Part2:", p2(...parseInput()));
+console.log("Part1:", results[0]);
+console.log("Part2:", results[results.length - 1]);
