@@ -8,6 +8,9 @@ type Card = Row[];
 const markCard = (card: Card, draw: number): Card =>
     card.map(row => row.map(n => (n !== draw ? n : null)));
 
+const scoreCard = (card: Card, draw: number): number =>
+    draw * sum(card.flat().filter(n => n !== null) as number[]);
+
 const cardComplete = (card: Card): boolean => {
     const complete = (xs: Row) => xs.every(x => x === null);
     const rowComplete = card.some(r => complete(r));
@@ -16,9 +19,6 @@ const cardComplete = (card: Card): boolean => {
         .some(c => complete(c));
     return rowComplete || colComplete;
 };
-
-const scoreCard = (card: Card, draw: number): number =>
-    draw * sum(card.flat().filter(n => n !== null) as number[]);
 
 const input = readFileSync("input/day04").toString().split("\n\n");
 const drawn = input[0].split(",").map(n => parseInt(n));
