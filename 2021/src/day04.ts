@@ -5,7 +5,7 @@ import { range, sum } from "./utils";
 type Row = (number | null)[];
 type Card = Row[];
 
-const filterCard = (card: Card, draw: number): Card =>
+const markCard = (card: Card, draw: number): Card =>
     card.map(row => row.map(n => (n !== draw ? n : null)));
 
 const cardComplete = (card: Card): boolean => {
@@ -31,17 +31,16 @@ const cards: Card[] = input.slice(1).map(b =>
     )
 );
 
-const results = [];
-for (const d of drawn) {
-    for (let i = 0; i < cards.length; i++) {
-        cards[i] = filterCard(cards[i], d);
-        if (cardComplete(cards[i])) {
-            results.push(scoreCard(cards[i], d));
-            cards.splice(i, 1);
-            i -= 1;
-        }
-    }
-}
-
-console.log("Part1:", results[0]);
-console.log("Part2:", results[results.length - 1]);
+const scores = drawn.reduce(
+    (acc: { cards: Card[]; scores: number[] }, d: number) => {
+        const cards = acc.cards.map(card => markCard(card, d));
+        const scores = cards.filter(card => cardComplete(card)).map(card => scoreCard(card, d));
+        return {
+            cards: cards.filter(card => !cardComplete(card)),
+            scores: acc.scores.concat(scores)
+        };
+    },
+    { cards: cards, scores: [] }
+).scores;
+console.log("Part1:", scores[0]);
+console.log("Part2:", scores[scores.length - 1]);
