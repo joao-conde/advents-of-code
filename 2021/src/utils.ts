@@ -1,10 +1,10 @@
 export const range = (start: number, end: number, step = 1): number[] =>
     [...Array(end - start).keys()].map(i => start + i * step).filter(x => x < end);
 
-export const scan = <T, K>(iter: Iterable<K>, seed: T, fn: (state: T, next: K) => T): T[] => {
+export const scan = <T, X>(xs: Iterable<X>, seed: T, fn: (state: T, next: X) => T): T[] => {
     const states = [seed];
-    for (const k of iter) {
-        seed = fn(seed, k);
+    for (const x of xs) {
+        seed = fn(seed, x);
         states.push(seed);
     }
     return states;
