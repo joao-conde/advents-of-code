@@ -1,5 +1,8 @@
-export const range = (start: number, end: number, step = 1): number[] =>
-    [...Array(end - start).keys()].map(i => start + i * step).filter(x => x < end);
+export const range = (a: number, b?: number, step = 1): number[] => {
+    const size = Math.ceil(b !== undefined ? (b - a) / step : a / step);
+    const offset = b !== undefined ? a : 0;
+    return [...Array(size).keys()].map(i => offset + i * step);
+};
 
 export const scan = <T, X>(xs: Iterable<X>, seed: T, fn: (state: T, next: X) => T): T[] => {
     const states = [seed];
