@@ -14,7 +14,7 @@ const scoreCard = (card: Card, draw: number): number =>
 const cardComplete = (card: Card): boolean => {
     const complete = (xs: Row) => xs.every(x => x === null);
     const rowComplete = card.some(r => complete(r));
-    const colComplete = range(0, card.length)
+    const colComplete = range(card.length)
         .map(c => card.map(r => r[c]))
         .some(c => complete(c));
     return rowComplete || colComplete;

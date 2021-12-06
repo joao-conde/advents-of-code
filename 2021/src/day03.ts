@@ -4,7 +4,7 @@ import { range } from "./utils";
 
 const powerRate = (report: string[], selector: (ones: number, zeros: number) => number): number => {
     const size = report[0].length;
-    return range(0, size).reduce((rate, i) => {
+    return range(size).reduce((rate, i) => {
         const ones = report.filter(num => num[i] === "1").length;
         const zeros = report.length - ones;
         return rate | (selector(ones, zeros) << (size - i - 1));
