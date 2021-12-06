@@ -4,13 +4,7 @@ export const range = (a: number, b?: number, step = 1): number[] => {
     return [...Array(size).keys()].map(i => offset + i * step);
 };
 
-export const scan = <T, X>(xs: Iterable<X>, seed: T, fn: (state: T, next: X) => T): T[] => {
-    const states = [seed];
-    for (const x of xs) {
-        seed = fn(seed, x);
-        states.push(seed);
-    }
-    return states;
-};
+export const scan = <T, X>(xs: Array<X>, seed: T, fn: (state: T, next: X) => T): T[] =>
+    xs.reduce((states, x) => states.concat([fn(states[states.length - 1], x)]), [seed]);
 
 export const sum = (xs: number[]): number => xs.reduce((sum, x) => sum + x, 0);
