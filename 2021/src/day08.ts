@@ -36,11 +36,11 @@ const input = readFileSync("input/day08").toString().split("\n");
 
 const p1 = input.reduce((unique, l) => {
     const [_patterns, output] = l.split("|");
-    const output_lens = output
+    const lengths = output
         .trim()
         .split(" ")
         .map(o => o.length);
-    return unique + output_lens.filter(o => [2, 3, 4, 7].includes(o)).length;
+    return unique + lengths.filter(l => [2, 3, 4, 7].includes(l)).length;
 }, 0);
 console.log("Part1:", p1);
 
