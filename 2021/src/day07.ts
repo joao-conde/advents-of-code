@@ -1,30 +1,19 @@
 import { readFileSync } from "fs";
 
-import { sum } from "./utils";
+import { mean, median, sum } from "./utils";
+
+const fuel = (positions: number[], position: number, cost: (p: number, pi: number) => number) =>
+    sum(positions.map(p => cost(position, p)));
 
 const positions = readFileSync("input/day07")
     .toString()
     .split(",")
     .map(x => parseInt(x))
-    .sort((a, b) => a - b)
+    .sort((a, b) => a - b);
 
+const p1 = fuel(positions, median(positions, false), (p, pi) => Math.abs(p - pi));
+console.log("Part1:", p1);
 
-let median: number | null = null;
-if (positions.length % 2 === 0) {
-    median = positions[positions.length / 2]
-} else {
-    const pos = Math.ceil(positions[positions.length / 2])
-    median = (positions[pos] + positions[pos + 1]) / 2
-}
-
-const p1 = sum(positions.map(p => Math.abs(p - median!)))
-console.log(p1)
-
-const cost = (x: number): number => {
-    return x === 1 ? 1 : cost(x - 1) + x;
-}
-
-const avg = Math.floor(sum(positions) / positions.length)
-const p2 = sum(positions.map(p => cost(Math.abs(p - avg))))
-console.log(p2)
-
+const cost = (x: number): number => (x === 1 ? 1 : cost(x - 1) + x);
+const p2 = fuel(positions, Math.floor(mean(positions)), (p, pi) => cost(Math.abs(p - pi)));
+console.log("Part2:", p2);
