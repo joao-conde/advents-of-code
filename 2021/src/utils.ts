@@ -1,3 +1,12 @@
+export const mean = (xs: number[]): number => sum(xs) / xs.length;
+
+export const median = (xs: number[], sort = true): number => {
+    const sorted = sort ? xs.sort((a, b) => a - b) : xs;
+    const i1 = Math.floor(sorted.length / 2);
+    const i2 = Math.ceil(sorted.length / 2);
+    return (sorted[i1] + sorted[i2]) / 2;
+};
+
 export const range = (a: number, b?: number, step = 1): number[] => {
     const size = Math.ceil(b !== undefined ? (b - a) / step : a / step);
     const offset = b !== undefined ? a : 0;
