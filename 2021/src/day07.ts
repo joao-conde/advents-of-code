@@ -14,6 +14,6 @@ const positions = readFileSync("input/day07")
 const p1 = fuel(positions, median(positions, false), (p, pi) => Math.abs(p - pi));
 console.log("Part1:", p1);
 
-const cost = (x: number): number => (x === 1 ? 1 : cost(x - 1) + x);
+const cost = (x: number): number => (x <= 1 ? 1 : cost(x - 1) + x);
 const p2 = fuel(positions, Math.floor(mean(positions)), (p, pi) => cost(Math.abs(p - pi)));
 console.log("Part2:", p2);
