@@ -1,5 +1,7 @@
 import { readFileSync } from "fs";
 
+import { sum } from "./utils";
+
 /**
  * Finds the mapping between signal wires and segments.
  * Side names are:
@@ -9,7 +11,7 @@ import { readFileSync } from "fs";
  *  side4 side5
  *     side6
  */
-const config = (patterns: string[][]): string[][] => {
+const buildMapper = (patterns: string[][]): string[][] => {
     const one = patterns.find(p => p.length === 2)!;
     const four = patterns.find(p => p.length === 4)!;
     const seven = patterns.find(p => p.length === 3)!;
@@ -31,36 +33,40 @@ const config = (patterns: string[][]): string[][] => {
     return [zero, one, two, three, four, five, six, seven, eight, nine];
 };
 
-const input = readFileSync("input/day08").toString().split("\n");
+const decodeOutputs = (mapper: string[][], outputs: string[][]): number => {
+    const code = outputs.reduce((code, chars) => code + decodeOutput(mapper, chars), "");
+    return parseInt(code);
+};
 
-const p1 = input.reduce((unique, l) => {
-    const [_, output] = l.split("|");
-    const lengths = output
-        .trim()
-        .split(" ")
-        .map(o => o.length);
-    return unique + lengths.filter(l => [2, 3, 4, 7].includes(l)).length;
-}, 0);
-console.log("Part1:", p1);
+const decodeOutput = (mapper: string[][], output: string[]): number =>
+    mapper.findIndex(k => k.every(x => output.includes(x) && output.every(x => k.includes(x))));
 
-const p2 = input.reduce((sum, l) => {
-    const [patterns, output] = l.split("|");
-    const conf = config(
+const parse = (line: string): [string[][], string[][]] => {
+    const [patterns, outputs] = line.split("|");
+    return [
         patterns
             .trim()
             .split(" ")
-            .map(p => p.split(""))
-    );
-    const code = output
-        .trim()
-        .split(" ")
-        .reduce((code, o) => {
-            const chars = o.split("");
-            const number = conf.findIndex(k =>
-                k.every(x => chars.includes(x) && chars.every(x => k.includes(x)))
-            );
-            return `${code}${number}`;
-        }, "");
-    return sum + parseInt(code);
-}, 0);
+            .map(p => p.split("")),
+        outputs
+            .trim()
+            .split(" ")
+            .map(o => o.split(""))
+    ];
+};
+
+const input = readFileSync("input/day08").toString().split("\n");
+
+const p1 = sum(
+    input
+        .map(l => parse(l))
+        .map(([_, outputs]) => outputs.filter(o => [2, 3, 4, 7].includes(o.length)).length)
+);
+console.log("Part1:", p1);
+
+const p2 = sum(
+    input
+        .map(l => parse(l))
+        .map(([patterns, outputs]) => decodeOutputs(buildMapper(patterns), outputs))
+);
 console.log("Part2:", p2);
