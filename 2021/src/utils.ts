@@ -8,7 +8,7 @@ export const median = (xs: number[], sort = true): number => {
 };
 
 export const range = (a: number, b?: number, step = 1): number[] => {
-    const size = Math.ceil(b !== undefined ? (b - a) / step : a / step);
+    const size = Math.ceil(b !== undefined ? Math.abs(b - a) / Math.abs(step) : a / step);
     const offset = b !== undefined ? a : 0;
     return [...Array(size).keys()].map(i => offset + i * step);
 };
