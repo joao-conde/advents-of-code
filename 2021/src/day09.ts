@@ -30,23 +30,26 @@ const fill = (
     basins.add(hash(i, j));
 
     const lowpoint = heightmap[i][j];
+    const stop = (r: number, c: number): boolean =>
+        heightmap[r][c] <= lowpoint || heightmap[r][c] === 9;
+
     for (let c = j - 1; c >= 0; c--) {
-        if (heightmap[i][c] <= lowpoint || heightmap[i][c] === 9) break;
+        if (stop(i, c)) break;
         fill(heightmap, i, c, basins);
     }
 
     for (let c = j + 1; c < heightmap[0].length; c++) {
-        if (heightmap[i][c] <= lowpoint || heightmap[i][c] === 9) break;
+        if (stop(i, c)) break;
         fill(heightmap, i, c, basins);
     }
 
     for (let r = i - 1; r >= 0; r--) {
-        if (heightmap[r][j] <= lowpoint || heightmap[r][j] === 9) break;
+        if (stop(r, j)) break;
         fill(heightmap, r, j, basins);
     }
 
     for (let r = i + 1; r < heightmap.length; r++) {
-        if (heightmap[r][j] <= lowpoint || heightmap[r][j] === 9) break;
+        if (stop(r, j)) break;
         fill(heightmap, r, j, basins);
     }
 
