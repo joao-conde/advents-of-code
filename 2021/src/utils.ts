@@ -17,3 +17,5 @@ export const scan = <T, X>(xs: Array<X>, seed: T, fn: (state: T, next: X) => T):
     xs.reduce((states, x) => states.concat([fn(states[states.length - 1], x)]), [seed]);
 
 export const sum = (xs: number[]): number => xs.reduce((sum, x) => sum + x, 0);
+
+export const mul = (xs: number[]): number => xs.reduce((sum, x) => sum * x, 1);
