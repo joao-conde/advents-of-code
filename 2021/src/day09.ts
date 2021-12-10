@@ -27,36 +27,27 @@ const fill = (
     basins = new Set<string>()
 ): Set<string> => {
     if (basins.has(hash(i, j))) return basins;
-
-    const lowpoint = heightmap[i][j];
     basins.add(hash(i, j));
 
-    // left
+    const lowpoint = heightmap[i][j];
     for (let c = j - 1; c >= 0; c--) {
-        if (heightmap[i][c] < lowpoint || heightmap[i][c] === 9) break;
+        if (heightmap[i][c] <= lowpoint || heightmap[i][c] === 9) break;
         fill(heightmap, i, c, basins);
-        basins.add(hash(i, c));
     }
 
-    // right
     for (let c = j + 1; c < heightmap[0].length; c++) {
-        if (heightmap[i][c] < lowpoint || heightmap[i][c] === 9) break;
+        if (heightmap[i][c] <= lowpoint || heightmap[i][c] === 9) break;
         fill(heightmap, i, c, basins);
-        basins.add(hash(i, c));
     }
 
-    // up
     for (let r = i - 1; r >= 0; r--) {
-        if (heightmap[r][j] < lowpoint || heightmap[r][j] === 9) break;
+        if (heightmap[r][j] <= lowpoint || heightmap[r][j] === 9) break;
         fill(heightmap, r, j, basins);
-        basins.add(hash(r, j));
     }
 
-    // down
     for (let r = i + 1; r < heightmap.length; r++) {
-        if (heightmap[r][j] < lowpoint || heightmap[r][j] === 9) break;
+        if (heightmap[r][j] <= lowpoint || heightmap[r][j] === 9) break;
         fill(heightmap, r, j, basins);
-        basins.add(hash(r, j));
     }
 
     return basins;
