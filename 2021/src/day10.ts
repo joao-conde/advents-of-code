@@ -1,5 +1,7 @@
 import { readFileSync } from "fs";
 
+import { sum } from "./utils";
+
 const CORRUPTION: Record<string, number> = {
     ")": 3,
     "]": 57,
@@ -38,7 +40,7 @@ const input = readFileSync("input/day10").toString().split("\n");
 const processed = input.map(l => process(l));
 
 const corrupt = processed.filter(illegal => typeof illegal === "string") as string[];
-const p1 = corrupt.reduce((score, s) => score + CORRUPTION[s!], 0);
+const p1 = sum(corrupt.map(s => CORRUPTION[s!]));
 console.log("Part1:", p1);
 
 const missing = processed.filter(missing => Array.isArray(missing)) as string[][];
