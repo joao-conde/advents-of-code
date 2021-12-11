@@ -1,3 +1,6 @@
+export const cartesian = (l1: number[], l2: number[]): number[][] =>
+    l1.flatMap(x => l2.map(y => [x, y]));
+
 export const mean = (xs: number[]): number => sum(xs) / xs.length;
 
 export const median = (xs: number[], sort = true): number => {
