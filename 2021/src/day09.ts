@@ -4,14 +4,6 @@ import { mul, range, sum } from "./utils";
 
 const hash = (i: number, j: number): string => [i, j].toString();
 
-const isLowpoint = (heightmap: number[][], i: number, j: number): boolean => {
-    const up = (heightmap[i - 1] || [])[j];
-    const down = (heightmap[i + 1] || [])[j];
-    const left = heightmap[i][j - 1];
-    const right = heightmap[i][j + 1];
-    return [up, down, left, right].filter(x => x !== undefined).every(x => x > heightmap[i][j]);
-};
-
 const lowpoints = (heightmap: number[][]): number[][] =>
     range(heightmap.length).reduce((points: number[][], i) => {
         const lowpoints = range(heightmap[i].length)
@@ -19,6 +11,14 @@ const lowpoints = (heightmap: number[][]): number[][] =>
             .map(j => [i, j]);
         return [...points, ...lowpoints];
     }, []);
+
+const isLowpoint = (heightmap: number[][], i: number, j: number): boolean => {
+    const up = (heightmap[i - 1] || [])[j];
+    const down = (heightmap[i + 1] || [])[j];
+    const left = heightmap[i][j - 1];
+    const right = heightmap[i][j + 1];
+    return [up, down, left, right].filter(x => x !== undefined).every(x => x > heightmap[i][j]);
+};
 
 const fill = (
     heightmap: number[][],

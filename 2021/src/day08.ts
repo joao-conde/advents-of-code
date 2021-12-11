@@ -2,6 +2,14 @@ import { readFileSync } from "fs";
 
 import { sum } from "./utils";
 
+const decodeOutputs = (mapper: string[][], outputs: string[][]): number => {
+    const code = outputs.reduce((code, chars) => code + decodeOutput(mapper, chars), "");
+    return parseInt(code);
+};
+
+const decodeOutput = (mapper: string[][], output: string[]): number =>
+    mapper.findIndex(k => k.every(x => output.includes(x) && output.every(x => k.includes(x))));
+
 /**
  * Finds the mapping between signal wires and segments.
  * Side names are:
@@ -32,14 +40,6 @@ const buildMapper = (patterns: string[][]): string[][] => {
     const two = three.concat([side4]).filter(i => i !== side5);
     return [zero, one, two, three, four, five, six, seven, eight, nine];
 };
-
-const decodeOutputs = (mapper: string[][], outputs: string[][]): number => {
-    const code = outputs.reduce((code, chars) => code + decodeOutput(mapper, chars), "");
-    return parseInt(code);
-};
-
-const decodeOutput = (mapper: string[][], output: string[]): number =>
-    mapper.findIndex(k => k.every(x => output.includes(x) && output.every(x => k.includes(x))));
 
 const parse = (line: string): [string[][], string[][]] => {
     const [patterns, outputs] = line.split("|");
