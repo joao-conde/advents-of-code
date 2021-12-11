@@ -51,6 +51,5 @@ const p2 = (octopuses: number[][]): number => {
 
 const input = readFileSync("input/day11").toString().split("\n");
 const octopuses = input.map(r => r.split("").map(o => parseInt(o)));
-
 console.log("Part1:", p1(copy(octopuses)));
 console.log("Part2:", p2(octopuses));
