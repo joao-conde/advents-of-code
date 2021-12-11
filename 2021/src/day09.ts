@@ -12,13 +12,16 @@ const lowpoints = (heightmap: number[][]): number[][] =>
         return [...points, ...lowpoints];
     }, []);
 
-const isLowpoint = (heightmap: number[][], i: number, j: number): boolean => {
-    const up = (heightmap[i - 1] || [])[j];
-    const down = (heightmap[i + 1] || [])[j];
-    const left = heightmap[i][j - 1];
-    const right = heightmap[i][j + 1];
-    return [up, down, left, right].filter(x => x !== undefined).every(x => x > heightmap[i][j]);
-};
+const isLowpoint = (heightmap: number[][], i: number, j: number): boolean =>
+    [
+        [0, 1],
+        [0, -1],
+        [1, 0],
+        [-1, 0]
+    ]
+        .map(([r, c]) => [r + i, c + j])
+        .filter(([r, c]) => r >= 0 && r < heightmap.length && c >= 0 && c < heightmap[0].length)
+        .every(([r, c]) => heightmap[r][c] > heightmap[i][j]);
 
 const fill = (
     heightmap: number[][],
