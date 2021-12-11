@@ -29,8 +29,8 @@ const getFlashers = (octopuses: number[][]): number[][] =>
 const flash = (octopuses: number[][], flashers: number[][]) => {
     flashers
         .flatMap(([i, j]) => {
-            const cols = [-1, 0, 1].map(x => x + j).filter(c => c >= 0 && c < GRID_SIZE);
             const rows = [-1, 0, 1].map(x => x + i).filter(r => r >= 0 && r < GRID_SIZE);
+            const cols = [-1, 0, 1].map(x => x + j).filter(c => c >= 0 && c < GRID_SIZE);
             const coords = cartesian(rows, cols).filter(([r, c]) => r !== i || c !== j);
             return coords;
         })
