@@ -3,16 +3,17 @@ import { readFileSync } from "fs";
 import { cartesian, sum } from "./utils";
 
 const GRID_SIZE = 10;
+const FLASH_THRESHOLD = 9;
 
-const flashersfn = (octopuses: number[][]): number[][] =>
+const getFlashers = (octopuses: number[][]): number[][] =>
     octopuses
         .map((r, i) => r.map((o, j) => [i, j, o]))
         .flat()
-        .filter(([_i, _j, o]) => o > 9);
+        .filter(([i, j, o]) => o > FLASH_THRESHOLD);
 
 const flash = (octopuses: number[][], flashers: number[][]) => {
     flashers
-        .flatMap(([i, j, o]) => {
+        .flatMap(([i, j]) => {
             const cols = [-1, 0, 1].map(x => x + j).filter(c => c >= 0 && c < GRID_SIZE);
             const rows = [-1, 0, 1].map(x => x + i).filter(r => r >= 0 && r < GRID_SIZE);
             const coords = cartesian(rows, cols).filter(([r, c]) => r !== i || c !== j);
@@ -25,23 +26,26 @@ const flash = (octopuses: number[][], flashers: number[][]) => {
 };
 
 const step = (octopuses: number[][]): [number, number[][]] => {
+    // increment octopuses energy level
     octopuses = octopuses.map(r => r.map(o => o + 1));
 
+    // increment adjacent octopuses energy
+    // and count all flashers
     let flashes = 0;
-    let flashers = flashersfn(octopuses);
+    let flashers = getFlashers(octopuses);
     while (flashers.length > 0) {
         flashes += flashers.length;
         flash(octopuses, flashers);
-        flashers = flashersfn(octopuses);
+        flashers = getFlashers(octopuses);
     }
 
     return [flashes, octopuses];
 };
 
 const input = readFileSync("input/day11").toString().split("\n");
-let octopuses = input.map(r => r.split("").map(o => parseInt(o)));
 
 const flashes = [];
+let octopuses = input.map(r => r.split("").map(o => parseInt(o)));
 while (true) {
     let newFlashes;
     [newFlashes, octopuses] = step(octopuses);
@@ -49,4 +53,5 @@ while (true) {
     if (newFlashes === 100) break;
 }
 
-console.log(sum(flashes.slice(0, 100)), flashes.length);
+console.log("Part1:", sum(flashes.slice(0, 100)));
+console.log("Part2:", flashes.length);
