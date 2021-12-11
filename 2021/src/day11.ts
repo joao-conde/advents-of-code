@@ -5,6 +5,15 @@ import { cartesian, copy, range } from "./utils";
 const GRID_SIZE = 10;
 const FLASH_THRESHOLD = 9;
 
+const p1 = (octopuses: number[][]): number =>
+    range(100).reduce(flashes => flashes + step(octopuses), 0);
+
+const p2 = (octopuses: number[][]): number => {
+    let i = 1;
+    while (step(octopuses) !== GRID_SIZE * GRID_SIZE) i++;
+    return i;
+};
+
 const step = (octopuses: number[][]): number => {
     // increment octopuses energy level
     cartesian(range(GRID_SIZE), range(GRID_SIZE)).forEach(([r, c]) => octopuses[r][c]++);
@@ -31,22 +40,13 @@ const flash = (octopuses: number[][], flashers: number[][]) => {
         .flatMap(([i, j]) => {
             const rows = [-1, 0, 1].map(x => x + i).filter(r => r >= 0 && r < GRID_SIZE);
             const cols = [-1, 0, 1].map(x => x + j).filter(c => c >= 0 && c < GRID_SIZE);
-            const coords = cartesian(rows, cols).filter(([r, c]) => r !== i || c !== j);
+            const coords = cartesian(rows, cols).filter(([r, c]) => !(r === i && c === j));
             return coords;
         })
         .filter(([r, c]) => octopuses[r][c] !== 0)
         .forEach(([r, c]) => octopuses[r][c]++);
 
     flashers.forEach(([i, j]) => (octopuses[i][j] = 0));
-};
-
-const p1 = (octopuses: number[][]): number =>
-    range(100).reduce(flashes => flashes + step(octopuses), 0);
-
-const p2 = (octopuses: number[][]): number => {
-    let i = 1;
-    while (step(octopuses) !== 100) i++;
-    return i;
 };
 
 const input = readFileSync("input/day11").toString().split("\n");
