@@ -1,16 +1,19 @@
-import { readFileSync } from "fs";
+import { readFileAsString } from "./utils";
 
-const graph: Record<string, string[]> = {};
-const input = readFileSync("input/day12").toString().split("\n");
-input
+type Graph = Record<string, string[]>;
+
+const graph = readFileAsString("input/day12")
+    .split("\n")
     .map(l => l.split("-"))
-    .forEach(([src, dst]) => {
+    .reduce((graph: Graph, [src, dst]) => {
         if (!(src in graph)) graph[src] = [];
         graph[src].push(dst);
 
         if (!(dst in graph)) graph[dst] = [];
         graph[dst].push(src);
-    });
+
+        return graph;
+    }, {});
 
 const dfs = (cur: string, curPath: string[] = [], paths: string[][] = []) => {
     const next = graph[cur];
@@ -56,8 +59,8 @@ const dfs2 = (allow: boolean, cur: string, curPath: string[] = [], paths: string
 
 const paths1: string[][] = [];
 dfs("start", [], paths1);
-console.log(paths1.length);
+console.log("Part1:", paths1.length);
 
 const paths: string[][] = [];
 dfs2(true, "start", [], paths);
-console.log(paths.length);
+console.log("Part2:", paths.length);
