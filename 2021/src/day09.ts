@@ -1,6 +1,4 @@
-import { readFileSync } from "fs";
-
-import { mul, range, sum } from "./utils";
+import { mul, range, readFileAsString, sum } from "./utils";
 
 const hash = (i: number, j: number): string => [i, j].toString();
 
@@ -59,7 +57,7 @@ const fill = (
     return basins;
 };
 
-const input = readFileSync("input/day09").toString().split("\n");
+const input = readFileAsString("input/day09").split("\n");
 const heightmap = input.map(r => r.split("").map(h => parseInt(h)));
 
 const points = lowpoints(heightmap);

@@ -1,6 +1,4 @@
-import { readFileSync } from "fs";
-
-import { range } from "./utils";
+import { range, readFileAsString } from "./utils";
 
 const powerRate = (report: string[], selector: (ones: number, zeros: number) => number): number => {
     const size = report[0].length;
@@ -24,7 +22,7 @@ const gasRate = (
     return parseInt(report[0], 2);
 };
 
-const report = readFileSync("input/day03").toString().split("\n");
+const report = readFileAsString("input/day03").split("\n");
 
 const gamma = powerRate(report, (ones, zeros) => (ones > zeros ? 1 : 0));
 const epsilon = powerRate(report, (ones, zeros) => (ones < zeros ? 1 : 0));

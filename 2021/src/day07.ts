@@ -1,12 +1,9 @@
-import { readFileSync } from "fs";
-
-import { mean, median, sum } from "./utils";
+import { mean, median, readFileAsString, sum } from "./utils";
 
 const fuel = (positions: number[], position: number, cost: (p: number, pi: number) => number) =>
     sum(positions.map(p => cost(position, p)));
 
-const positions = readFileSync("input/day07")
-    .toString()
+const positions = readFileAsString("input/day07")
     .split(",")
     .map(x => parseInt(x))
     .sort((a, b) => a - b);

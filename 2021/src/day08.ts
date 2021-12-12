@@ -1,6 +1,4 @@
-import { readFileSync } from "fs";
-
-import { sum } from "./utils";
+import { readFileAsString, sum } from "./utils";
 
 const decodeOutputs = (mapper: string[][], outputs: string[][]): number => {
     const code = outputs.reduce((code, chars) => code + decodeOutput(mapper, chars), "");
@@ -55,7 +53,7 @@ const parse = (line: string): [string[][], string[][]] => {
     ];
 };
 
-const input = readFileSync("input/day08").toString().split("\n");
+const input = readFileAsString("input/day08").split("\n");
 
 const p1 = sum(
     input

@@ -1,6 +1,4 @@
-import { readFileSync } from "fs";
-
-import { range, sum } from "./utils";
+import { range, readFileAsString, sum } from "./utils";
 
 const countFishes = (fishes: number[], days: number): number => {
     const states = range(10);
@@ -14,8 +12,7 @@ const countFishes = (fishes: number[], days: number): number => {
     return sum(counts);
 };
 
-const fishes = readFileSync("input/day06")
-    .toString()
+const fishes = readFileAsString("input/day06")
     .split(",")
     .map(x => parseInt(x));
 console.log("Part1:", countFishes(fishes, 80));

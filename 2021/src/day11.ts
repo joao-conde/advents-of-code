@@ -1,6 +1,4 @@
-import { readFileSync } from "fs";
-
-import { cartesian, copy, range } from "./utils";
+import { cartesian, copy, range, readFileAsString } from "./utils";
 
 const GRID_SIZE = 10;
 const FLASH_THRESHOLD = 9;
@@ -49,7 +47,7 @@ const flash = (octopuses: number[][], flashers: number[][]) => {
     flashers.forEach(([i, j]) => (octopuses[i][j] = 0));
 };
 
-const input = readFileSync("input/day11").toString().split("\n");
+const input = readFileAsString("input/day11").split("\n");
 const octopuses = input.map(r => r.split("").map(o => parseInt(o)));
 console.log("Part1:", p1(copy(octopuses)));
 console.log("Part2:", p2(octopuses));

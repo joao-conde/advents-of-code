@@ -1,7 +1,6 @@
-import { readFileSync } from "fs";
+import { readFileAsString } from "./utils";
 
-const commands: [string, number][] = readFileSync("input/day02")
-    .toString()
+const commands: [string, number][] = readFileAsString("input/day02")
     .split("\n")
     .map(c => c.split(" "))
     .map(([dir, val]) => [dir, parseInt(val)]);

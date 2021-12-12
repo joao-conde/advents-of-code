@@ -1,6 +1,4 @@
-import { readFileSync } from "fs";
-
-import { range, scan } from "./utils";
+import { range, readFileAsString, scan } from "./utils";
 
 const overlaps = (lines: number[][][]): number => {
     const overlaps = new Map<string, number>();
@@ -16,7 +14,7 @@ const linePoints = ([[x1, y1], [x2, y2]]: number[][]): number[][] => {
     return scan(range(size), [x1, y1], ([x, y]) => [x + incx, y + incy]);
 };
 
-const input = readFileSync("input/day05").toString().split("\n");
+const input = readFileAsString("input/day05").split("\n");
 const lines = input.map(l => l.split("->").map(p => p.split(",").map(x => parseInt(x))));
 const straight = lines.filter(([[x1, y1], [x2, y2]]) => x1 === x2 || y1 === y2);
 console.log("Part1:", overlaps(straight));

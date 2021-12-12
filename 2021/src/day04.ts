@@ -1,6 +1,4 @@
-import { readFileSync } from "fs";
-
-import { range, sum } from "./utils";
+import { range, readFileAsString, sum } from "./utils";
 
 type Row = (number | null)[];
 type Card = Row[];
@@ -20,7 +18,7 @@ const cardComplete = (card: Card): boolean => {
     return rowComplete || colComplete;
 };
 
-const input = readFileSync("input/day04").toString().split("\n\n");
+const input = readFileAsString("input/day04").split("\n\n");
 const drawn = input[0].split(",").map(n => parseInt(n));
 const cards = input.slice(1).map(c =>
     c.split("\n").map(r =>

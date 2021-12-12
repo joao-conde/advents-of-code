@@ -1,6 +1,4 @@
-import { readFileSync } from "fs";
-
-import { sum } from "./utils";
+import { readFileAsString, sum } from "./utils";
 
 const CORRUPTION: Record<string, number> = {
     ")": 3,
@@ -36,7 +34,7 @@ const process = (line: string): string | string[] => {
     return stack;
 };
 
-const input = readFileSync("input/day10").toString().split("\n");
+const input = readFileAsString("input/day10").split("\n");
 const processed = input.map(l => process(l));
 
 const corrupt = processed.filter(illegal => typeof illegal === "string") as string[];

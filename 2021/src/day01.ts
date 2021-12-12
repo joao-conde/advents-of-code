@@ -1,11 +1,8 @@
-import { readFileSync } from "fs";
-
-import { sum } from "./utils";
+import { readFileAsString, sum } from "./utils";
 
 const increases = (xs: number[]): number => xs.slice(1).filter((x, i) => x > xs[i]).length;
 
-const measures = readFileSync("input/day01")
-    .toString()
+const measures = readFileAsString("input/day01")
     .split("\n")
     .map(x => parseInt(x));
 console.log("Part1:", increases(measures));
