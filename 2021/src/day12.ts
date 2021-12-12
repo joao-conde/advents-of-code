@@ -2,6 +2,32 @@ import { readFileAsString } from "./utils";
 
 type Graph = Record<string, string[]>;
 
+const dfs = (
+    graph: Graph,
+    smallVisited: boolean,
+    cur = "start",
+    curPath: string[] = [],
+    paths: string[][] = []
+): string[][] => {
+    if (cur === "start" && curPath.includes("start")) return paths;
+
+    if (cur === "end") {
+        paths.push(curPath.concat("end"));
+        return paths;
+    }
+
+    const lowercase = cur === cur.toLowerCase();
+    const frequency = curPath.filter(c => c === cur).length;
+    if (lowercase && frequency >= 1) {
+        if (smallVisited) return paths;
+        else smallVisited = true;
+    }
+
+    graph[cur].forEach(next => dfs(graph, smallVisited, next, curPath.concat(cur), paths));
+
+    return paths;
+};
+
 const graph = readFileAsString("input/day12")
     .split("\n")
     .map(l => l.split("-"))
@@ -14,45 +40,5 @@ const graph = readFileAsString("input/day12")
 
         return graph;
     }, {});
-
-const dfs = (cur: string, curPath: string[] = [], paths: string[][] = []) => {
-    const next = graph[cur];
-
-    const isLowerCase = cur.toLowerCase() === cur;
-    if (isLowerCase && curPath.filter(c => c === cur).length >= 1) return;
-
-    if (cur === "end") {
-        paths.push(curPath.concat("end"));
-        return;
-    }
-
-    next.forEach(n => dfs(n, curPath.concat(cur), paths));
-};
-
-const dfs2 = (allow: boolean, cur: string, curPath: string[] = [], paths: string[][] = []) => {
-    let allowthis = allow;
-    const next = graph[cur];
-
-    const isLowerCase = cur.toLowerCase() === cur;
-    if (isLowerCase && curPath.filter(c => c === cur).length >= 1) {
-        if (!allowthis) return;
-        allowthis = false;
-    }
-
-    if (cur === "start" && curPath.includes("start")) return;
-
-    if (cur === "end") {
-        paths.push(curPath.concat("end"));
-        return;
-    }
-
-    next.forEach(n => dfs2(allowthis, n, curPath.concat(cur), paths));
-};
-
-const paths1: string[][] = [];
-dfs("start", [], paths1);
-console.log("Part1:", paths1.length);
-
-const paths: string[][] = [];
-dfs2(true, "start", [], paths);
-console.log("Part2:", paths.length);
+console.log("Part1:", dfs(graph, true).length);
+console.log("Part2:", dfs(graph, false).length);
