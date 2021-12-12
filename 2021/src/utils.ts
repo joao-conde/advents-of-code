@@ -24,7 +24,7 @@ export const range = (a: number, b?: number, step = 1): number[] => {
 
 export const readFileAsString = (path: string): string => readFileSync(path).toString();
 
-export const scan = <T, X>(xs: Array<X>, seed: T, fn: (state: T, next: X) => T): T[] =>
+export const scan = <T, X>(xs: Array<X>, fn: (state: T, next: X) => T, seed: T): T[] =>
     xs.reduce((states, x) => states.concat([fn(states[states.length - 1], x)]), [seed]);
 
 export const sum = (xs: number[]): number => xs.reduce((sum, x) => sum + x, 0);
