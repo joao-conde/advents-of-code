@@ -9,13 +9,16 @@ const dfs = (
     curPath: string[] = [],
     paths: string[][] = []
 ): string[][] => {
-    if (cur === "start" && curPath.includes("start")) return paths;
-
+    // successfully terminate this branch and add it to found paths
     if (cur === "end") {
-        paths.push(curPath.concat("end"));
+        paths.push(curPath.concat(cur));
         return paths;
     }
 
+    // prune branches going back to start
+    if (cur === "start" && curPath.includes("start")) return paths;
+
+    // prune branches where a small node would be visited again
     const lowercase = cur === cur.toLowerCase();
     const frequency = curPath.filter(c => c === cur).length;
     if (lowercase && frequency >= 1) {
@@ -23,6 +26,7 @@ const dfs = (
         else smallVisited = true;
     }
 
+    // recursive depth-first search call for each reachable node
     graph[cur].forEach(next => dfs(graph, smallVisited, next, curPath.concat(cur), paths));
 
     return paths;
