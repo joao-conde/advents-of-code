@@ -6,30 +6,28 @@ const dfs = (
     graph: Graph,
     repeatSmall: boolean,
     cur = "start",
-    curPath: string[] = [],
-    paths: string[][] = []
+    curPath: string[] = []
 ): string[][] => {
     // successfully terminate this branch and add it to found paths
-    if (cur === "end") {
-        paths.push(curPath.concat(cur));
-        return paths;
-    }
+    if (cur === "end") return [curPath.concat(cur)];
 
     // prune branches going back to start
-    if (cur === "start" && curPath.includes("start")) return paths;
+    if (cur === "start" && curPath.includes("start")) return [];
 
     // prune branches where a small node would be visited again
     const lowercase = cur === cur.toLowerCase();
     const frequency = curPath.filter(c => c === cur).length;
     if (lowercase && frequency >= 1) {
         if (repeatSmall) repeatSmall = false;
-        else return paths;
+        else return [];
     }
 
     // recursive depth-first search call for each reachable node
-    graph[cur].forEach(next => dfs(graph, repeatSmall, next, curPath.concat(cur), paths));
-
-    return paths;
+    return graph[cur].reduce(
+        (paths: string[][], next: string) =>
+            paths.concat(dfs(graph, repeatSmall, next, curPath.concat(cur))),
+        []
+    );
 };
 
 const graph = readFileAsString("input/day12")
