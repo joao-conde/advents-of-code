@@ -1,6 +1,4 @@
-import { mul, range, readFileAsString, sum } from "./utils";
-
-const hash = (i: number, j: number): string => [i, j].toString();
+import { mul, range, readFileAsString, sum, Set } from "./utils";
 
 const lowpoints = (heightmap: number[][]): number[][] =>
     range(heightmap.length).reduce((points: number[][], i) => {
@@ -25,10 +23,10 @@ const fill = (
     heightmap: number[][],
     i: number,
     j: number,
-    basins = new Set<string>()
-): Set<string> => {
-    if (basins.has(hash(i, j))) return basins;
-    basins.add(hash(i, j));
+    basins = new Set<[number, number]>()
+): Set<[number, number]> => {
+    if (basins.has([i, j])) return basins;
+    basins.add([i, j]);
 
     const lowpoint = heightmap[i][j];
     const stop = (r: number, c: number): boolean =>
@@ -65,5 +63,5 @@ const risk = sum(points.map(([i, j]) => heightmap[i][j] + 1));
 console.log("Part1:", risk);
 
 const basins = points.map(([i, j]) => fill(heightmap, i, j));
-const sizes = basins.map(b => b.size).sort((a, b) => b - a);
+const sizes = basins.map(b => b.size()).sort((a, b) => b - a);
 console.log("Part2:", mul(sizes.slice(0, 3)));
