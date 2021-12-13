@@ -13,7 +13,7 @@ const fold = (dots: Set<[number, number]>, [axis, value]: [string, number]) => {
 const input = readFileAsString("input/day13").split("\n\n");
 const folds: [string, number][] = input[1]
     .split("\n")
-    .map(l => l.split(" ")[2].split("=")[0])
+    .map(l => l.split(" ")[2].split("="))
     .map(([axis, val]) => [axis, parseInt(val)]);
 const dots = input[0]
     .split("\n")
