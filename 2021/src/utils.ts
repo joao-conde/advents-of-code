@@ -28,3 +28,11 @@ export const scan = <T, X>(xs: Array<X>, fn: (state: T, next: X) => T, seed: T):
     xs.reduce((states, x) => states.concat([fn(states[states.length - 1], x)]), [seed]);
 
 export const sum = (xs: number[]): number => xs.reduce((sum, x) => sum + x, 0);
+
+export class Set<T> {
+    storage: string[] = [];
+    hash = (value: T): string => JSON.stringify(value);
+    has = (value: T): boolean => this.storage.includes(this.hash(value));
+    add = (value: T) => this.storage.push(this.hash(value));
+    size = (): number => this.storage.length;
+}
