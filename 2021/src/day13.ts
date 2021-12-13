@@ -25,9 +25,4 @@ console.log("Part1:", dots.size());
 
 console.log("Part2:");
 folds.slice(1).forEach(f => fold(dots, f));
-range(6).forEach(x => {
-    const row = range(40)
-        .map(y => (dots.has([y, x]) ? "#" : " "))
-        .join("");
-    console.log(row);
-});
+range(6).map(x => console.log(range(40).map(y => dots.has([y, x]) ? "#" : " ").join("")))
