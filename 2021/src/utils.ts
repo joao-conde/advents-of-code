@@ -32,11 +32,13 @@ export const sum = (xs: number[]): number => xs.reduce((sum, x) => sum + x, 0);
 export class Set<T> {
     private storage: string[] = [];
 
+    private hash = (value: T): string => JSON.stringify(value);
+
+    private dehash = (value: string): T => JSON.parse(value);
+
     size = (): number => this.storage.length;
 
-    hash = (value: T): string => JSON.stringify(value);
-
-    dehash = (value: string): T => JSON.parse(value);
+    values = (): T[] => this.storage.map(value => this.dehash(value));
 
     has = (value: T): boolean => this.storage.includes(this.hash(value));
 
@@ -49,6 +51,4 @@ export class Set<T> {
         this.storage = this.storage.filter(t => t !== this.hash(value));
         return this;
     };
-
-    values = (): T[] => this.storage.map(value => this.dehash(value));
 }
