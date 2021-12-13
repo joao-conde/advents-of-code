@@ -30,9 +30,25 @@ export const scan = <T, X>(xs: Array<X>, fn: (state: T, next: X) => T, seed: T):
 export const sum = (xs: number[]): number => xs.reduce((sum, x) => sum + x, 0);
 
 export class Set<T> {
-    storage: string[] = [];
-    hash = (value: T): string => JSON.stringify(value);
-    has = (value: T): boolean => this.storage.includes(this.hash(value));
-    add = (value: T) => this.storage.push(this.hash(value));
+    private storage: string[] = [];
+
     size = (): number => this.storage.length;
+
+    hash = (value: T): string => JSON.stringify(value);
+
+    dehash = (value: string): T => JSON.parse(value);
+
+    has = (value: T): boolean => this.storage.includes(this.hash(value));
+
+    add = (value: T): this => {
+        if (!this.has(value)) this.storage.push(this.hash(value));
+        return this;
+    };
+
+    delete = (value: T): this => {
+        this.storage = this.storage.filter(t => t !== this.hash(value));
+        return this;
+    };
+
+    values = (): T[] => this.storage.map(value => this.dehash(value));
 }
