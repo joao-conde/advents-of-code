@@ -17,17 +17,11 @@ const solve = (template: string[], rules: Record<string, string>, steps: number)
     range(steps).forEach(_ => {
         pairs = Object.entries(pairs).reduce((pairs: Record<string, number>, [k, v]) => {
             const letter = rules[k];
-            const x = k[0] + letter;
-            const y = letter + k[1];
-
-            if (!(letter in counts)) counts[letter] = 0;
-            counts[letter] += v;
-
-            if (!(x in pairs)) pairs[x] = 0;
-            if (!(y in pairs)) pairs[y] = 0;
-            pairs[x] += v;
-            pairs[y] += v;
-
+            const p1 = k[0] + letter;
+            const p2 = letter + k[1];
+            counts[letter] = letter in counts ? counts[letter] + v : v;
+            pairs[p1] = p1 in pairs ? pairs[p1] + v : v;
+            pairs[p2] = p2 in pairs ? pairs[p2] + v : v;
             return pairs;
         }, {});
     });
