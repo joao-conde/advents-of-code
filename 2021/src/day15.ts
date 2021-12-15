@@ -1,8 +1,5 @@
 import { copy, range, readFileAsString } from "./utils";
 
-type Point = [number, number];
-type Element = [Point, number];
-
 const shortestPathLen = (risks: number[][]): number => {
     const height = risks.length;
     const width = risks[0].length;
@@ -10,7 +7,7 @@ const shortestPathLen = (risks: number[][]): number => {
     const distances: number[][] = copy(risks).map(r => r.map(_ => Infinity));
     distances[0][0] = 0;
 
-    const queue: Element[] = [[[0, 0], 0]];
+    const queue: [[number, number], number][] = [[[0, 0], 0]];
     while (queue.length > 0) {
         const [[x1, y1], distance] = queue.pop()!;
 
@@ -48,7 +45,6 @@ const expand = (grid: number[][]) => {
         const next = block.slice(-height).map(r => r.map(x => (x + 1 > 9 ? 1 : x + 1)));
         return block.concat(next);
     }, firstBlock);
-
     return blocks;
 };
 
