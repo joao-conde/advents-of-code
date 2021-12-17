@@ -29,6 +29,8 @@ export const scan = <T, X>(xs: Array<X>, fn: (state: T, next: X) => T, seed: T):
 
 export const sum = (xs: number[]): number => xs.reduce((sum, x) => sum + x, 0);
 
+export const zip = <T, K>(l1: T[], l2: K[]): [T, K][] => l1.map((_, i) => [l1[i], l2[i]]);
+
 export class Set<T> {
     private storage: string[] = [];
 
