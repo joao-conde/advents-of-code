@@ -1,22 +1,17 @@
-import { readFileAsString, windows } from "./utils";
+import { cartesian, range, readFileAsString, windows } from "./utils";
 
 type SFNumber = [number, number][];
 
-const build = (n: string): SFNumber => {
-    const l: SFNumber = [];
+const build = (line: string): SFNumber => {
+    const n: SFNumber = [];
     let lvl = 0;
-    for (let i = 0; i < n.length; i++) {
-        if (n[i] === "[") lvl += 1;
-        else if (n[i] === "]") lvl -= 1;
-        else if (n[i] === ",") continue;
-        else {
-            const num = isNaN(parseInt(n[i] + n[i + 1]))
-                ? parseInt(n[i])
-                : parseInt(n[i] + n[i + 1]);
-            l.push([num, lvl]);
-        }
+    for (const c of line) {
+        if (c === "[") lvl += 1;
+        else if (c === "]") lvl -= 1;
+        else if (c === ",") continue;
+        else n.push([parseInt(c), lvl]);
     }
-    return l;
+    return n;
 };
 
 const add = (n1: SFNumber, n2: SFNumber): SFNumber => [
@@ -26,22 +21,20 @@ const add = (n1: SFNumber, n2: SFNumber): SFNumber => [
 
 const explode = (n: SFNumber): boolean => {
     for (const [i, [[v1, lvl1], [v2, lvl2]]] of windows(n, 2).entries()) {
-        if (lvl1 === lvl2 && lvl1 > 4) {
-            if (n[i - 1]) n[i - 1][0] += v1;
-            if (n[i + 2]) n[i + 2][0] += v2;
-            n.splice(i, 2, [0, 4]);
-            return true;
-        }
+        if (lvl1 !== lvl2 || lvl1 <= 4) continue;
+        if (n[i - 1]) n[i - 1][0] += v1;
+        if (n[i + 2]) n[i + 2][0] += v2;
+        n.splice(i, 2, [0, 4]);
+        return true;
     }
     return false;
 };
 
 const split = (n: SFNumber): boolean => {
     for (const [i, [value, level]] of n.entries()) {
-        if (value >= 10) {
-            n.splice(i, 1, [Math.floor(value / 2), level + 1], [Math.ceil(value / 2), level + 1]);
-            return true;
-        }
+        if (value < 10) continue;
+        n.splice(i, 1, [Math.floor(value / 2), level + 1], [Math.ceil(value / 2), level + 1]);
+        return true;
     }
     return false;
 };
@@ -54,7 +47,7 @@ const reduce = (n: SFNumber): SFNumber => {
     }
 };
 
-const magnitude = (n: SFNumber) => {
+const magnitude = (n: SFNumber): number => {
     while (n.length > 1) {
         const i = windows(n, 2).findIndex(([[_v1, lvl1], [_v2, lvl2]]) => lvl1 === lvl2);
         const v = 3 * n[i][0] + 2 * n[i + 1][0];
@@ -64,19 +57,14 @@ const magnitude = (n: SFNumber) => {
 };
 
 const input = readFileAsString("input/day18");
-const builds = input.split("\n").map(line => reduce(build(line)));
-const begin = reduce(add(reduce(builds[0]), reduce(builds[1])));
-const num = builds.slice(2).reduce((sum: SFNumber, n: SFNumber) => {
-    return reduce(add(sum, n));
-}, begin);
+const depths = input.split("\n").map(line => reduce(build(line)));
 
+const num = depths
+    .slice(2)
+    .reduce((sum: SFNumber, n: SFNumber) => reduce(add(sum, n)), reduce(add(depths[0], depths[1])));
 console.log("Part1:", magnitude(num));
 
-const magnitudes: number[] = [];
-for (let i = 0; i < builds.length; i++) {
-    for (let j = 0; j < builds.length; j++) {
-        const sum = reduce(add(builds[i], builds[j]));
-        magnitudes.push(magnitude(sum));
-    }
-}
+const magnitudes = cartesian(range(depths.length), range(depths.length))
+    .filter(([i, j]) => i !== j)
+    .map(([i, j]) => magnitude(reduce(add(depths[i], depths[j]))));
 console.log("Part2:", Math.max(...magnitudes));
