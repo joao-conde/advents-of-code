@@ -29,6 +29,9 @@ export const scan = <T, X>(xs: Array<X>, fn: (state: T, next: X) => T, seed: T):
 
 export const sum = (xs: number[]): number => xs.reduce((sum, x) => sum + x, 0);
 
+export const windows = <T>(xs: T[], size: number) =>
+    xs.slice(0, -size + 1).map((_, i) => xs.slice(i, i + size));
+
 export class Set<T> {
     private storage: string[] = [];
 
