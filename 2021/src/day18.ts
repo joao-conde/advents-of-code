@@ -30,7 +30,6 @@ const explode = (n: SFNumber): boolean => {
             if (n[i - 1]) n[i - 1][0] += v1;
             if (n[i + 2]) n[i + 2][0] += v2;
             n.splice(i, 2, [0, 4]);
-            // n.splice(i, 0, [0, 4]);
             return true;
         }
     }
@@ -67,8 +66,17 @@ const magnitude = (n: SFNumber) => {
 const input = readFileAsString("input/day18");
 const builds = input.split("\n").map(line => reduce(build(line)));
 const begin = reduce(add(reduce(builds[0]), reduce(builds[1])));
-const num = builds.slice(2).reduce((sum: SFNumber, n) => {
+const num = builds.slice(2).reduce((sum: SFNumber, n: SFNumber) => {
     return reduce(add(sum, n));
 }, begin);
 
-console.log(magnitude(num));
+console.log("Part1:", magnitude(num));
+
+const magnitudes: number[] = [];
+for (let i = 0; i < builds.length; i++) {
+    for (let j = 0; j < builds.length; j++) {
+        const sum = reduce(add(builds[i], builds[j]));
+        magnitudes.push(magnitude(sum));
+    }
+}
+console.log("Part2:", Math.max(...magnitudes));
