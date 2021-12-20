@@ -1,21 +1,23 @@
-import { cartesian, range, readFileAsString, Set } from "./utils";
+import { cartesian, range, readFileAsString, Set as Myset } from "./utils";
 
-type Lights = Set<[number, number]>;
+type Lights = Myset<[number, number]>;
 
 const LIGHT = "#";
 
-const getBounds = (lights: Lights): { minx: number; miny: number; maxx: number; maxy: number } => {
-    const minx = lights.values().reduce((minx, [x, y]) => (x < minx ? x : minx), Infinity);
-    const miny = lights.values().reduce((miny, [x, y]) => (y < miny ? y : miny), Infinity);
-    const maxx = lights.values().reduce((maxx, [x, y]) => (x > maxx ? x : maxx), minx);
-    const maxy = lights.values().reduce((maxy, [x, y]) => (y > maxy ? y : maxy), miny);
-    return { minx, miny, maxx, maxy };
+const getPoints = (lights: Lights): [number, number][] => {
+    const ps = lights
+        .values()
+        .map(([x, y]) => {
+            const xs = range(x - 1, x + 2);
+            const ys = range(y - 1, y + 2);
+            return cartesian(xs, ys);
+        })
+        .flat() as [number, number][];
+    return [...new Set(ps)];
 };
 
 const enhance = (algorithm: string, lights: Lights): Lights => {
-    const { minx, miny, maxx, maxy } = getBounds(lights);
-    const coords = cartesian(range(minx - 3, maxx + 3), range(miny - 3, maxy + 3));
-
+    const coords = getPoints(lights);
     return coords.reduce((ls: Lights, [x, y]) => {
         const bin = [
             [x - 1, y - 1],
@@ -32,12 +34,13 @@ const enhance = (algorithm: string, lights: Lights): Lights => {
             return bin + pixel;
         }, "");
 
-        const next = algorithm[parseInt(bin, 2)];
+        const i = parseInt(bin, 2);
+        const next = algorithm[i];
 
         if (next === LIGHT) ls.add([x, y]);
 
         return ls;
-    }, new Set() as Lights);
+    }, new Myset() as Lights);
 };
 
 const [algorithm, image] = readFileAsString("input/day20").split("\n\n");
@@ -51,7 +54,7 @@ const lights = image
             .filter(([x, y, c]) => c === LIGHT)
     )
     .flat()
-    .reduce((lights, [x, y]) => lights.add([x, y]), new Set()) as Lights;
+    .reduce((lights, [x, y]) => lights.add([x, y]), new Myset()) as Lights;
 
 const lit = enhance(algorithm, enhance(algorithm, lights));
 console.log("Part1:", lit.size());
