@@ -20,7 +20,7 @@ const add = (n1: SFNumber, n2: SFNumber): SFNumber => [
 ];
 
 const explode = (n: SFNumber): boolean => {
-    const i = windows(n, 2).findIndex(([[_v1, lvl1], [_v2, lvl2]]) => lvl1 === lvl2 && lvl1 > 4);
+    const i = windows(n, 2).findIndex(([[v1, lvl1], [v2, lvl2]]) => lvl1 === lvl2 && lvl1 > 4);
     if (i === -1) return false;
     if (n[i - 1]) n[i - 1][0] += n[i][0];
     if (n[i + 2]) n[i + 2][0] += n[i + 1][0];
@@ -45,7 +45,7 @@ const reduce = (n: SFNumber): SFNumber => {
 
 const magnitude = (n: SFNumber): number => {
     while (n.length > 1) {
-        const i = windows(n, 2).findIndex(([[_v1, lvl1], [_v2, lvl2]]) => lvl1 === lvl2);
+        const i = windows(n, 2).findIndex(([[v1, lvl1], [v2, lvl2]]) => lvl1 === lvl2);
         const v = 3 * n[i][0] + 2 * n[i + 1][0];
         n.splice(i, 2, [v, n[i][1] - 1]);
     }
