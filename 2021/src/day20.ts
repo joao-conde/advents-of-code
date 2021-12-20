@@ -1,23 +1,22 @@
-import { cartesian, range, readFileAsString, Set as Myset } from "./utils";
+import { readFileAsString, Set as Myset } from "./utils";
+import { cartesian, range } from "./utils";
 
 type Lights = Myset<[number, number]>;
 
 const LIGHT = "#";
 
-const getPoints = (lights: Lights): [number, number][] => {
-    const ps = lights
-        .values()
-        .map(([x, y]) => {
-            const xs = range(x - 1, x + 2);
-            const ys = range(y - 1, y + 2);
-            return cartesian(xs, ys);
-        })
-        .flat() as [number, number][];
-    return [...new Set(ps)];
+const getBounds = (lights: Lights): { minx: number; miny: number; maxx: number; maxy: number } => {
+    const minx = lights.values().reduce((minx, [x, y]) => (x < minx ? x : minx), Infinity);
+    const miny = lights.values().reduce((miny, [x, y]) => (y < miny ? y : miny), Infinity);
+    const maxx = lights.values().reduce((maxx, [x, y]) => (x > maxx ? x : maxx), minx);
+    const maxy = lights.values().reduce((maxy, [x, y]) => (y > maxy ? y : maxy), miny);
+    return { minx, miny, maxx, maxy };
 };
 
-const enhance = (algorithm: string, lights: Lights): Lights => {
-    const coords = getPoints(lights);
+const enhance = (countDarks: boolean, algorithm: string, lights: Lights, darks: Lights): Lights => {
+    const { minx, miny, maxx, maxy } = getBounds(lights);
+    const coords = cartesian(range(minx - 1, maxx + 2), range(miny - 1, maxy + 2));
+
     return coords.reduce((ls: Lights, [x, y]) => {
         const bin = [
             [x - 1, y - 1],
@@ -29,8 +28,9 @@ const enhance = (algorithm: string, lights: Lights): Lights => {
             [x + 1, y - 1],
             [x + 1, y],
             [x + 1, y + 1]
-        ].reduce((bin, [x, y]) => {
-            const pixel = lights.has([x, y]) ? "1" : "0";
+        ]
+        .reduce((bin, [x, y]) => {
+            const pixel = (lights.has([x, y]) || (countDarks && darks.has([x, y]))) ? "1" : "0";
             return bin + pixel;
         }, "");
 
@@ -56,5 +56,16 @@ const lights = image
     .flat()
     .reduce((lights, [x, y]) => lights.add([x, y]), new Myset()) as Lights;
 
-const lit = enhance(algorithm, enhance(algorithm, lights));
+const darks = image
+.split("\n")
+.map((row, x) =>
+    row
+        .split("")
+        .map((c, y) => [x, y, c])
+        .filter(([x, y, c]) => c === ".")
+)
+.flat()
+.reduce((darks, [x, y]) => darks.add([x, y]), new Myset()) as Lights;
+
+const lit = enhance(true, algorithm, enhance(false, algorithm, lights, darks), darks);
 console.log("Part1:", lit.size());
