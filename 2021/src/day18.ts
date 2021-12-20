@@ -20,23 +20,19 @@ const add = (n1: SFNumber, n2: SFNumber): SFNumber => [
 ];
 
 const explode = (n: SFNumber): boolean => {
-    for (const [i, [[v1, lvl1], [v2, lvl2]]] of windows(n, 2).entries()) {
-        if (lvl1 !== lvl2 || lvl1 <= 4) continue;
-        if (n[i - 1]) n[i - 1][0] += v1;
-        if (n[i + 2]) n[i + 2][0] += v2;
-        n.splice(i, 2, [0, 4]);
-        return true;
-    }
-    return false;
+    const i = windows(n, 2).findIndex(([[_v1, lvl1], [_v2, lvl2]]) => lvl1 === lvl2 && lvl1 > 4);
+    if (i === -1) return false;
+    if (n[i - 1]) n[i - 1][0] += n[i][0];
+    if (n[i + 2]) n[i + 2][0] += n[i + 1][0];
+    n.splice(i, 2, [0, 4]);
+    return true;
 };
 
 const split = (n: SFNumber): boolean => {
-    for (const [i, [value, level]] of n.entries()) {
-        if (value < 10) continue;
-        n.splice(i, 1, [Math.floor(value / 2), level + 1], [Math.ceil(value / 2), level + 1]);
-        return true;
-    }
-    return false;
+    const i = n.findIndex(([value, level]) => value >= 10);
+    if (i === -1) return false;
+    n.splice(i, 1, [Math.floor(n[i][0] / 2), n[i][1] + 1], [Math.ceil(n[i][0] / 2), n[i][1] + 1]);
+    return true;
 };
 
 const reduce = (n: SFNumber): SFNumber => {
