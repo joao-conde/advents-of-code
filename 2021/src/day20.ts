@@ -3,7 +3,6 @@ import { readFileAsString, cartesian, range, Set } from "./utils";
 type Lights = Set<[number, number]>;
 
 const LIGHT = "#";
-// const DARK = ".";
 
 const getBounds = (lights: Lights): { minx: number; miny: number; maxx: number; maxy: number } => {
     const minx = lights.values().reduce((minx, [x, y]) => (x < minx ? x : minx), Infinity);
@@ -60,20 +59,5 @@ const lights = image
     .flat()
     .reduce((lights, [x, y]) => lights.add([x, y]), new Set()) as Lights;
 
-// const space = image
-//     .split("\n")
-//     .map((row, x) =>
-//         row
-//             .split("")
-//             .map((c, y) => [x, y, c])
-//             .filter(([x, y, c]) => c === DARK)
-//     )
-//     .flat()
-//     .reduce((space, [x, y]) => space.add([x, y]), new Set()) as Lights;
-
-// const test = algorithm[0] === "#";
-// false false false false
-// false true false true
-const temp = enhance(algorithm, lights, false);
-const lit = enhance(algorithm, temp, true);
+const lit = enhance(algorithm, enhance(algorithm, lights, false), true);
 console.log("Part1:", lit.size());
