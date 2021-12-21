@@ -28,11 +28,10 @@ const enhance = (algorithm: string, lights: Lights, spaceLit: boolean): Lights =
             [x + 1, y + 1]
         ];
 
-        const adrift = neighbors.every(([x, y]) => !lights.has([x, y]));
-
         const bin = neighbors.reduce((bin, [x, y]) => {
+            const outofbounds = x < minx || x > maxx || y < miny || y > maxy;
             let pixel = "";
-            if (adrift) {
+            if (outofbounds) {
                 pixel = spaceLit ? "1" : "0";
             } else {
                 pixel = lights.has([x, y]) ? "1" : "0";
