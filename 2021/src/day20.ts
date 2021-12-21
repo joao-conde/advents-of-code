@@ -3,7 +3,7 @@ import { readFileAsString, cartesian, range, Set } from "./utils";
 type Lights = Set<[number, number]>;
 
 const LIGHT = "#";
-const DARK = ".";
+// const DARK = ".";
 
 const getBounds = (lights: Lights): { minx: number; miny: number; maxx: number; maxy: number } => {
     const minx = lights.values().reduce((minx, [x, y]) => (x < minx ? x : minx), Infinity);
@@ -13,12 +13,11 @@ const getBounds = (lights: Lights): { minx: number; miny: number; maxx: number; 
     return { minx, miny, maxx, maxy };
 };
 
-const enhance = (algorithm: string, lights: Lights, space: Lights, spaceLit: boolean): Lights => {
+const enhance = (algorithm: string, lights: Lights, spaceLit: boolean): Lights => {
     const { minx, miny, maxx, maxy } = getBounds(lights);
     const coords = cartesian(range(minx - 1, maxx + 2), range(miny - 1, maxy + 2));
-
     return coords.reduce((ls: Lights, [x, y]) => {
-        const bin = [
+        const neighbors = [
             [x - 1, y - 1],
             [x - 1, y],
             [x - 1, y + 1],
@@ -28,16 +27,22 @@ const enhance = (algorithm: string, lights: Lights, space: Lights, spaceLit: boo
             [x + 1, y - 1],
             [x + 1, y],
             [x + 1, y + 1]
-        ].reduce((bin, [x, y]) => {
-            const pixel = lights.has([x, y]) || (spaceLit && space.has([x, y])) ? "1" : "0";
+        ];
+
+        const adrift = neighbors.every(([x, y]) => !lights.has([x, y]));
+
+        const bin = neighbors.reduce((bin, [x, y]) => {
+            let pixel = "";
+            if (adrift) {
+                pixel = spaceLit ? "1" : "0";
+            } else {
+                pixel = lights.has([x, y]) ? "1" : "0";
+            }
             return bin + pixel;
         }, "");
 
-        const i = parseInt(bin, 2);
-        const next = algorithm[i];
-
+        const next = algorithm[parseInt(bin, 2)];
         if (next === LIGHT) ls.add([x, y]);
-
         return ls;
     }, new Set() as Lights);
 };
@@ -55,16 +60,20 @@ const lights = image
     .flat()
     .reduce((lights, [x, y]) => lights.add([x, y]), new Set()) as Lights;
 
-const space = image
-    .split("\n")
-    .map((row, x) =>
-        row
-            .split("")
-            .map((c, y) => [x, y, c])
-            .filter(([x, y, c]) => c === DARK)
-    )
-    .flat()
-    .reduce((space, [x, y]) => space.add([x, y]), new Set()) as Lights;
+// const space = image
+//     .split("\n")
+//     .map((row, x) =>
+//         row
+//             .split("")
+//             .map((c, y) => [x, y, c])
+//             .filter(([x, y, c]) => c === DARK)
+//     )
+//     .flat()
+//     .reduce((space, [x, y]) => space.add([x, y]), new Set()) as Lights;
 
-const lit = enhance(algorithm, enhance(algorithm, lights, space, false), space, true);
+// const test = algorithm[0] === "#";
+// false false false false
+// false true false true
+const temp = enhance(algorithm, lights, false);
+const lit = enhance(algorithm, temp, true);
 console.log("Part1:", lit.size());
