@@ -1,13 +1,14 @@
-import { range, readFileAsString, Set } from "./utils";
+import { range, readFileAsString, JCSet as Set } from "./utils";
 
 const fold = (dots: Set<[number, number]>, [axis, value]: [string, number]) => {
-    dots.values()
+    const values = dots.array();
+    values
         .filter(([_, y]) => axis === "y" && y >= value)
-        .forEach(([x, y]) => dots.delete([x, y]).add([x, 2 * value - y]));
+        .forEach(([x, y]) => dots.add([x, 2 * value - y]).delete([x, y]));
 
-    dots.values()
+    values
         .filter(([x, _]) => axis === "x" && x >= value)
-        .forEach(([x, y]) => dots.delete([x, y]).add([2 * value - x, y]));
+        .forEach(([x, y]) => dots.add([2 * value - x, y]).delete([x, y]));
 };
 
 const input = readFileAsString("input/day13").split("\n\n");
@@ -21,7 +22,7 @@ const dots = input[0]
     .reduce((dots, point) => dots.add(point as [number, number]), new Set<[number, number]>());
 
 fold(dots, folds[0]);
-console.log("Part1:", dots.size());
+console.log("Part1:", dots.size);
 
 console.log("Part2:");
 folds.slice(1).forEach(f => fold(dots, f));

@@ -1,4 +1,4 @@
-import { mul, range, readFileAsString, sum, Set } from "./utils";
+import { mul, range, readFileAsString, sum, JCSet as Set } from "./utils";
 
 const lowpoints = (heightmap: number[][]): number[][] =>
     range(heightmap.length).reduce((points: number[][], i) => {
@@ -63,5 +63,5 @@ const risk = sum(points.map(([i, j]) => heightmap[i][j] + 1));
 console.log("Part1:", risk);
 
 const basins = points.map(([i, j]) => fill(heightmap, i, j));
-const sizes = basins.map(b => b.size()).sort((a, b) => b - a);
+const sizes = basins.map(b => b.size).sort((a, b) => b - a);
 console.log("Part2:", mul(sizes.slice(0, 3)));
