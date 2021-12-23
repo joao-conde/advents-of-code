@@ -1,4 +1,4 @@
-// import { readFileAsString } from "./utils";
+// import { car } from "./utils";
 // const input = readFileAsString("input/day21");
 
 const play = (
@@ -13,7 +13,13 @@ const play = (
     while (score1 < max && score2 < max) {
         const move = (rolls % 100) + ((rolls + 1) % 100) + ((rolls + 2) % 100) + 3;
 
-        ({ score1, score2, p1, p2 } = playIter(plays1, p1, p2, score1, score2, move));
+        if (plays1) {
+            p1 = (p1 + move) % 10;
+            score1 += p1 + 1;
+        } else {
+            p2 = (p2 + move) % 10;
+            score2 += p2 + 1;
+        }
 
         plays1 = !plays1;
         rolls += 3;
@@ -26,78 +32,72 @@ const play = (
     };
 };
 
-const playIter = (
-    plays1: boolean,
-    p1: number,
-    p2: number,
+type GameState = {
     score1: number,
     score2: number,
-    move: number
-): { score1: number; score2: number; p1: number; p2: number } => {
-    if (plays1) {
-        p1 = (p1 + move) % 10;
-        score1 += p1 + 1;
-    } else {
-        p2 = (p2 + move) % 10;
-        score2 += p2 + 1;
-    }
-
-    return {
-        score1,
-        score2,
-        p1,
-        p2
-    };
-};
-
-const cache: Record<string, number> = {};
+    p1: number,
+    p2: number,
+    plays1: boolean,
+}
 
 const play2 = (
-    plays1: number,
     p1: number,
     p2: number,
-    score1: number,
-    score2: number,
-    max: number,
-    move: number
-): number => {
-    const k = `${p1};${p2};${score1};${score2};${move}`;
+): any => {
+    let states: GameState[] = [{
+        score1: 0,
+        score2: 0,
+        p1: p1,
+        p2: p2,
+        plays1: true,
+    }]
 
-    if (k in cache) return cache[k];
+    let p1wins = 0;
+    let p2wins = 0;
+    while(states.length > 0) {
+        const nextStates: GameState[] = [];
 
-    if (score1 >= max || score2 >= max) {
-        cache[k] = score1 > score2 ? 1 : 0;
-        return cache[k];
+        states.forEach(({
+            score1,
+            score2,
+            p1,
+            p2,
+            plays1
+        }) => {
+            if (score1 >= 21 || score2 >= 21) {
+                if (score1 > score2) p1wins++;
+                else p2wins++;
+                return;
+            };
+            
+            const rolls = [1,2,3]
+            for (const r1 of rolls) {
+                for(const r2 of rolls) {
+                    for(const r3 of rolls) {
+                        const move = r1 + r2 + r3;
+                        const nextp1 = (p1 + move) % 10;
+                        const nextp2 = (p2 + move) % 10;
+                        nextStates.push({
+                            score1: score1 + 1 + nextp1,
+                            score2: score2 + 1 + nextp2,
+                            p1: nextp1,
+                            p2: nextp2,
+                            plays1: !plays1
+                        })
+                    }
+                }
+            }
+        })
+        
+        states = nextStates;
     }
 
-    if (plays1 <= 2) {
-        p1 = (p1 + move) % 10;
-    } else if (plays1 > 2 && plays1 <= 5) {
-        p2 = (p2 + move) % 10;
-    }
-
-    if (plays1 === 2) {
-        score1 += p1 + 1;
-    } else if (plays1 === 5) {
-        score2 += p2 + 1;
-    }
-
-    const y =
-        play2((plays1 + 1) % 6, p1, p2, score1, score2, 21, 1) +
-        play2((plays1 + 1) % 6, p1, p2, score1, score2, 21, 2) +
-        play2((plays1 + 1) % 6, p1, p2, score1, score2, 21, 3);
-
-    cache[k] = y;
-
-    return y;
+    return [p1wins, p2wins]
 };
 
-const { score1, score2, rolls } = play(true, 3, 7, 0, 0, 1000); // -1 on coords
+const { score1, score2, rolls } = play(true, 4 - 1, 8 - 1, 0, 0, 1000); // -1 on coords
 console.log("Part1:", rolls * (score2 < score1 ? score2 : score1));
 
-console.log(
-    play2(0, 3, 7, 0, 0, 21, 1) + play2(0, 3, 7, 0, 0, 21, 2) + play2(0, 3, 7, 0, 0, 21, 3)
-);
-console.log(444356092776315, "expected");
-console.log(cache["3;7;0;0;1"] + cache["3;7;0;0;2"] + cache["3;7;0;0;3"]);
-console.log(cache["3;7;0;0;1"], cache["3;7;0;0;2"], cache["3;7;0;0;3"]);
+const x = play2(3, 7)
+
+console.log(x)
