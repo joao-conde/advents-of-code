@@ -1,4 +1,4 @@
-import { readFileAsString, cartesian, range, JCSet as Set } from "./utils";
+import { cartesian, range, readFileAsString, JCSet as Set } from "./utils";
 
 type Lights = Set<[number, number]>;
 
@@ -29,7 +29,7 @@ const countLit = (algorithm: string, image: string, steps: number, toggle: boole
 const enhance = (algorithm: string, lights: Lights, spaceLit: boolean): Lights => {
     const { minx, miny, maxx, maxy } = getBounds(lights);
     const coords = cartesian(range(minx - 1, maxx + 2), range(miny - 1, maxy + 2));
-    return coords.reduce((ls: Lights, [x, y]) => {
+    return coords.reduce((next: Lights, [x, y]) => {
         const neighbors = [
             [x - 1, y - 1],
             [x - 1, y],
@@ -42,20 +42,16 @@ const enhance = (algorithm: string, lights: Lights, spaceLit: boolean): Lights =
             [x + 1, y + 1]
         ];
 
-        const bin = neighbors.reduce((bin, [x, y]) => {
-            const outofbounds = x < minx || x > maxx || y < miny || y > maxy;
-            let pixel = "";
-            if (outofbounds) {
-                pixel = spaceLit ? "1" : "0";
-            } else {
-                pixel = lights.has([x, y]) ? "1" : "0";
-            }
-            return bin + pixel;
+        const index = neighbors.reduce((index, [x, y]) => {
+            const adrift = x < minx || x > maxx || y < miny || y > maxy;
+            const pixel = lights.has([x, y]) || (adrift && spaceLit) ? "1" : "0";
+            return index + pixel;
         }, "");
 
-        const next = algorithm[parseInt(bin, 2)];
-        if (next === LIGHT) ls.add([x, y]);
-        return ls;
+        const pixel = algorithm[parseInt(index, 2)];
+        if (pixel === LIGHT) next.add([x, y]);
+
+        return next;
     }, new Set() as Lights);
 };
 
