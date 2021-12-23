@@ -30,3 +30,14 @@ export const sum = (xs: number[]): number => xs.reduce((sum, x) => sum + x, 0);
 
 export const windows = <T>(xs: T[], size: number) =>
     xs.slice(0, -size + 1).map((_, i) => xs.slice(i, i + size));
+
+export class JCSet<T> extends Set {
+    private hash = (value: T): string => JSON.stringify(value);
+    private dehash = (value: string): T => JSON.parse(value);
+
+    override has = (value: T): boolean => super.has(this.hash(value));
+    override add = (value: T): this => super.add(this.hash(value));
+    override delete = (value: T): boolean => super.delete(this.hash(value));
+
+    array = (): T[] => [...this].map(value => this.dehash(value));
+}
