@@ -1,6 +1,6 @@
-import { readFileAsString, cartesian, range, Set } from "./utils";
+import { readFileAsString, cartesian, range } from "./utils";
 
-type Lights = Set<[number, number]>;
+type Lights = Set<string>;
 
 const LIGHT = "#";
 
@@ -14,7 +14,7 @@ const countLit = (algorithm: string, image: string, steps: number, toggle: boole
                 .filter(([x, y, c]) => c === LIGHT)
         )
         .flat()
-        .reduce((lights, [x, y]) => lights.add([x, y]), new Set()) as Lights;
+        .reduce((lights, [x, y]) => lights.add(hash([x, y])), new Set()) as Lights;
 
     let spaceLit = false;
     range(steps).forEach(() => {
@@ -22,7 +22,7 @@ const countLit = (algorithm: string, image: string, steps: number, toggle: boole
         spaceLit = !spaceLit;
     });
 
-    return lights.size();
+    return lights.size;
 };
 
 const enhance = (algorithm: string, lights: Lights, spaceLit: boolean): Lights => {
@@ -47,24 +47,30 @@ const enhance = (algorithm: string, lights: Lights, spaceLit: boolean): Lights =
             if (outofbounds) {
                 pixel = spaceLit ? "1" : "0";
             } else {
-                pixel = lights.has([x, y]) ? "1" : "0";
+                pixel = lights.has(hash([x, y])) ? "1" : "0";
             }
             return bin + pixel;
         }, "");
 
         const next = algorithm[parseInt(bin, 2)];
-        if (next === LIGHT) ls.add([x, y]);
+        if (next === LIGHT) ls.add(hash([x, y]));
         return ls;
     }, new Set() as Lights);
 };
 
 const getBounds = (lights: Lights): { minx: number; miny: number; maxx: number; maxy: number } => {
-    const minx = lights.values().reduce((minx, [x, y]) => (x < minx ? x : minx), Infinity);
-    const miny = lights.values().reduce((miny, [x, y]) => (y < miny ? y : miny), Infinity);
-    const maxx = lights.values().reduce((maxx, [x, y]) => (x > maxx ? x : maxx), minx);
-    const maxy = lights.values().reduce((maxy, [x, y]) => (y > maxy ? y : maxy), miny);
+    const values = [...lights].map(p => dehash(p));
+    const minx = values.reduce((minx, [x, y]) => (x < minx ? x : minx), Infinity);
+    const miny = values.reduce((miny, [x, y]) => (y < miny ? y : miny), Infinity);
+    const maxx = values.reduce((maxx, [x, y]) => (x > maxx ? x : maxx), minx);
+    const maxy = values.reduce((maxy, [x, y]) => (y > maxy ? y : maxy), miny);
     return { minx, miny, maxx, maxy };
 };
+
+const hash = <T>([x, y]: [T, T]): string => [x, y].join(";");
+
+const dehash = (xy: string): [number, number] =>
+    xy.split(";").map(x => parseInt(x)) as [number, number];
 
 const [algorithm, image] = readFileAsString("input/day20").split("\n\n");
 const toggle = algorithm[0] === "#" && algorithm[algorithm.length - 1] === ".";

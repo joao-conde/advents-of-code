@@ -30,27 +30,3 @@ export const sum = (xs: number[]): number => xs.reduce((sum, x) => sum + x, 0);
 
 export const windows = <T>(xs: T[], size: number) =>
     xs.slice(0, -size + 1).map((_, i) => xs.slice(i, i + size));
-
-export class Set<T> {
-    private storage: string[] = [];
-
-    private hash = (value: T): string => JSON.stringify(value);
-
-    private dehash = (value: string): T => JSON.parse(value);
-
-    size = (): number => this.storage.length;
-
-    values = (): T[] => this.storage.map(value => this.dehash(value));
-
-    has = (value: T): boolean => this.storage.includes(this.hash(value));
-
-    add = (value: T): this => {
-        if (!this.has(value)) this.storage.push(this.hash(value));
-        return this;
-    };
-
-    delete = (value: T): this => {
-        this.storage = this.storage.filter(t => t !== this.hash(value));
-        return this;
-    };
-}
