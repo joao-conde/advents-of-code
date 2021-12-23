@@ -4,12 +4,25 @@ type Lights = Set<[number, number]>;
 
 const LIGHT = "#";
 
-const getBounds = (lights: Lights): { minx: number; miny: number; maxx: number; maxy: number } => {
-    const minx = lights.values().reduce((minx, [x, y]) => (x < minx ? x : minx), Infinity);
-    const miny = lights.values().reduce((miny, [x, y]) => (y < miny ? y : miny), Infinity);
-    const maxx = lights.values().reduce((maxx, [x, y]) => (x > maxx ? x : maxx), minx);
-    const maxy = lights.values().reduce((maxy, [x, y]) => (y > maxy ? y : maxy), miny);
-    return { minx, miny, maxx, maxy };
+const countLit = (algorithm: string, image: string, steps: number, toggle: boolean): number => {
+    let lights = image
+        .split("\n")
+        .map((row, x) =>
+            row
+                .split("")
+                .map((c, y) => [x, y, c])
+                .filter(([x, y, c]) => c === LIGHT)
+        )
+        .flat()
+        .reduce((lights, [x, y]) => lights.add([x, y]), new Set()) as Lights;
+
+    let spaceLit = false;
+    range(steps).forEach(() => {
+        lights = enhance(algorithm, lights, toggle && spaceLit);
+        spaceLit = !spaceLit;
+    });
+
+    return lights.size();
 };
 
 const enhance = (algorithm: string, lights: Lights, spaceLit: boolean): Lights => {
@@ -45,18 +58,15 @@ const enhance = (algorithm: string, lights: Lights, spaceLit: boolean): Lights =
     }, new Set() as Lights);
 };
 
+const getBounds = (lights: Lights): { minx: number; miny: number; maxx: number; maxy: number } => {
+    const minx = lights.values().reduce((minx, [x, y]) => (x < minx ? x : minx), Infinity);
+    const miny = lights.values().reduce((miny, [x, y]) => (y < miny ? y : miny), Infinity);
+    const maxx = lights.values().reduce((maxx, [x, y]) => (x > maxx ? x : maxx), minx);
+    const maxy = lights.values().reduce((maxy, [x, y]) => (y > maxy ? y : maxy), miny);
+    return { minx, miny, maxx, maxy };
+};
+
 const [algorithm, image] = readFileAsString("input/day20").split("\n\n");
-
-const lights = image
-    .split("\n")
-    .map((row, x) =>
-        row
-            .split("")
-            .map((c, y) => [x, y, c])
-            .filter(([x, y, c]) => c === LIGHT)
-    )
-    .flat()
-    .reduce((lights, [x, y]) => lights.add([x, y]), new Set()) as Lights;
-
-const lit = enhance(algorithm, enhance(algorithm, lights, false), true);
-console.log("Part1:", lit.size());
+const toggle = algorithm[0] === "#" && algorithm[algorithm.length - 1] === ".";
+console.log("Part1:", countLit(algorithm, image, 2, toggle));
+console.log("Part2:", countLit(algorithm, image, 50, toggle));
