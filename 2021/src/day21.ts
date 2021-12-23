@@ -61,7 +61,7 @@ const play2 = (
     max: number,
     move: number
 ): number => {
-    const k = `${p1}${p2}${score1}${score2}${move}`;
+    const k = `${p1};${p2};${score1};${score2};${move}`;
 
     if (k in cache) return cache[k];
 
@@ -99,3 +99,5 @@ console.log(
     play2(0, 3, 7, 0, 0, 21, 1) + play2(0, 3, 7, 0, 0, 21, 2) + play2(0, 3, 7, 0, 0, 21, 3)
 );
 console.log(444356092776315, "expected");
+console.log(cache["3;7;0;0;1"] + cache["3;7;0;0;2"] + cache["3;7;0;0;3"]);
+console.log(cache["3;7;0;0;1"], cache["3;7;0;0;2"], cache["3;7;0;0;3"]);

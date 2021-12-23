@@ -11,8 +11,7 @@
         "allowUnusedLabels": false,
         "allowUnreachableCode": false,
         "exactOptionalPropertyTypes": true,
-        "noFallthroughCasesInSwitch": true,
-        "noPropertyAccessFromIndexSignature": true
+        "noFallthroughCasesInSwitch": true
     },
     "include": ["src/**/*.ts"],
     "exclude": ["node_modules/", "dist/"]
