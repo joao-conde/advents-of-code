@@ -1,7 +1,10 @@
 import { readFileSync } from "fs";
 
-export const cartesian = (l1: number[], l2: number[]): number[][] =>
-    l1.flatMap(x => l2.map(y => [x, y]));
+export const cartesian = (...args: number[][]): number[][] =>
+    args.reduce(
+        (a: number[][], b) => a.map(x => b.map(y => x.concat(y))).reduce((a, b) => a.concat(b), []),
+        [[]]
+    );
 
 export const copy = <T>(o: T): T => JSON.parse(JSON.stringify(o));
 
