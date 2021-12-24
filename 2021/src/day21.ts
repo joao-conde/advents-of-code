@@ -13,20 +13,17 @@ type Die = (
     p2: number,
     s1: number,
     s2: number,
-    options: { rolls: number; cache: Cache }
+    options?: { rolls: number; cache: Cache }
 ) => GameSummary;
 
-const play = (die: Die, p1: number, p2: number): GameSummary => {
-    const cache: Record<string, GameSummary> = {};
-    return die(p1 - 1, p2 - 1, 0, 0, { rolls: 0, cache: cache });
-};
+const play = (die: Die, p1: number, p2: number): GameSummary => die(p1 - 1, p2 - 1, 0, 0);
 
 const deterministic = (
     p1: number,
     p2: number,
     s1: number,
     s2: number,
-    { rolls }: { rolls: number }
+    { rolls } = { rolls: 0 }
 ): GameSummary => {
     if (s1 >= 1000 || s2 >= 1000) return { s1: s1, s2: s2, rolls: rolls };
     const move = (rolls % 100) + ((rolls + 1) % 100) + ((rolls + 2) % 100) + 3;
@@ -40,7 +37,7 @@ const quantum = (
     p2: number,
     s1: number,
     s2: number,
-    { cache }: { cache: Cache }
+    { cache } = { cache: {} as Cache }
 ): GameSummary => {
     if (s1 >= 21) return { s1: 1, s2: 0 };
     if (s2 >= 21) return { s1: 0, s2: 1 };
