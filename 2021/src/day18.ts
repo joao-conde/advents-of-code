@@ -14,6 +14,14 @@ const build = (line: string): SFNumber => {
     return n;
 };
 
+const reduce = (n: SFNumber): SFNumber => {
+    while (true) {
+        if (explode(n)) continue;
+        if (split(n)) continue;
+        return n;
+    }
+};
+
 const add = (n1: SFNumber, n2: SFNumber): SFNumber => [
     ...(n1.map(([v1, lvl1]) => [v1, lvl1 + 1]) as SFNumber),
     ...(n2.map(([v2, lvl2]) => [v2, lvl2 + 1]) as SFNumber)
@@ -33,14 +41,6 @@ const split = (n: SFNumber): boolean => {
     if (i === -1) return false;
     n.splice(i, 1, [Math.floor(n[i][0] / 2), n[i][1] + 1], [Math.ceil(n[i][0] / 2), n[i][1] + 1]);
     return true;
-};
-
-const reduce = (n: SFNumber): SFNumber => {
-    while (true) {
-        if (explode(n)) continue;
-        if (split(n)) continue;
-        return n;
-    }
 };
 
 const magnitude = (n: SFNumber): number => {
