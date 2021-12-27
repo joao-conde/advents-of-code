@@ -1,11 +1,8 @@
 import { range, readFileAsString } from "./utils";
 
-type ALURegister = number;
-
-type ALUOperation = (a: string, b: number) => void;
-
 class ALU {
-    [key: string]: ALURegister | ALUOperation;
+    // eslint-disable-next-line
+    [key: string]: number | any;
 
     constructor(w = 0, x = 0, y = 0, z = 0) {
         this.w = w;
@@ -14,73 +11,82 @@ class ALU {
         this.z = z;
     }
 
+    copy = (): ALU =>
+        new ALU(this.w as number, this.x as number, this.y as number, this.z as number);
+
     toString = (): string => `${this.w};${this.x};${this.y};${this.z}`;
 
-    copy = () => new ALU(this.w as number, this.x as number, this.y as number, this.z as number);
+    protected inp = (a: string, b: number) => (this[a] = b);
 
-    inp = (a: string, b: number) => {
-        this[a] = b;
-    };
+    protected add = (a: string, b: number | string) => (this[a] = this.val(a) + this.val(b));
 
-    add = (a: string, b: number | string) => {
-        const value = typeof b === "number" ? b : this[b];
-        this[a] = (this[a] as ALURegister) + (value as ALURegister);
-    };
+    protected mul = (a: string, b: number | string) => (this[a] = this.val(a) * this.val(b));
 
-    mul = (a: string, b: number | string) => {
-        const value = typeof b === "number" ? b : this[b];
-        this[a] = (this[a] as ALURegister) * (value as ALURegister);
-    };
+    protected div = (a: string, b: number | string) =>
+        (this[a] = Math.trunc(this.val(a) / this.val(b)));
 
-    div = (a: string, b: number | string) => {
-        const value = typeof b === "number" ? b : this[b];
-        if (value === 0) console.log("dividing by zero wtf");
-        this[a] = (this[a] as ALURegister) / (value as ALURegister);
-    };
+    protected mod = (a: string, b: number | string) => (this[a] = this.val(a) % this.val(b));
 
-    mod = (a: string, b: number | string) => {
-        const value = typeof b === "number" ? b : this[b];
-        this[a] = (this[a] as ALURegister) % (value as ALURegister);
-    };
+    protected eql = (a: string, b: number | string) =>
+        (this[a] = this.val(a) === this.val(b) ? 1 : 0);
 
-    eql = (a: string, b: number | string) => {
-        const value = typeof b === "number" ? b : this[b];
-        this[a] = (this[a] as ALURegister) === (value as ALURegister) ? 1 : 0;
-    };
+    private val = (b: string | number): number => (typeof b === "number" ? b : this[b]);
 }
 
-const tryParseInt = (x: string): string | number => {
-    const num = parseInt(x);
-    return isNaN(num) ? x : num;
-};
+const valid = (instructions: (string | number)[][], digits: number[]) => {
+    const visited = new Set();
 
-const digits = range(1, 10).reverse();
-const DP: Record<string, number> = {};
-const solve = (alu: ALU, instructions: (string | number)[][], step = 0, monad = "") => {
-    if (step >= instructions.length) {
-        if (alu.z === 0) console.log("valid MONAD:", monad);
-        return alu.z === 0 ? parseInt(monad) : -1;
-    }
+    let result: number | null = null;
+    const best = (
+        alu: ALU,
+        instructions: (string | number)[][],
+        step = 0,
+        monad = ""
+    ): number | null => {
+        if (alu.z > Math.pow(10, 7)) return null;
 
-    const [opcode, op1, op2] = instructions[step];
-    if (opcode === "inp") {
-        for (const digit of digits) {
-            const nextalu = alu.copy();
-            nextalu.inp(op1 as string, digit);
+        if (result) return result;
 
-            const k = `${nextalu.toString()};${monad.length}`;
-            if (!(k in DP)) {
-                DP[k] = parseInt(monad);
-                solve(nextalu, instructions, step + 1, monad + digit);
-            }
+        if (step >= instructions.length) {
+            result = alu.z === 0 ? parseInt(monad) : null;
+            return result;
         }
-    } else {
-        (alu[opcode] as ALUOperation)(op1 as string, op2 as number);
-        solve(alu, instructions, step + 1, monad);
-    }
+
+        const [opcode, op1, op2] = instructions[step];
+        if (opcode === "inp") {
+            for (const digit of digits) {
+                const nextalu = alu.copy();
+                nextalu[opcode](op1 as string, digit);
+
+                const k = `${nextalu.toString()};${monad.length}`;
+                if (!visited.has(k)) {
+                    best(nextalu, instructions, step + 1, monad + digit);
+                    visited.add(k);
+                }
+            }
+        } else {
+            alu[opcode](op1, op2);
+            best(alu, instructions, step + 1, monad);
+        }
+
+        return result;
+    };
+
+    best(new ALU(), instructions);
+
+    return result;
 };
 
 const lines = readFileAsString("input/day24").split("\n");
-const instructions = lines.map(line => line.split(" ").map(x => tryParseInt(x)));
-const p1 = solve(new ALU(), instructions);
-console.log(p1);
+const instructions = lines.map(line =>
+    line.split(" ").map(x => {
+        const num = parseInt(x);
+        return isNaN(num) ? x : num;
+    })
+);
+
+const p1 = valid(instructions, range(1, 10).reverse());
+console.log("Part1:", p1);
+
+const p2 = valid(instructions, range(1, 10));
+console.log("Part2:", p2);
