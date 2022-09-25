@@ -8,10 +8,11 @@ From the [Advent Of Code](https://adventofcode.com/about) page on December 2017:
 
 ## Language used for each year
 
-| Year                                  | Language   | Completion |
+|                 Year                  |  Language  | Completion |
 | :-----------------------------------: | :--------: | :--------: |
-| [2021](https://adventofcode.com/2021) | TypeScript | 41/50      |
-| [2020](https://adventofcode.com/2020) | Rust       | 50/50      |
-| [2019](https://adventofcode.com/2019) | C++        | 25/50      |
-| [2018](https://adventofcode.com/2018) | JavaScript | 18/50      |
-| [2017](https://adventofcode.com/2017) | Python     | 46/50      |
+| [2022](https://adventofcode.com/2022) |   Scala    |   00/50    |
+| [2021](https://adventofcode.com/2021) | TypeScript |   41/50    |
+| [2020](https://adventofcode.com/2020) |    Rust    |   50/50    |
+| [2019](https://adventofcode.com/2019) |    C++     |   25/50    |
+| [2018](https://adventofcode.com/2018) | JavaScript |   18/50    |
+| [2017](https://adventofcode.com/2017) |   Python   |   46/50    |

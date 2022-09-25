@@ -2,7 +2,7 @@
 
 ## Running solutions
 
-The following assumes you are at the project root level (same as `Cargo.toml` and this `README.md`).
+The following assumes you are at the project root level (same as this `README.md`).
 
 To run the solution for a given day:
 
