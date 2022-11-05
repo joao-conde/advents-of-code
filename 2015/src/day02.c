@@ -7,7 +7,7 @@ int cmp_asc(const void* elem1, const void* elem2) {
 }
 
 int present_paper(int l, int w, int h) {
-    int dimensions[] = {l * w, w * h, l * h};
+    int dimensions[3] = {l * w, w * h, l * h};
     qsort(&dimensions, 3, sizeof(int), cmp_asc);
 
     int surface = 2 * dimensions[0] + 2 * dimensions[1] + 2 * dimensions[2];
@@ -15,7 +15,7 @@ int present_paper(int l, int w, int h) {
 }
 
 int present_ribbon(int l, int w, int h) {
-    int dimensions[] = {l, w, h};
+    int dimensions[3] = {l, w, h};
     qsort(&dimensions, 3, sizeof(int), cmp_asc);
 
     int volume =  dimensions[0] * dimensions[1] * dimensions[2];
