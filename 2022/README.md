@@ -13,6 +13,6 @@ $ scala src/day[01-25].scala
 Solutions developed with:
 
 ```bash
-$ scala -version
+$ scala --version
 Scala code runner version 3.2.0 -- Copyright 2002-2022, LAMP/EPFL
 ```
