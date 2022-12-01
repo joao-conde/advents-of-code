@@ -2,8 +2,9 @@ import scala.io.Source.fromFile
 import scala.util.Using
 
 def main(args: Array[String]): Unit = {
-    val lines = Using(fromFile("input/day01"))(x => x.getLines().toList).get
-    val ints = lines.map(x => x.toInt)
-    val even = ints.filter(x => x % 2 == 0)
-    println("Part1: " + even.length)
+    val input = Using(fromFile("input/day01"))(x => x.mkString).get
+    val elfs = input.split("\n\n").map(e => e.split("\n"))
+    val sorted = elfs.map(s => s.map(x => x.toInt).sum).sorted.reverse
+    println("Part1: " + sorted(0))
+    println("Part2: " + sorted.slice(0, 3).sum)
 }
