@@ -9,27 +9,21 @@ def main(args: Array[String]): Unit = {
         .map(s => {
             val firstHalf = s.slice(0, s.length / 2)
             val secondHalf = s.slice(s.length / 2, s.length)
-            val items = charSet(firstHalf)
-            val misplaced = secondHalf.find(items.contains).get
+            val misplaced = firstHalf.find(c => secondHalf.contains(c)).get
             priority(misplaced)
         })
         .sum
 
     val p2 = (0 until sacks.length / 3)
         .map(i => {
-            val s1 = sacks(i * 3)
-            val s2 = sacks(i * 3 + 1)
-            val s3 = sacks(i * 3 + 2)
-            val x = charSet(s1).intersect(charSet(s2))
-            val dup = s3.find(x.contains).get
-            priority(dup)
+            val (s1, s2, s3) = (sacks(i * 3), sacks(i * 3 + 1), sacks(i * 3 + 2))
+            val badge = s1.find(c => s2.contains(c) && s3.contains(c)).get
+            priority(badge)
         })
         .sum
 
     println("Part1: " + p1)
     println("Part2: " + p2)
 }
-
-def charSet(str: String): Set[Char] = str.foldLeft(Set[Char]())((acc, c) => acc + c)
 
 def priority(item: Char): Int = item.toInt - (if (item.isUpper) 'A'.toInt - 27 else 'a'.toInt - 1)
