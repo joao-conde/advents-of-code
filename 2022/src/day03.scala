@@ -5,7 +5,7 @@ def main(args: Array[String]): Unit = {
     val input = Using(fromFile("input/day03"))(_.mkString).get
     val sacks = input.split("\n")
     val p1 = sacks
-        .map(s => s.sliding(s.length / 2, s.length / 2).toList)
+        .map(s => s.sliding(s.length / 2, s.length / 2).toArray)
         .map(halves => halves(0).find(c => halves(1).contains(c)).get)
         .map(priority)
         .sum
