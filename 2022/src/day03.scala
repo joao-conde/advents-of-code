@@ -6,7 +6,7 @@ def main(args: Array[String]): Unit = {
     val sacks = input.split("\n")
     val p1 = sacks
         .map(s => s.sliding(s.length / 2, s.length / 2).toArray)
-        .map(halves => halves(0).find(c => halves(1).contains(c)).get)
+        .map({ case Array(x, y) => x.find(c => y.contains(c)).get })
         .map(priority)
         .sum
     val p2 = sacks
