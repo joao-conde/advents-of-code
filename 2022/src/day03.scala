@@ -5,12 +5,12 @@ def main(args: Array[String]): Unit = {
     val input = Using(fromFile("input/day03"))(_.mkString).get
     val sacks = input.split("\n")
     val p1 = sacks
-        .map(s => s.sliding(s.length / 2, s.length / 2).toArray)
+        .map(s => s.grouped(s.length / 2).toArray)
         .map({ case Array(x, y) => x.find(c => y.contains(c)).get })
         .map(priority)
         .sum
     val p2 = sacks
-        .sliding(3, 3)
+        .grouped(3)
         .map({ case Array(x, y, z) => x.find(c => y.contains(c) && z.contains(c)).get })
         .map(priority)
         .sum
