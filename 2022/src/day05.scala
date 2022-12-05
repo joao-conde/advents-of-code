@@ -12,17 +12,11 @@ def main(args: Array[String]): Unit = {
 }
 
 def buildStacks(crates: Array[String]): Array[Stack[Char]] = {
-    val nstacks = crates.last.trim().last.asDigit
-    crates
-        .dropRight(1)
-        .reverse
-        .foldLeft(Array.fill(nstacks) { Stack[Char]() })((acc, x) => {
-            (0 until nstacks)
-                .zip(1 to x.length by 4)
-                .filter((_, i) => x(i) != ' ')
-                .foreach((s, i) => acc(s).push(x(i)))
-            acc
-        })
+    crates.toList.transpose
+        .map(_.filter(_.isUpper))
+        .filter(_.nonEmpty)
+        .map(l => Stack().pushAll(l.reverse))
+        .toArray
 }
 
 def rearrange(
