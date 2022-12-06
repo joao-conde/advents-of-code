@@ -10,8 +10,4 @@ def main(args: Array[String]): Unit = {
 }
 
 def findMarker(buffer: String, length: Int): Int =
-    buffer
-        .sliding(length)
-        .zipWithIndex
-        .find((x, i) => x.distinct.length() == length)
-        .get(1) + length
+    buffer.sliding(length).indexWhere(_.distinct.length() == length) + length
