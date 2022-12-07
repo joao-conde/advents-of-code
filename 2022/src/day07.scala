@@ -34,18 +34,14 @@ def buildFileSystem(lines: Array[String]): INode = {
     root
 }
 
-def changeDirectory(root: Dir, cwd: Dir, dir: String): Dir = {
-    dir match {
+def changeDirectory(root: Dir, cwd: Dir, arg: String): Dir = {
+    arg match {
         case "/"  => root
         case ".." => cwd.parent.getOrElse(root)
-        case d =>
+        case dir =>
             cwd.children
-                .find({
-                    case (Dir(name, _, _)) => name == cwd.name + d
-                    case _                 => false
-                })
+                .collectFirst({ case subdir: Dir if subdir.name == cwd.name + dir => subdir })
                 .get
-                .asInstanceOf[Dir]
     }
 }
 
