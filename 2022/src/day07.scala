@@ -35,11 +35,11 @@ def main(args: Array[String]): Unit = {
         c match {
             case "$ cd /"  => cur = root
             case "$ cd .." => cur = cur.parent.getOrElse(root)
-            case cd(dir)   => cur = dirs(dir)
+            case cd(dir)   => cur = dirs(cur.name + dir)
             case dir(name) => {
-                val child = Dir(name, Some(cur), Array())
+                val child = Dir(cur.name + name, Some(cur), Array())
                 cur.contents = cur.contents :+ child
-                dirs += name -> child
+                dirs += (cur.name + name) -> child
             }
             case file(size, name) => {
                 val child = File(name, size.toInt)
@@ -53,7 +53,8 @@ def main(args: Array[String]): Unit = {
     findSizes(root, sizes)
 
     val p1 = sizes.values.filter(_ < 100000).sum
-
+    val unused = 70000000 - sizes("/")
+    val p2 = sizes.values.toArray.sorted.find(x => unused + x >= 30000000).get
     println("Part1: " + p1)
-    println("Part2: ")
+    println("Part2: " + p2)
 }
