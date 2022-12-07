@@ -8,10 +8,8 @@ case class Dir(name: String, parent: Option[Dir], var children: List[INode])
 
 def main(args: Array[String]): Unit = {
     val input = Using(fromFile("input/day07"))(_.mkString).get
-
     val root = buildFileSystem(input.split("\n"))
     val sizes = computeSizes(root)
-
     val p1 = sizes.values.filter(_ < 100000).sum
     val p2 = sizes.values.toArray.sorted.find(70000000 - sizes("/") + _ >= 30000000).get
     println("Part1: " + p1)
