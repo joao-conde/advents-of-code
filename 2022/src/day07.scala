@@ -52,19 +52,18 @@ def buildFileSystem(commands: Array[String]): INode = {
 }
 
 def computeSizes(node: INode): Map[String, Int] = {
-    val sizes = Map[String, Int]().withDefaultValue(0)
-    computeSizes(node, sizes)
-    sizes
-}
-
-def computeSizes(node: INode, sizes: Map[String, Int]): Int = {
-    node match {
-        case File(_, size) => size
-        case Dir(name, _, children) =>
-            children.foldLeft(0)((acc, n) => {
-                val size = computeSizes(n, sizes)
-                sizes(name) += size
-                acc + size
-            })
+    def compute(node: INode, sizes: Map[String, Int]): Int = {
+        node match {
+            case File(_, size) => size
+            case Dir(name, _, children) =>
+                children.foldLeft(0)((acc, n) => {
+                    val size = compute(n, sizes)
+                    sizes(name) += size
+                    acc + size
+                })
+        }
     }
+    val sizes = Map[String, Int]().withDefaultValue(0)
+    compute(node, sizes)
+    sizes
 }
