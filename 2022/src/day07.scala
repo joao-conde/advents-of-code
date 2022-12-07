@@ -17,32 +17,36 @@ def main(args: Array[String]): Unit = {
 }
 
 def buildFileSystem(lines: Array[String]): INode = {
-    val cd = """\$ cd ([\w \/]+)""".r
+    val cd = """\$ cd ([\w \/ ..]+)""".r
     val dir = """dir (.+)""".r
     val file = """(\d+) (.+)""".r
 
     val root = Dir("/", None, List())
 
     var cwd = root
-    lines.foreach(
-      {
-          case "$ cd /"  => cwd = root
-          case "$ cd .." => cwd = cwd.parent.getOrElse(root)
-          case cd(dir) =>
-              cwd = cwd.children
-                  .find({
-                      case (Dir(name, _, _)) => name == cwd.name + dir
-                      case _                 => false
-                  })
-                  .get
-                  .asInstanceOf[Dir]
-          case dir(name) => cwd.children = cwd.children :+ Dir(cwd.name + name, Some(cwd), List())
-          case file(size, name) => cwd.children = cwd.children :+ File(name, size.toInt)
-          case _                =>
-      }
-    )
+    lines.foreach({
+        case cd(dir)   => cwd = changeDirectory(root, cwd, dir)
+        case dir(name) => cwd.children = cwd.children :+ Dir(cwd.name + name, Some(cwd), List())
+        case file(size, name) => cwd.children = cwd.children :+ File(name, size.toInt)
+        case _                =>
+    })
 
     root
+}
+
+def changeDirectory(root: Dir, cwd: Dir, dir: String): Dir = {
+    dir match {
+        case "/"  => root
+        case ".." => cwd.parent.getOrElse(root)
+        case d =>
+            cwd.children
+                .find({
+                    case (Dir(name, _, _)) => name == cwd.name + d
+                    case _                 => false
+                })
+                .get
+                .asInstanceOf[Dir]
+    }
 }
 
 def computeSizes(root: INode): Map[String, Int] = {
