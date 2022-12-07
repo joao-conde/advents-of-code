@@ -22,7 +22,6 @@ def buildFileSystem(lines: Array[String]): INode = {
     val file = """(\d+) (.+)""".r
 
     val root = Dir("/", None, List())
-
     var cwd = root
     lines.foreach({
         case cd(dir)   => cwd = changeDirectory(root, cwd, dir)
@@ -57,6 +56,7 @@ def computeSizes(root: INode): Map[String, Int] = {
                 })
         }
     }
+
     val sizes = Map[String, Int]().withDefaultValue(0)
     compute(root, sizes)
     sizes
