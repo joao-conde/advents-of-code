@@ -5,21 +5,14 @@ import scala.util.Using
 def main(args: Array[String]): Unit = {
     val input = Using(fromFile("input/day08"))(_.mkString).get
     val heights = input.split("\n").map(_.split("").map(_.toInt))
-
-    var highestScore = -1
-    var visible = 2 * heights.length + 2 * heights(0).length - 4
-    for (i <- 1 until heights.length - 1) {
-        for (j <- 1 until heights(0).length - 1) {
-            val height = highest(heights, i, j)
-            visible = if (heights(i)(j) > height) visible + 1 else visible
-
-            val score = scenicScore(heights, i, j)
-            highestScore = max(score, highestScore)
-        }
-    }
-
-    println("Part1: " + visible)
-    println("Part2: " + highestScore)
+    val coords =
+        (1 until heights.length - 1).flatMap(i => (1 until heights(i).length - 1).map(j => (i, j)))
+    val p1 = coords.count((i, j) =>
+        heights(i)(j) > highest(heights, i, j)
+    ) + 2 * heights.length + 2 * heights(0).length - 4
+    val p2 = coords.map((i, j) => scenicScore(heights, i, j)).reduce(max)
+    println("Part1: " + p1)
+    println("Part2: " + p2)
 }
 
 def highest(heights: Array[Array[Int]], i: Int, j: Int): Int = {
