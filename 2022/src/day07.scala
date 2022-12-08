@@ -4,7 +4,7 @@ import scala.util.Using
 
 type INode = File | Dir;
 case class File(name: String, size: Int)
-case class Dir(name: String, parent: Option[Dir], var children: List[INode])
+case class Dir(name: String, parent: Option[Dir] = None, var children: List[INode] = List())
 
 def main(args: Array[String]): Unit = {
     val input = Using(fromFile("input/day07"))(_.mkString).get
@@ -21,11 +21,11 @@ def buildFileSystem(lines: Array[String]): INode = {
     val dir = """dir (.+)""".r
     val file = """(\d+) (.+)""".r
 
-    val root = Dir("/", None, List())
+    val root = Dir("/")
     var cwd = root
     lines.foreach({
-        case cd(dir)   => cwd = changeDirectory(root, cwd, dir)
-        case dir(name) => cwd.children = cwd.children :+ Dir(cwd.name + name, Some(cwd), List())
+        case cd(dir)          => cwd = changeDirectory(root, cwd, dir)
+        case dir(name)        => cwd.children = cwd.children :+ Dir(cwd.name + name, Some(cwd))
         case file(size, name) => cwd.children = cwd.children :+ File(name, size.toInt)
         case _                =>
     })
