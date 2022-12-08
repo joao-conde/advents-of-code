@@ -2,7 +2,7 @@ import scala.collection.mutable.Map
 import scala.io.Source.fromFile
 import scala.util.Using
 
-type INode = File | Dir;
+type INode = File | Dir
 case class File(name: String, size: Int)
 case class Dir(name: String, parent: Option[Dir] = None, var children: List[INode] = List())
 
@@ -17,7 +17,7 @@ def main(args: Array[String]): Unit = {
 }
 
 def buildFileSystem(lines: Array[String]): INode = {
-    val cd = """\$ cd ([\w \/ ..]+)""".r
+    val cd = """\$ cd ([\w /.]+)""".r
     val dir = """dir (.+)""".r
     val file = """(\d+) (.+)""".r
 

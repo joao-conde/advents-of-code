@@ -4,7 +4,7 @@ import scala.util.Using
 
 def main(args: Array[String]): Unit = {
     val input = Using(fromFile("input/day05"))(_.mkString).get
-    var Array(crates, moves) = input.split("\n\n").map(_.split("\n"))
+    val Array(crates, moves) = input.split("\n\n").map(_.split("\n"))
     val p1 = rearrange(buildStacks(crates), moves).map(_.top).mkString
     val p2 = rearrange(buildStacks(crates), moves, reverse = true).map(_.top).mkString
     println("Part1: " + p1)
@@ -32,7 +32,7 @@ def rearrange(
 }
 
 def move[T](from: Stack[T], to: Stack[T], amount: Int, reverse: Boolean = false): Unit = {
-    var popped = (1 to amount).map(i => from.pop())
+    var popped = (1 to amount).map(_ => from.pop())
     if (reverse) popped = popped.reverse
     popped.foreach(x => to.push(x))
 }
