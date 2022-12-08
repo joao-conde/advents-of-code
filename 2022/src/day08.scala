@@ -5,11 +5,12 @@ import scala.util.Using
 def main(args: Array[String]): Unit = {
     val input = Using(fromFile("input/day08"))(_.mkString).get
     val heights = input.split("\n").map(_.split("").map(_.toInt))
-    val coords =
-        (1 until heights.length - 1).flatMap(i => (1 until heights(i).length - 1).map(j => (i, j)))
-    val p1 = coords.count((i, j) =>
-        heights(i)(j) > highest(heights, i, j)
-    ) + 2 * heights.length + 2 * heights(0).length - 4
+
+    val (nrows, ncols) = (heights.length, heights(0).length)
+    val coords = (1 until nrows - 1).flatMap(i => (1 until ncols - 1).map(j => (i, j)))
+    val around = 2 * nrows + 2 * ncols - 4
+
+    val p1 = coords.count((i, j) => heights(i)(j) > highest(heights, i, j)) + around
     val p2 = coords.map((i, j) => scenicScore(heights, i, j)).reduce(max)
     println("Part1: " + p1)
     println("Part2: " + p2)
