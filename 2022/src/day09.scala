@@ -1,4 +1,3 @@
-import scala.collection.mutable.Set
 import scala.io.Source.fromFile
 import scala.math.abs
 import scala.util.Using
@@ -25,19 +24,11 @@ def main(args: Array[String]): Unit = {
     println("Part2: " + p2)
 }
 
-def tailPath(length: Int, headPath: Array[(Int, Int)]): Array[(Int, Int)] = {
-    (1 until length)
-        .foldLeft((headPath.last, headPath))({
-            case ((knot, follow), _) => {
-                val path = knotPath(knot, follow)
-                (path.last, path)
-            }
-        })
-        ._2
-}
+def tailPath(length: Int, headPath: Array[(Int, Int)]): Array[(Int, Int)] =
+    (1 until length).foldLeft(headPath)((acc, _) => follow(acc))
 
-def knotPath(knot: (Int, Int), follow: Array[(Int, Int)]): Array[(Int, Int)] = {
-    follow.foldLeft(Array((0, 0)))((acc, head) => {
+def follow(path: Array[(Int, Int)]): Array[(Int, Int)] = {
+    path.foldLeft(Array((0, 0)))((acc, head) => {
         val tail = acc.last
         val delta = (head(0) - tail(0), head(1) - tail(1))
         val deltaN = (
