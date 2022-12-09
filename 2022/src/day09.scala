@@ -40,9 +40,7 @@ def knotPath(knot: (Int, Int), follow: Array[(Int, Int)]): Array[(Int, Int)] = {
           if (delta(0) != 0) delta(0) / abs(delta(0)) else 0,
           if (delta(1) != 0) delta(1) / abs(delta(1)) else 0
         )
-        if (abs(delta(0)) > 1 || abs(delta(1)) > 1)
-            acc :+ (tail(0) + deltaN(0), tail(1) + deltaN(1))
-        else
-            acc :+ tail
+        val update = abs(delta(0)) > 1 || abs(delta(1)) > 1
+        if (update) acc :+ (tail(0) + deltaN(0), tail(1) + deltaN(1)) else acc :+ tail
     })
 }
