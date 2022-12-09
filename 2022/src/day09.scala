@@ -19,17 +19,20 @@ def main(args: Array[String]): Unit = {
             }
         })
 
-    val shortTailPath = knotPath((0, 0), headPath)
-    val (_, longTailPath) = (1 until 10).foldLeft((headPath.last, headPath))((acc, _) => {
-        val (knot, follow) = acc
-        val path = knotPath(knot, follow)
-        (path.last, path)
-    })
-
-    val p1 = shortTailPath.toSet.size
-    val p2 = longTailPath.toSet.size
+    val p1 = tailPath(2, headPath).toSet.size
+    val p2 = tailPath(10, headPath).toSet.size
     println("Part1: " + p1)
     println("Part2: " + p2)
+}
+
+def tailPath(length: Int, headPath: Array[(Int, Int)]): Array[(Int, Int)] = {
+    (1 until length)
+        .foldLeft((headPath.last, headPath))((acc, _) => {
+            val (knot, follow) = acc
+            val path = knotPath(knot, follow)
+            (path.last, path)
+        })
+        ._2
 }
 
 def knotPath(knot: (Int, Int), follow: Array[(Int, Int)]): Array[(Int, Int)] = {
