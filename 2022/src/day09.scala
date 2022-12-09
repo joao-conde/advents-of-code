@@ -28,14 +28,14 @@ def tailPath(length: Int, headPath: Array[(Int, Int)]): Array[(Int, Int)] =
     (1 until length).foldLeft(headPath)((acc, _) => follow(acc))
 
 def follow(path: Array[(Int, Int)]): Array[(Int, Int)] = {
-    path.foldLeft(Array((0, 0)))((acc, head) => {
-        val tail = acc.last
-        val delta = (head(0) - tail(0), head(1) - tail(1))
+    path.foldLeft(Array((0, 0)))((acc, dst) => {
+        val cur = acc.last
+        val delta = (dst(0) - cur(0), dst(1) - cur(1))
         val deltaN = (
           if (delta(0) != 0) delta(0) / abs(delta(0)) else 0,
           if (delta(1) != 0) delta(1) / abs(delta(1)) else 0
         )
         val update = abs(delta(0)) > 1 || abs(delta(1)) > 1
-        if (update) acc :+ (tail(0) + deltaN(0), tail(1) + deltaN(1)) else acc :+ tail
+        if (update) acc :+ (cur(0) + deltaN(0), cur(1) + deltaN(1)) else acc :+ cur
     })
 }
