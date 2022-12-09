@@ -18,18 +18,18 @@ def main(args: Array[String]): Unit = {
                 case "D" => acc :+ (head(0), head(1) - 1)
             }
         })
-    val p1 = knotPath((0, 0), headPath).foldLeft(Set[(Int, Int)]())((acc, tail) => acc.addOne(tail))
 
-    val (_, path) = (1 until 10).foldLeft((headPath.last, headPath))((acc, _) => {
+    val shortTailPath = knotPath((0, 0), headPath)
+    val (_, longTailPath) = (1 until 10).foldLeft((headPath.last, headPath))((acc, _) => {
         val (knot, follow) = acc
         val path = knotPath(knot, follow)
         (path.last, path)
     })
 
-    val p2 = path.foldLeft(Set[(Int, Int)]())((acc, tail) => acc.addOne(tail))
-
-    println("Part1: " + p1.size)
-    println("Part2: " + p2.size)
+    val p1 = shortTailPath.toSet.size
+    val p2 = longTailPath.toSet.size
+    println("Part1: " + p1)
+    println("Part2: " + p2)
 }
 
 def knotPath(knot: (Int, Int), follow: Array[(Int, Int)]): Array[(Int, Int)] = {
@@ -46,3 +46,5 @@ def knotPath(knot: (Int, Int), follow: Array[(Int, Int)]): Array[(Int, Int)] = {
             acc :+ tail
     })
 }
+
+// def uniquePositions(path: Array[(Int, Int)]): Int => 1
