@@ -46,5 +46,3 @@ def knotPath(knot: (Int, Int), follow: Array[(Int, Int)]): Array[(Int, Int)] = {
             acc :+ tail
     })
 }
-
-// def uniquePositions(path: Array[(Int, Int)]): Int => 1
