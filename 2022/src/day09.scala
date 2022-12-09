@@ -27,10 +27,11 @@ def main(args: Array[String]): Unit = {
 
 def tailPath(length: Int, headPath: Array[(Int, Int)]): Array[(Int, Int)] = {
     (1 until length)
-        .foldLeft((headPath.last, headPath))((acc, _) => {
-            val (knot, follow) = acc
-            val path = knotPath(knot, follow)
-            (path.last, path)
+        .foldLeft((headPath.last, headPath))({
+            case ((knot, follow), _) => {
+                val path = knotPath(knot, follow)
+                (path.last, path)
+            }
         })
         ._2
 }
