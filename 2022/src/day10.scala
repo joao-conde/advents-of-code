@@ -7,15 +7,16 @@ def main(args: Array[String]): Unit = {
 
     val xs = instructions.foldLeft(Array((1, 1)))((acc, instruction) => {
         val cpu = (acc.last(0), acc.last(1))
-        acc :+
+        acc ++
             (instruction match {
-                case Array("noop")      => (cpu(0), cpu(1) + 1)
-                case Array("addx", op1) => (cpu(0) + op1.toInt, cpu(1) + 2)
+                case Array("noop") => Array((cpu(0), cpu(1) + 1))
+                case Array("addx", op1) =>
+                    Array((cpu(0), cpu(1) + 1), (cpu(0) + op1.toInt, cpu(1) + 2))
             })
     })
 
-    val p1 =
-        xs.filter((x, cycles) => List(20, 60, 100, 140, 180, 220).contains(cycles)).map(_ * _).sum
+    val signals = List(20, 60, 100, 140, 180, 220)
+    val p1 = xs.filter((x, cycles) => signals.contains(cycles)).map(_ * _).sum
 
     println("Part1: " + p1)
     println("Part2: ")
