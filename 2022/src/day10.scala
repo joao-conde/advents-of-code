@@ -6,13 +6,13 @@ def main(args: Array[String]): Unit = {
     val instructions = input.split("\n").map(_.split(" "))
 
     val xs = instructions.foldLeft(Array((1, 1)))((acc, instruction) => {
-        val cpu = (acc.last(0), acc.last(1))
-        acc ++
-            (instruction match {
-                case Array("noop") => Array((cpu(0), cpu(1) + 1))
-                case Array("addx", op1) =>
-                    Array((cpu(0), cpu(1) + 1), (cpu(0) + op1.toInt, cpu(1) + 2))
-            })
+        val cpu = acc.last
+        val next = instruction match {
+            case Array("noop") => Array((cpu(0), cpu(1) + 1))
+            case Array("addx", op1) =>
+                Array((cpu(0), cpu(1) + 1), (cpu(0) + op1.toInt, cpu(1) + 2))
+        }
+        acc ++ next
     })
 
     val signals = List(20, 60, 100, 140, 180, 220)
