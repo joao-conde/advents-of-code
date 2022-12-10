@@ -19,13 +19,10 @@ def main(args: Array[String]): Unit = {
     val p1 = xs.filter((_, cycle) => signals.contains(cycle)).map(_ * _).sum
 
     val p2 = xs
+        .map((x, cycle) => x)
         .grouped(40)
-        .map(l =>
-            l.zipWithIndex
-                .map({ case ((x, _), i) =>
-                    if ((x - 1 to x + 1).contains(i)) "#" else "."
-                })
-                .mkString
+        .map(r =>
+            r.zipWithIndex.map((x, i) => if ((x - 1 to x + 1).contains(i)) "#" else ".").mkString
         )
         .mkString("\n")
 
