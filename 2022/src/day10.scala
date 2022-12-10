@@ -16,8 +16,18 @@ def main(args: Array[String]): Unit = {
     })
 
     val signals = List(20, 60, 100, 140, 180, 220)
-    val p1 = xs.filter((x, cycles) => signals.contains(cycles)).map(_ * _).sum
+    val p1 = xs.filter((x, cycle) => signals.contains(cycle)).map(_ * _).sum
 
     println("Part1: " + p1)
-    println("Part2: ")
+    println("Part2: (see below)")
+    xs.grouped(40)
+        .foreach(l => {
+            l.zipWithIndex.foreach({
+                case ((x, cycle), i) => {
+                    val char = if ((x - 1 to x + 1).contains(i)) "#" else "."
+                    print(char)
+                }
+            })
+            println()
+        })
 }
