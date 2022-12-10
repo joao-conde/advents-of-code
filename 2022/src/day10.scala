@@ -17,16 +17,18 @@ def main(args: Array[String]): Unit = {
 
     val signals = List(20, 60, 100, 140, 180, 220)
     val p1 = xs.filter((_, cycle) => signals.contains(cycle)).map(_ * _).sum
+
     val p2 = xs
         .grouped(40)
         .map(l =>
             l.zipWithIndex
-                .map({ case ((x, cycle), i) =>
+                .map({ case ((x, _), i) =>
                     if ((x - 1 to x + 1).contains(i)) "#" else "."
                 })
                 .mkString
         )
         .mkString("\n")
+
     println("Part1: " + p1)
     println("Part2:\n" + p2)
 }
