@@ -8,6 +8,8 @@ From the [Advent Of Code](https://adventofcode.com/about) page on December 2017:
 
 ## Language used for each year
 
+Total stars can be [checked here.](https://adventofcode.com/events)
+
 |                 Year                  |  Language  | Completion |
 | :-----------------------------------: | :--------: | :--------: |
 | [2022](https://adventofcode.com/2022) |   Scala    |   14/50    |
