@@ -1,5 +1,4 @@
 import scala.io.Source.fromFile
-import scala.math.abs
 import scala.util.Using
 
 def main(args: Array[String]): Unit = {
@@ -8,13 +7,12 @@ def main(args: Array[String]): Unit = {
 
     val headPath = moves
         .flatMap((move, steps) => (1 to steps).map(_ => move))
-        .foldLeft(Array((0, 0)))((acc, move) => {
-            val head = acc.last
+        .scanLeft((0, 0))((head, move) => {
             move match {
-                case "R" => acc :+ (head(0) + 1, head(1))
-                case "L" => acc :+ (head(0) - 1, head(1))
-                case "U" => acc :+ (head(0), head(1) + 1)
-                case "D" => acc :+ (head(0), head(1) - 1)
+                case "R" => (head(0) + 1, head(1))
+                case "L" => (head(0) - 1, head(1))
+                case "U" => (head(0), head(1) + 1)
+                case "D" => (head(0), head(1) - 1)
             }
         })
 
@@ -25,17 +23,12 @@ def main(args: Array[String]): Unit = {
 }
 
 def tailPath(length: Int, headPath: Array[(Int, Int)]): Array[(Int, Int)] =
-    (1 until length).foldLeft(headPath)((acc, _) => follow(acc))
+    (1 until length).foldLeft(headPath)((path, _) => follow(path))
 
 def follow(path: Array[(Int, Int)]): Array[(Int, Int)] = {
-    path.foldLeft(Array((0, 0)))((acc, dst) => {
-        val cur = acc.last
+    path.scanLeft((0, 0))((cur, dst) => {
         val delta = (dst(0) - cur(0), dst(1) - cur(1))
-        val deltaN = (
-          if (delta(0) != 0) delta(0) / abs(delta(0)) else 0,
-          if (delta(1) != 0) delta(1) / abs(delta(1)) else 0
-        )
-        val update = abs(delta(0)) > 1 || abs(delta(1)) > 1
-        if (update) acc :+ (cur(0) + deltaN(0), cur(1) + deltaN(1)) else acc :+ cur
+        val update = delta(0).abs > 1 || delta(1).abs > 1
+        if (update) (cur(0) + delta(0).signum, cur(1) + delta(1).signum) else cur
     })
 }
