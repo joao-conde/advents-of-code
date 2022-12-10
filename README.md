@@ -8,11 +8,9 @@ From the [Advent Of Code](https://adventofcode.com/about) page on December 2017:
 
 ## Language used for each year
 
-Total stars can be [checked here.](https://adventofcode.com/events)
-
 |                 Year                  |  Language  | Completion |
-| :-----------------------------------: | :--------: | :--------: |
-| [2022](https://adventofcode.com/2022) |   Scala    |   14/50    |
+| :-----------------------------------: | :--------: |:----------:|
+| [2022](https://adventofcode.com/2022) |   Scala    |   20/50    |
 | [2021](https://adventofcode.com/2021) | TypeScript |   41/50    |
 | [2020](https://adventofcode.com/2020) |    Rust    |   50/50    |
 | [2019](https://adventofcode.com/2019) |    C++     |   25/50    |
