@@ -8,15 +8,16 @@ def main(args: Array[String]): Unit = {
 
     val (nrows, ncols) = (heights.length, heights(0).length)
     val coords = (1 until nrows - 1).flatMap(i => (1 until ncols - 1).map(j => (i, j)))
-    val around = 2 * nrows + 2 * ncols - 4
 
-    val p1 = coords.count((i, j) => heights(i)(j) > highest(heights, i, j)) + around
+    val p1 = coords.count((i, j) =>
+        heights(i)(j) > lowestToEdge(heights, i, j)
+    ) + 2 * nrows + 2 * ncols - 4
     val p2 = coords.map((i, j) => scenicScore(heights, i, j)).reduce(max)
     println("Part1: " + p1)
     println("Part2: " + p2)
 }
 
-def highest(heights: Array[Array[Int]], i: Int, j: Int): Int = {
+def lowestToEdge(heights: Array[Array[Int]], i: Int, j: Int): Int = {
     val up = (0 until i).map(heights(_)(j)).reduce(max)
     val down = (i + 1 until heights.length).map(heights(_)(j)).reduce(max)
     val left = (0 until j).map(heights(i)(_)).reduce(max)
