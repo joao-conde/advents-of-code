@@ -27,22 +27,14 @@ def lowestToEdge(heights: Array[Array[Int]], i: Int, j: Int): Int = {
 
 def scenicScore(heights: Array[Array[Int]], i: Int, j: Int): Int = {
     val height = heights(i)(j)
-
-    val upRange = i - 1 to 0 by -1
-    var up = upRange.map(heights(_)(j)).indexWhere(_ >= height)
-    up = if (up == -1) upRange.length else up + 1
-
-    val downRange = i + 1 until heights.length
-    var down = downRange.map(heights(_)(j)).indexWhere(_ >= height)
-    down = if (down == -1) downRange.length else down + 1
-
-    val leftRange = j - 1 to 0 by -1
-    var left = leftRange.map(heights(i)(_)).indexWhere(_ >= height)
-    left = if (left == -1) leftRange.length else left + 1
-
-    val rightRange = j + 1 until heights(i).length
-    var right = rightRange.map(heights(i)(_)).indexWhere(_ >= height)
-    right = if (right == -1) rightRange.length else right + 1
-
+    val up = countTrees((i - 1 to 0 by -1).map(heights(_)(j)), height)
+    val down = countTrees((i + 1 until heights.length).map(heights(_)(j)), height)
+    val left = countTrees((j - 1 to 0 by -1).map(heights(i)(_)), height)
+    val right = countTrees((j + 1 until heights(i).length).map(heights(i)(_)), height)
     up * down * left * right
+}
+
+def countTrees(seq: Seq[Int], height: Int): Int = {
+    val index = seq.indexWhere(_ >= height)
+    if (index == -1) seq.length else index + 1
 }
