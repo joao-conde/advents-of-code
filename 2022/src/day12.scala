@@ -32,18 +32,24 @@ def bfs(heightmap: Array[String], src: (Int, Int), dst: (Int, Int)): Array[(Int,
         if ((i, j) == dst)
             return path
 
-        if (!visited.contains((i, j))) {
-            val height = heightmap(i)(j)
-            if (i > 0 && heightmap(i - 1)(j) - height <= 1) queue = queue :+ (path :+ (i - 1, j))
-            if (i < heightmap.length - 1 && heightmap(i + 1)(j) - height <= 1)
-                queue = queue :+ (path :+ (i + 1, j))
-            if (j > 0 && heightmap(i)(j - 1) - height <= 1) queue = queue :+ (path :+ (i, j - 1))
-            if (j < heightmap(i).length - 1 && heightmap(i)(j + 1) - height <= 1)
-                queue = queue :+ (path :+ (i, j + 1))
-        }
+        if (!visited.contains((i, j)))
+            queue = queue ++ neighbors(heightmap, (i, j)).map(n => path :+ n)
 
         visited.add((i, j))
     }
 
     Array()
+}
+
+def neighbors(heightmap: Array[String], src: (Int, Int)): Array[(Int, Int)] = {
+    val (i, j) = src
+    val height = heightmap(i)(j)
+    var neighbors = Array[(Int, Int)]()
+    if (i > 0 && heightmap(i - 1)(j) - height <= 1) neighbors = neighbors :+ (i - 1, j)
+    if (i < heightmap.length - 1 && heightmap(i + 1)(j) - height <= 1)
+        neighbors = neighbors :+ (i + 1, j)
+    if (j > 0 && heightmap(i)(j - 1) - height <= 1) neighbors = neighbors :+ (i, j - 1)
+    if (j < heightmap(i).length - 1 && heightmap(i)(j + 1) - height <= 1)
+        neighbors = neighbors :+ (i, j + 1)
+    neighbors
 }
