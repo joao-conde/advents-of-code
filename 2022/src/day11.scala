@@ -56,6 +56,6 @@ def main(args: Array[String]): Unit = {
     val input = Using(fromFile("input/day11"))(_.mkString).get
     val p1 = MonkeyInTheMiddle(input).play(20, worry => worry / 3)
     val p2 = MonkeyInTheMiddle(input).play(10000)
-    println("Part1: " + p1)
-    println("Part2: " + p2)
+    println(s"Part1: ${p1}")
+    println(s"Part2: ${p2}")
 }

@@ -13,8 +13,8 @@ def main(args: Array[String]): Unit = {
         heights(i)(j) > lowestToEdge(heights, i, j)
     ) + 2 * nrows + 2 * ncols - 4
     val p2 = coords.map((i, j) => scenicScore(heights, i, j)).reduce(max)
-    println("Part1: " + p1)
-    println("Part2: " + p2)
+    println(s"Part1: ${p1}")
+    println(s"Part2: ${p2}")
 }
 
 def lowestToEdge(heights: Array[Array[Int]], i: Int, j: Int): Int = {

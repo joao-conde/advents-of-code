@@ -18,8 +18,8 @@ def main(args: Array[String]): Unit = {
 
     val p1 = tailPath(2, headPath).toSet.size
     val p2 = tailPath(10, headPath).toSet.size
-    println("Part1: " + p1)
-    println("Part2: " + p2)
+    println(s"Part1: ${p1}")
+    println(s"Part2: ${p2}")
 }
 
 def tailPath(length: Int, headPath: Array[(Int, Int)]): Array[(Int, Int)] =

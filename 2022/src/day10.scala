@@ -26,6 +26,6 @@ def main(args: Array[String]): Unit = {
         )
         .mkString("\n")
 
-    println("Part1: " + p1)
-    println("Part2:\n" + p2)
+    println(s"Part1: ${p1}")
+    println(s"Part2:\n${p2}")
 }

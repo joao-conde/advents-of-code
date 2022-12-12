@@ -7,8 +7,8 @@ def main(args: Array[String]): Unit = {
     val Array(crates, moves) = input.split("\n\n").map(_.split("\n"))
     val p1 = rearrange(buildStacks(crates), moves).map(_.top).mkString
     val p2 = rearrange(buildStacks(crates), moves, reverse = true).map(_.top).mkString
-    println("Part1: " + p1)
-    println("Part2: " + p2)
+    println(s"Part1: ${p1}")
+    println(s"Part2: ${p2}")
 }
 
 def buildStacks(crates: Array[String]): Array[Stack[Char]] = {

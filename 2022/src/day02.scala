@@ -10,8 +10,8 @@ def main(args: Array[String]): Unit = {
     val rounds = input.split("\n").map(_.split(" "))
     val p1 = rounds.map({ case Array(op, me) => scoreMe(alias(me), op) }).sum
     val p2 = rounds.map({ case Array(op, strat) => scoreMe(move(op, strat), op) }).sum
-    println("Part1: " + p1)
-    println("Part2: " + p2)
+    println(s"Part1: $p1")
+    println(s"Part2: $p2")
 }
 
 def scoreMe(me: String, op: String): Int =
