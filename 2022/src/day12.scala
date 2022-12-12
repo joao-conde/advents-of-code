@@ -1,4 +1,4 @@
-import scala.collection.mutable.{Map, Set}
+import scala.collection.mutable.Set
 import scala.io.Source.fromFile
 import scala.util.Using
 
@@ -19,18 +19,20 @@ def main(args: Array[String]): Unit = {
                     .flatMap((r, i) => r.zipWithIndex.map((height, j) => (i, j, height)))
                     .filter((_, _, height) => height == 'a')
 
-    val p1 = bfs(heightmap, (s0, s1), (e0, e1)).size
-    val p2 = starts.map((i, j, _) => bfs(heightmap, (i, j), (e0, e1)).size).filter(_ > 0).min
+    val p1 = bfs(heightmap, (s0, s1), (e0, e1)).size - 1
+    val p2 = starts.map((i, j, _) => bfs(heightmap, (i, j), (e0, e1)).size - 1).filter(_ > 0).min
     println("Part1: " + p1)
     println("Part2: " + p2)
 }
 
-def bfs(heightmap: Array[String], src: Node, dst: Node): List[Node] = {
+def bfs(heightmap: Array[String], src: Node, dst: Node): Array[Node] = {
     val visited = Set[Node]()
-    var queue = List[(Node, List[Node])]((src, List()))
+    var queue = List(Array(src))
     while (queue.nonEmpty) {
-        val ((i, j), path) = queue.head
+        val path = queue.head
         queue = queue.tail
+
+        val (i, j) = path.last
 
         val height = heightmap(i)(j)
 
@@ -38,14 +40,14 @@ def bfs(heightmap: Array[String], src: Node, dst: Node): List[Node] = {
             return path
 
         if (!visited.contains((i, j))) {
-            if (i > 0 && heightmap(i - 1)(j) - height <= 1) queue = queue :+ ((i-1, j), path :+ (i-1, j))
-            if (i < heightmap.length - 1 && heightmap(i + 1)(j) - height <= 1) queue = queue :+ ((i+1, j), path :+ (i+1, j))
-            if (j > 0 && heightmap(i)(j - 1) - height <= 1) queue = queue :+ ((i, j-1), path :+ (i, j-1))
-            if (j < heightmap(i).length - 1 && heightmap(i)(j + 1) - height <= 1) queue = queue :+ ((i, j+1), path :+ (i, j+1))        
+            if (i > 0 && heightmap(i - 1)(j) - height <= 1) queue = queue :+ (path :+ (i-1, j))
+            if (i < heightmap.length - 1 && heightmap(i + 1)(j) - height <= 1) queue = queue :+ (path :+ (i+1, j))
+            if (j > 0 && heightmap(i)(j - 1) - height <= 1) queue = queue :+ (path :+ (i, j-1))
+            if (j < heightmap(i).length - 1 && heightmap(i)(j + 1) - height <= 1) queue = queue :+ (path :+ (i, j+1))      
         }
 
         visited.add((i, j))
     }
 
-    List()
+    Array()
 }
