@@ -2,6 +2,12 @@ import scala.io.Source.fromFile
 import scala.math.min
 import scala.util.Using
 
+type Token = Open | Close | Comma | Value
+case class Open()
+case class Close()
+case class Comma()
+case class Value(value: Int)
+
 enum Comparison:
     case Greater, Equal, Lesser
 
@@ -20,22 +26,47 @@ def main(args: Array[String]): Unit = {
 def parse(str: String): List[Any] = {
     var cur: List[Any] = List()
     var stack: List[List[Any]] = List()
+    val tokens = tokenize(str)
+    tokens.foreach({
+        case Open() => {
+            stack = stack :+ cur
+            cur = List()
+        }
+        case Close() => {
+            val prev = stack.last
+            stack = stack.dropRight(1)
+            cur = prev :+ cur
+        }
+        case Comma()      => {}
+        case Value(value) => cur = cur :+ value
+    })
+    cur
+}
+
+def tokenize(str: String): List[Token] = {
+    var tokens: List[Token] = List()
+    var digits: List[Char] = List()
     for (c <- str) {
         c match {
-            case '[' => {
-                stack = stack :+ cur
-                cur = List()
-            }
+            case '[' => tokens = tokens :+ Open()
             case ']' => {
-                val prev = stack.last
-                stack = stack.dropRight(1)
-                cur = prev :+ cur
+                if (digits.nonEmpty) {
+                    tokens = tokens :+ Value(digits.mkString.toInt)
+                    digits = List()
+                }
+                tokens = tokens :+ Close()
             }
-            case ',' => {}
-            case x   => cur = cur :+ x.asDigit
+            case ',' => {
+                if (digits.nonEmpty) {
+                    tokens = tokens :+ Value(digits.mkString.toInt)
+                    digits = List()
+                }
+                tokens = tokens :+ Comma()
+            }
+            case d => digits = digits :+ d
         }
     }
-    cur
+    tokens
 }
 
 def compare(left: Any, right: Any): Comparison = {
