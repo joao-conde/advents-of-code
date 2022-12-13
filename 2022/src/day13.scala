@@ -1,4 +1,3 @@
-import scala.collection.mutable.Stack
 import scala.io.Source.fromFile
 import scala.math.min
 import scala.util.Using
