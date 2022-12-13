@@ -11,7 +11,7 @@ def main(args: Array[String]): Unit = {
 
     val pairs = input.split("\n\n").map(_.split("\n").map(parse))
     val p1 = pairs.zipWithIndex
-        .map({ case (Array(p0, p1), i) => if (compare(p0, p1) != Comparison.Greater) i + 1 else 0 })
+        .map({ case (Array(p0, p1), i) => if (compare(p0, p1) == Comparison.Lesser) i + 1 else 0 })
         .sum
 
     println(s"Part1: ${p1}")
@@ -32,10 +32,8 @@ def parse(str: String): List[Any] = {
                 stack = stack.dropRight(1)
                 cur = prev :+ cur
             }
-            case ',' => ()
-            case x => {
-                cur = cur :+ x.asDigit
-            }
+            case ',' => {}
+            case x   => cur = cur :+ x.asDigit
         }
     }
     cur
