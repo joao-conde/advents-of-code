@@ -12,18 +12,8 @@ def main(args: Array[String]): Unit = {
     val input = Using(fromFile("input/day13"))(_.mkString).get
 
     val pairs = input.split("\n\n").map(_.split("\n").map(parse))
-
-    assert(compare(pairs(0)(0), pairs(0)(1)) == Comparison.Lesser)
-    assert(compare(pairs(1)(0), pairs(1)(1)) == Comparison.Lesser)
-    assert(compare(pairs(2)(0), pairs(2)(1)) == Comparison.Greater)
-    assert(compare(pairs(3)(0), pairs(3)(1)) == Comparison.Lesser)
-    assert(compare(pairs(4)(0), pairs(4)(1)) == Comparison.Greater)
-    assert(compare(pairs(5)(0), pairs(5)(1)) == Comparison.Lesser)
-    assert(compare(pairs(6)(0), pairs(6)(1)) == Comparison.Greater)
-    assert(compare(pairs(7)(0), pairs(7)(1)) == Comparison.Greater)
-
     val p1 = pairs.zipWithIndex
-        .map({ case (Array(p0, p1), i) => if (compare(p0, p1) == Comparison.Lesser) i + 1 else 0 })
+        .map({ case (Array(p0, p1), i) => if (compare(p0, p1) != Comparison.Greater) i + 1 else 0 })
         .sum
 
     println(s"Part1: ${p1}")
@@ -79,5 +69,9 @@ def compare(left: Value, right: Value): Comparison = {
         }
         case (left: Int, right: List[Value]) => compare(List(left), right)
         case (left: List[Value], right: Int) => compare(left, List(right))
+        case something => {
+            println(something)
+            Comparison.Equal
+        }
     }
 }
