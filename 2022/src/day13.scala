@@ -9,7 +9,7 @@ case class Comma()
 case class Value(value: Int)
 
 enum Comparison:
-    case Greater, Equal, Lesser
+    case Lesser, Equal, Greater
 
 def main(args: Array[String]): Unit = {
     val input = Using(fromFile("input/day13"))(_.mkString).get
@@ -29,22 +29,22 @@ def main(args: Array[String]): Unit = {
 }
 
 def parse(str: String): List[Any] = {
-    var cur: List[Any] = List()
+    var list: List[Any] = List()
     var stack: List[List[Any]] = List()
     tokenize(str).foreach({
         case Open() => {
-            stack = stack :+ cur
-            cur = List()
+            stack = stack :+ list
+            list = List()
         }
         case Close() => {
             val prev = stack.last
             stack = stack.dropRight(1)
-            cur = prev :+ cur
+            list = prev :+ list
         }
         case Comma()      => {}
-        case Value(value) => cur = cur :+ value
+        case Value(value) => list = list :+ value
     })
-    cur
+    list
 }
 
 def tokenize(str: String): List[Token] = {
