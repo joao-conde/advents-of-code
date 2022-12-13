@@ -69,9 +69,5 @@ def compare(left: Value, right: Value): Comparison = {
         }
         case (left: Int, right: List[Value]) => compare(List(left), right)
         case (left: List[Value], right: Int) => compare(left, List(right))
-        case something => {
-            println(something)
-            Comparison.Equal
-        }
     }
 }
