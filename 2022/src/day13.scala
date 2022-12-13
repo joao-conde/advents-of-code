@@ -3,8 +3,6 @@ import scala.io.Source.fromFile
 import scala.math.min
 import scala.util.Using
 
-type Value = Int | List[Any]
-
 enum Comparison:
     case Greater, Equal, Lesser
 
@@ -20,9 +18,9 @@ def main(args: Array[String]): Unit = {
     println(s"Part2: ${}")
 }
 
-def parse(str: String): List[Value] = {
-    var cur: List[Value] = List()
-    var stack: List[List[Value]] = List()
+def parse(str: String): List[Any] = {
+    var cur: List[Any] = List()
+    var stack: List[List[Any]] = List()
     for (c <- str) {
         c match {
             case '[' => {
@@ -43,7 +41,7 @@ def parse(str: String): List[Value] = {
     cur
 }
 
-def compare(left: Value, right: Value): Comparison = {
+def compare(left: Any, right: Any): Comparison = {
     (left, right) match {
         case (left: Int, right: Int) => {
             if (left == right)
@@ -53,7 +51,7 @@ def compare(left: Value, right: Value): Comparison = {
             else
                 Comparison.Greater
         }
-        case (left: List[Value], right: List[Value]) => {
+        case (left: List[Any], right: List[Any]) => {
             val len = min(left.length, right.length)
             val comparisons = (0 until len)
                 .map(i => compare(left(i), right(i)))
@@ -67,7 +65,7 @@ def compare(left: Value, right: Value): Comparison = {
                 case _                                  => comparison
             }
         }
-        case (left: Int, right: List[Value]) => compare(List(left), right)
-        case (left: List[Value], right: Int) => compare(left, List(right))
+        case (left: Int, right: List[Any]) => compare(List(left), right)
+        case (left: List[Any], right: Int) => compare(left, List(right))
     }
 }
