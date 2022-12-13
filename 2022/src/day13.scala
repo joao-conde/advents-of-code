@@ -31,8 +31,7 @@ def main(args: Array[String]): Unit = {
 def parse(str: String): List[Any] = {
     var cur: List[Any] = List()
     var stack: List[List[Any]] = List()
-    val tokens = tokenize(str)
-    tokens.foreach({
+    tokenize(str).foreach({
         case Open() => {
             stack = stack :+ cur
             cur = List()
@@ -51,8 +50,8 @@ def parse(str: String): List[Any] = {
 def tokenize(str: String): List[Token] = {
     var tokens: List[Token] = List()
     var digits: List[Char] = List()
-    for (c <- str) {
-        c match {
+    str.foreach({
+        {
             case '[' => tokens = tokens :+ Open()
             case ']' => {
                 if (digits.nonEmpty) {
@@ -70,19 +69,21 @@ def tokenize(str: String): List[Token] = {
             }
             case d => digits = digits :+ d
         }
-    }
+    })
     tokens
 }
 
 def compare(left: Any, right: Any): Comparison = {
     (left, right) match {
+        case (left: Int, right: List[Any]) => compare(List(left), right)
+        case (left: List[Any], right: Int) => compare(left, List(right))
         case (left: Int, right: Int) => {
-            if (left == right)
-                Comparison.Equal
+            if (left > right)
+                Comparison.Greater
             else if (left < right)
                 Comparison.Lesser
             else
-                Comparison.Greater
+                Comparison.Equal
         }
         case (left: List[Any], right: List[Any]) => {
             val len = min(left.length, right.length)
@@ -98,7 +99,5 @@ def compare(left: Any, right: Any): Comparison = {
                 case _                                  => comparison
             }
         }
-        case (left: Int, right: List[Any]) => compare(List(left), right)
-        case (left: List[Any], right: Int) => compare(left, List(right))
     }
 }
