@@ -22,7 +22,7 @@ def main(args: Array[String]): Unit = {
 }
 
 def bfs(heightmap: Array[String], src: (Int, Int), dst: (Int, Int)): Array[(Int, Int)] = {
-    val visited = Set[(Int, Int)]()
+    val visited: Set[(Int, Int)] = Set()
     var queue = List(Array(src))
     while (queue.nonEmpty) {
         val path = queue.head
@@ -44,7 +44,7 @@ def bfs(heightmap: Array[String], src: (Int, Int), dst: (Int, Int)): Array[(Int,
 def neighbors(heightmap: Array[String], src: (Int, Int)): Array[(Int, Int)] = {
     val (i, j) = src
     val height = heightmap(i)(j)
-    var neighbors = Array[(Int, Int)]()
+    var neighbors: Array[(Int, Int)] = Array()
     if (i > 0 && heightmap(i - 1)(j) - height <= 1) neighbors = neighbors :+ (i - 1, j)
     if (i < heightmap.length - 1 && heightmap(i + 1)(j) - height <= 1)
         neighbors = neighbors :+ (i + 1, j)

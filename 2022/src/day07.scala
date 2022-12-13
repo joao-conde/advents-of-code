@@ -57,7 +57,7 @@ def computeSizes(root: INode): Map[String, Int] = {
         }
     }
 
-    val sizes = Map[String, Int]().withDefaultValue(0)
+    val sizes: Map[String, Int] = Map().withDefaultValue(0)
     compute(root, sizes)
     sizes
 }
