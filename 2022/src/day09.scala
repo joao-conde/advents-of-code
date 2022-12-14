@@ -29,6 +29,6 @@ def follow(path: Array[(Int, Int)]): Array[(Int, Int)] = {
     path.scanLeft((0, 0))((cur, dst) => {
         val delta = (dst(0) - cur(0), dst(1) - cur(1))
         val update = delta(0).abs > 1 || delta(1).abs > 1
-        if (update) (cur(0) + delta(0).signum, cur(1) + delta(1).signum) else cur
+        if (update) (cur(0) + delta(0).sign, cur(1) + delta(1).sign) else cur
     })
 }
