@@ -15,8 +15,10 @@ def main(args: Array[String]): Unit = {
         )
 
     val rocks = computeRocks(rockLines)
-    val occupied1 = (rocks, sand, bottom, point) => rocks.contains(point) || sand.contains(point)
-    val occupied2 = (rocks, sand, bottom, point) => rocks.contains(point) || sand.contains(point)
+    val occupied1: OccupiedFn = (rocks, sand, bottom, point) =>
+        rocks.contains(point) || sand.contains(point)
+    val occupied2: OccupiedFn = (rocks, sand, bottom, point) =>
+        rocks.contains(point) || sand.contains(point) || point(1) == bottom
 
     val p1 = sandUnits(rocks, occupied1)
     val p2 = sandUnits(rocks, occupied2) + 1
