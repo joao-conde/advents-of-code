@@ -17,6 +17,7 @@ def main(args: Array[String]): Unit = {
     val occupied1: OccupiedFn = (occupied, bottom, point) => occupied.contains(point)
     val occupied2: OccupiedFn = (occupied, bottom, point) =>
         occupied.contains(point) || point(1) == bottom
+
     val p1 = sandUnits(computeRocks(rockLines), occupied1)
     val p2 = sandUnits(computeRocks(rockLines), occupied2) + 1
     println(s"Part1: ${p1}")
