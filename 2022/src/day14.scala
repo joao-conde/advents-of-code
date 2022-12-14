@@ -4,7 +4,7 @@ import scala.math.{abs, max}
 import scala.util.Using
 
 type Point = (Int, Int)
-type OccupiedFn = (Set[Point], Set[Point], Int, Point) => Boolean
+type OccupiedFn = (rocks: Set[Point], sand: Set[Point], bottom: Int, point: Point) => Boolean
 
 def main(args: Array[String]): Unit = {
     val input = Using(fromFile("input/day14"))(_.mkString).get
@@ -14,7 +14,7 @@ def main(args: Array[String]): Unit = {
           _.split("->").map(_.split(",").map(_.trim.toInt)).map({ case Array(x, y) => (x, y) })
         )
 
-    val rocks = parseRocks(rockLines)
+    val rocks = computeRocks(rockLines)
     val p1 =
         sandUnits(
           rocks,
@@ -30,7 +30,7 @@ def main(args: Array[String]): Unit = {
     println(s"Part2: ${p2}")
 }
 
-def parseRocks(rockLines: Array[Array[Point]]): Set[Point] = {
+def computeRocks(rockLines: Array[Array[Point]]): Set[Point] = {
     val rocks: Set[Point] = Set()
     for (path <- rockLines) {
         var cur = path(0)
@@ -44,16 +44,9 @@ def parseRocks(rockLines: Array[Array[Point]]): Set[Point] = {
 
 def rockPath(p0: Point, p1: Point): List[Point] = {
     val ((x0, y0), (x1, y1)) = (p0, p1)
-    val diff = (abs(x0 - x1), abs(y0 - y1))
-    val len = max(diff(0), diff(1))
-    val start = diff match {
-        case (_, 0) => if (x0 < x1) p0 else p1
-        case (0, _) => if (y0 < y1) p0 else p1
-    }
-    diff match {
-        case (_, 0) => (1 to len).scanLeft(start)((rock, x) => (rock(0) + 1, rock(1))).toList
-        case (0, _) => (1 to len).scanLeft(start)((rock, y) => (rock(0), rock(1) + 1)).toList
-    }
+    val delta = ((x1 - x0), (y1 - y0))
+    val len = max(abs(delta(0)), abs(delta(1)))
+    (1 to len).scanLeft(p0)((rock, _) => (rock(0) + delta(0).sign, rock(1) + delta(1).sign)).toList
 }
 
 def sandUnits(rocks: Set[Point], occupiedFn: OccupiedFn, start: Point = (500, 0)): Int = {
@@ -87,6 +80,5 @@ def dropSand(
             return Some(cur)
         }
     }
-
     None
 }
