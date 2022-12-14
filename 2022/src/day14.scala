@@ -4,7 +4,7 @@ import scala.math.{abs, max}
 import scala.util.Using
 
 type Point = (Int, Int)
-type OccupiedFn = (rocks: Set[Point], sand: Set[Point], bottom: Int, point: Point) => Boolean
+type OccupiedFn = (occupied: Set[Point], bottom: Int, point: Point) => Boolean
 
 def main(args: Array[String]): Unit = {
     val input = Using(fromFile("input/day14"))(_.mkString).get
@@ -14,14 +14,11 @@ def main(args: Array[String]): Unit = {
           _.split("->").map(_.split(",").map(_.trim.toInt)).map({ case Array(x, y) => (x, y) })
         )
 
-    val rocks = computeRocks(rockLines)
-    val occupied1: OccupiedFn = (rocks, sand, bottom, point) =>
-        rocks.contains(point) || sand.contains(point)
-    val occupied2: OccupiedFn = (rocks, sand, bottom, point) =>
-        rocks.contains(point) || sand.contains(point) || point(1) == bottom
-
-    val p1 = sandUnits(rocks, occupied1)
-    val p2 = sandUnits(rocks, occupied2) + 1
+    val occupied1: OccupiedFn = (occupied, bottom, point) => occupied.contains(point)
+    val occupied2: OccupiedFn = (occupied, bottom, point) =>
+        occupied.contains(point) || point(1) == bottom
+    val p1 = sandUnits(computeRocks(rockLines), occupied1)
+    val p2 = sandUnits(computeRocks(rockLines), occupied2) + 1
     println(s"Part1: ${p1}")
     println(s"Part2: ${p2}")
 }
@@ -45,22 +42,20 @@ def rockPath(p0: Point, p1: Point): List[Point] = {
     (1 to len).scanLeft(p0)((rock, _) => (rock(0) + delta(0).sign, rock(1) + delta(1).sign)).toList
 }
 
-def sandUnits(rocks: Set[Point], occupiedFn: OccupiedFn, start: Point = (500, 0)): Int = {
-    val sand: Set[Point] = Set()
-    val bottom = rocks.map((_, y) => y).max + 2
+def sandUnits(occupied: Set[Point], occupiedFn: OccupiedFn, start: Point = (500, 0)): Int = {
+    val bottom = occupied.map((_, y) => y).max + 2
     LazyList
         .from(1)
-        .takeWhile(_ => dropSand(rocks, sand, bottom, start, occupiedFn).getOrElse(start) != start)
+        .takeWhile(_ => dropSand(occupied, occupiedFn, bottom, start).getOrElse(start) != start)
         .toList
         .last
 }
 
 def dropSand(
-    rocks: Set[Point],
-    sand: Set[Point],
+    occupied: Set[Point],
+    occupiedFn: OccupiedFn,
     bottom: Int,
-    start: Point,
-    occupied: OccupiedFn
+    start: Point
 ): Option[Point] = {
     var cur = start
     while (cur(1) <= bottom) {
@@ -68,11 +63,11 @@ def dropSand(
         val downLeft = (cur(0) - 1, cur(1) + 1)
         val downRight = (cur(0) + 1, cur(1) + 1)
 
-        if (!occupied(rocks, sand, bottom, below)) cur = below
-        else if (!occupied(rocks, sand, bottom, downLeft)) cur = downLeft
-        else if (!occupied(rocks, sand, bottom, downRight)) cur = downRight
+        if (!occupiedFn(occupied, bottom, below)) cur = below
+        else if (!occupiedFn(occupied, bottom, downLeft)) cur = downLeft
+        else if (!occupiedFn(occupied, bottom, downRight)) cur = downRight
         else {
-            sand.add(cur)
+            occupied.add(cur)
             return Some(cur)
         }
     }
