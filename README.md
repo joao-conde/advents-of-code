@@ -1,4 +1,4 @@
-# Advents of Code 🎄
+# Advents of Conde 🎄
 
 Repository to host solutions for the [yearly advent of code challenges](https://adventofcode.com/events).
 
