@@ -17,8 +17,8 @@ def main(args: Array[String]): Unit = {
 
     val p1 = bfs(heightmap, (s0, s1), (e0, e1)).size - 1
     val p2 = starts.map((i, j, _) => bfs(heightmap, (i, j), (e0, e1)).size - 1).filter(_ > 0).min
-    println(s"Part1: ${p1}")
-    println(s"Part2: ${p2}")
+    println(s"Part1: $p1")
+    println(s"Part2: $p2")
 }
 
 def bfs(heightmap: Array[String], src: (Int, Int), dst: (Int, Int)): Array[(Int, Int)] = {

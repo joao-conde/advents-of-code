@@ -12,8 +12,8 @@ def main(args: Array[String]): Unit = {
     val sizes = computeSizes(root)
     val p1 = sizes.values.filter(_ < 100000).sum
     val p2 = sizes.values.toArray.sorted.find(70000000 - sizes("/") + _ >= 30000000).get
-    println(s"Part1: ${p1}")
-    println(s"Part2: ${p2}")
+    println(s"Part1: $p1")
+    println(s"Part2: $p2")
 }
 
 def buildFileSystem(lines: Array[String]): INode = {

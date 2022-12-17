@@ -20,8 +20,8 @@ def main(args: Array[String]): Unit = {
 
     val p1 = sandUnits(computeRocks(rockLines), occupied1)
     val p2 = sandUnits(computeRocks(rockLines), occupied2) + 1
-    println(s"Part1: ${p1}")
-    println(s"Part2: ${p2}")
+    println(s"Part1: $p1")
+    println(s"Part2: $p2")
 }
 
 def computeRocks(rockLines: Array[Array[Point]]): Set[Point] = {

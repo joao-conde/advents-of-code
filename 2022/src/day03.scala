@@ -14,8 +14,8 @@ def main(args: Array[String]): Unit = {
         .map({ case Array(x, y, z) => x.find(c => y.contains(c) && z.contains(c)).get })
         .map(priority)
         .sum
-    println(s"Part1: ${p1}")
-    println(s"Part2: ${p2}")
+    println(s"Part1: $p1")
+    println(s"Part2: $p2")
 }
 
 def priority(item: Char): Int = item.toInt - (if (item.isUpper) 'A'.toInt - 27 else 'a'.toInt - 1)

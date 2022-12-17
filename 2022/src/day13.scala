@@ -24,8 +24,8 @@ def main(args: Array[String]): Unit = {
         .sortWith((a, b) => compare(a, b) == Comparison.Lesser)
     val p2 = (sorted.indexWhere(_ == dividers(0)) + 1) * (sorted.indexWhere(_ == dividers(1)) + 1)
 
-    println(s"Part1: ${p1}")
-    println(s"Part2: ${p2}")
+    println(s"Part1: $p1")
+    println(s"Part2: $p2")
 }
 
 def parse(str: String): List[Any] = {
