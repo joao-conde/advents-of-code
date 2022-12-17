@@ -2,42 +2,49 @@ import scala.io.Source.fromFile
 import scala.math.{abs, max, min}
 import scala.util.Using
 
-type Point = (Int, Int)
-
-type Equation = (p: Point) => Boolean;
-
-class Area(sx: Int, sy: Int, bx: Int, by: Int) {
-    val d = manhattan((sx, sy), (bx, by))
-    val m = 1
-
-    val inTopLeft: Equation = p => p(1) >= m * p(0) + getB(sx, sy, m) - d
-    val inTopRight: Equation = p => p(1) >= -m * p(0) + getB(sx, sy, -m) - d
-    val inBotLeft: Equation = p => p(1) <= -m * p(0) + getB(sx, sy, -m) + d
-    val inBotRight: Equation = p => p(1) <= m * p(0) + getB(sx, sy, m) + d
-
-    def contains(p: Point): Boolean =
-        List(inTopLeft, inTopRight, inBotLeft, inBotRight).forall(l => l(p))
-
-    def manhattan(p0: Point, p1: Point): Int = abs(p0(0) - p1(0)) + abs(p0(1) - p1(1))
-
-    def getB(sx: Int, sy: Int, m: Int): Int = sy - sx * m
+class Spot(val sx: Int, val sy: Int, val bx: Int, val by: Int) {
+    val distance = abs(sx - bx) + abs(sy - by)
+    val positiveSlopeXs = List(sx - sy - distance, sx - sy + distance)
+    val negativeSlopeXs = List(sx + sy - distance, sx + sy + distance)
 }
 
 def main(args: Array[String]): Unit = {
     val input = Using(fromFile("input/day15"))(_.mkString).get
 
     val re = """Sensor at x=(-?\d+), y=(-?\d+): closest beacon is at x=(-?\d+), y=(-?\d+)""".r
-
-    val areas = input
+    val spots = input
         .split("\n")
-        .map({ case re(sx, sy, bx, by) =>
-            Area(sx.toInt, sy.toInt, bx.toInt, by.toInt)
-        })
-        .toList
+        .map({ case re(sx, sy, bx, by) => Spot(sx.toInt, sy.toInt, bx.toInt, by.toInt) })
 
-    val p1 = (-10000000 to 10000000)
-        .map(x => (x, 2000000))
-        .count(p => areas.exists(area => area.contains(p))) - 1
-
-    println(s"Part1: ${p1}")
+    val p1 = solveP1(spots)
+    val p2 = solveP2(spots)
+    println(s"Part1: $p1")
+    println(s"Part2: $p2")
 }
+
+def solveP1(spots: Array[Spot]): Int = {
+    val intervals = spots
+        .map(spot => (spot, spot.distance - abs(spot.sy - 2000000)))
+        .filter({ case (_, dx) => dx > 0 })
+        .map({ case (spot, dx) => spot.sx - dx to spot.sx + dx })
+    val minx = intervals.map(i => i.start).min
+    val maxx = intervals.map(i => i.end).max
+    (minx to maxx).count(x => intervals.exists(interval => interval.contains(x))) - 1
+}
+
+def solveP2(spots: Array[Spot]): BigInt = {
+    val positives = spots.flatMap(_.positiveSlopeXs)
+    val negatives = spots.flatMap(_.negativeSlopeXs)
+    val posLine = findLine(positives)
+    val negLine = findLine(negatives)
+    val x = (posLine + negLine) / 2
+    val y = (negLine - posLine) / 2
+    BigInt(x) * 4000000 + y
+}
+
+def findLine(xs: Array[Int]): Int = (0 until xs.length)
+    .flatMap(i => (i + 1 until xs.length).map(j => (i, j)))
+    .map({ case (i, j) => (xs(i), xs(j)) })
+    .find({ case (x0, x1) => abs(x0 - x1) == 2 })
+    .map({ case (i, j) => min(i, j) + 1 })
+    .get
