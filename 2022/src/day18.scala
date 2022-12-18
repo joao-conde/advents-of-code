@@ -1,6 +1,5 @@
 import scala.collection.mutable.Set
 import scala.io.Source.fromFile
-import scala.math.abs
 import scala.util.Using
 
 case class Cube(x: Int, y: Int, z: Int) {
@@ -16,8 +15,10 @@ case class Cube(x: Int, y: Int, z: Int) {
 
 def main(args: Array[String]): Unit = {
     val input = Using(fromFile("input/day18"))(_.mkString).get
-    val cubes =
-        input.split("\n").map(_.split(",").map(_.toInt)).map(c => Cube(c(0), c(1), c(2)))
+    val cubes = input
+        .split("\n")
+        .map(_.split(",").map(_.toInt))
+        .map(c => Cube(c(0), c(1), c(2)))
 
     val boxMin = cubes.flatMap(c => List(c.x, c.y, c.z)).min
     val boxMax = cubes.flatMap(c => List(c.x, c.y, c.z)).max
@@ -43,7 +44,6 @@ def reachesOut(cube: Cube, cubes: Array[Cube], boxMin: Int, boxMax: Int): Boolea
             val outside = cur.x < boxMin || cur.x > boxMax ||
                 cur.y < boxMin || cur.y > boxMax ||
                 cur.z < boxMin || cur.z > boxMax
-
             if (outside) return true
 
             queue = queue ::: cur.neighbors()
