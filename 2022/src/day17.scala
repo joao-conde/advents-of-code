@@ -147,6 +147,6 @@ def main(args: Array[String]): Unit = {
     val input = Using(fromFile("input/day17"))(_.mkString).get
     val p1 = Chamber(input).simulate(2022)
     val p2 = Chamber(input).simulate(1000000000000L) - 1
-    println(s"Part1: ${p1}")
-    println(s"Part2: ${p2}")
+    println(s"Part1: $p1")
+    println(s"Part2: $p2")
 }
