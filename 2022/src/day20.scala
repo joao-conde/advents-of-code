@@ -2,8 +2,6 @@ import scala.io.Source.fromFile
 import scala.math.abs
 import scala.util.Using
 
-// TODO swap other days ::: to ++
-
 def main(args: Array[String]): Unit = {
     val input = Using(fromFile("input/day20"))(_.mkString).get
 
