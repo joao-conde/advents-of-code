@@ -1,7 +1,20 @@
 import scala.io.Source.fromFile
 import scala.util.Using
 
-class Num(val value: Long, var prev: Option[Num], var next: Option[Num])
+class Num(val value: Long, var prev: Option[Num], var next: Option[Num]) {
+    def append(other: Num) = {
+        this.next = Some(other)
+        other.prev = Some(this)
+    }
+
+    def delete() = {
+        this.prev.get.next = this.next
+        this.next.get.prev = this.prev
+    }
+
+    def lookup(offset: Int) =
+        (1 to offset.abs).foldLeft(this)((cur, _) => if (offset > 0) cur.next.get else cur.prev.get)
+}
 
 def main(args: Array[String]): Unit = {
     val input = Using(fromFile("input/day20"))(_.mkString).get
@@ -14,50 +27,27 @@ def main(args: Array[String]): Unit = {
 }
 
 def decrypt(nums: Array[Int], rounds: Int = 1, key: Long = 1): Long = {
-    val nodes = nums.map(i => Num(i * key, None, None))
-    nodes
-        .zip(nodes.drop(1))
-        .foreach((n1, n2) => {
-            n1.next = Some(n2)
-            n2.prev = Some(n1)
-        })
-    nodes.last.next = Some(nodes.head)
-    nodes.head.prev = Some(nodes.last)
-
+    val nodes = buildNodes(nums, key)
     (1 to rounds).foreach(_ => mix(nodes))
 
     val zero = nodes.find(_.value == 0).get
-    List(1000, 2000, 3000)
-        .map(i => {
-            var cur = zero
-            (1 to i).foreach(_ => cur = cur.next.get)
-            cur.value
-        })
-        .sum
+    List(1000, 2000, 3000).map(zero.lookup(_).value).sum
 }
 
 def mix(nodes: Array[Num]) = {
     nodes.foreach(n => {
-        n.prev.get.next = n.next
-        n.next.get.prev = n.prev
-
+        n.delete()
         val move = (n.value % (nodes.length - 1)).toInt
-
-        var (left, right) = (n.prev.get, n.next.get)
-        if (move >= 0)
-            (1 to move).foreach(_ => {
-                left = left.next.get
-                right = right.next.get
-            })
-        else
-            (1 to move.abs).foreach(_ => {
-                left = left.prev.get
-                right = right.prev.get
-            })
-
-        n.prev = Some(left)
-        n.next = Some(right)
-        left.next = Some(n)
-        right.prev = Some(n)
+        var left = n.prev.get.lookup(move)
+        var right = n.next.get.lookup(move)
+        left.append(n)
+        n.append(right)
     })
+}
+
+def buildNodes(nums: Array[Int], key: Long): Array[Num] = {
+    val nodes = nums.map(i => Num(i * key, None, None))
+    nodes.zip(nodes.drop(1)).foreach((n1, n2) => n1.append(n2))
+    nodes.last.append(nodes.head)
+    nodes
 }
