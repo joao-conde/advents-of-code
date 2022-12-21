@@ -23,19 +23,12 @@ def main(args: Array[String]): Unit = {
     println(s"Part1: $p1")
 }
 
-def evaluate(
-    monkey: String,
-    expressions: Map[String, Expression],
-    cache: Map[String, Long] = Map()
-): Long = {
-    if (cache.contains(monkey))
-        return cache(monkey)
-
-    val num = expressions.get(monkey).get match {
+def evaluate(monkey: String, expressions: Map[String, Expression]): Long = {
+    expressions.get(monkey).get match {
         case (num: Long) => num
         case (m1: String, op: String, m2: String) => {
-            val num1 = evaluate(m1, expressions, cache)
-            val num2 = evaluate(m2, expressions, cache)
+            val num1 = evaluate(m1, expressions)
+            val num2 = evaluate(m2, expressions)
             op match {
                 case "+" => num1 + num2
                 case "-" => num1 - num2
@@ -44,6 +37,4 @@ def evaluate(
             }
         }
     }
-    cache.addOne(monkey, num)
-    num
 }
