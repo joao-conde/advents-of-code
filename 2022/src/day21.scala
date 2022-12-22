@@ -23,8 +23,8 @@ def main(args: Array[String]): Unit = {
     // solution is interception of two lines since the equation is linear
     // m1 * x + b1 = m2 * x + b2 <=> x = (b1 - b2) / (m2 - m1)
     val (monkey1, _, monkey2) = expressions("root"): @unchecked
-    val (slope1, b1) = equation(monkey1, expressions)
-    val (slope2, b2) = equation(monkey2, expressions)
+    val (slope1, b1) = line(monkey1, expressions)
+    val (slope2, b2) = line(monkey2, expressions)
     val p2 = (b1 - b2) / (slope2 - slope1)
 
     println(s"Part1: $p1")
@@ -47,7 +47,7 @@ def evaluate(monkey: String, expressions: Map[String, Expression]): BigDecimal =
     }
 }
 
-def equation(monkey: String, expressions: Map[String, Expression]): (BigDecimal, BigDecimal) = {
+def line(monkey: String, expressions: Map[String, Expression]): (BigDecimal, BigDecimal) = {
     val (x1, y1) = (0, evaluate(monkey, expressions.updated("humn", 0)))
     val (x2, y2) = (1, evaluate(monkey, expressions.updated("humn", 1)))
     val slope = (y2 - y1) / (x2 - x1)
