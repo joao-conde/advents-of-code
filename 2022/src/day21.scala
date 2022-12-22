@@ -1,8 +1,7 @@
-import scala.collection.mutable.Map
 import scala.io.Source.fromFile
 import scala.util.Using
 
-type Expression = (String, String, String) | Long
+type Expression = (String, String, String) | BigDecimal
 
 def main(args: Array[String]): Unit = {
     val input = Using(fromFile("input/day21"))(_.mkString).get
@@ -13,19 +12,40 @@ def main(args: Array[String]): Unit = {
         .split("\n")
         .foldLeft(Map[String, Expression]())((acc, x) => {
             val expression = x match {
-                case re1(m1, num)        => m1 -> num.toLong
+                case re1(m1, num)        => m1 -> BigDecimal(num)
                 case re2(m1, m2, op, m3) => m1 -> (m2, op, m3)
             }
             acc + expression
         })
 
     val p1 = evaluate("root", expressions)
+
+    // solution is interception of two lines since the equation is linear
+    // slope1 * x + b1 = slope2 * x + b2
+    // slope1 * x + b1 = slope2 * x + b2
+    // slope1 * x + b1 - slope1 * x = slope2 * x + b2 - slope1 * x
+    // b1 = slope2 * x + b2 - slope1 * x
+    // b1 - b2 = slope2 * x - slope1 * x
+    // b1 - b2 = x * (slope2 - slope1)
+    // (b1 - b2) / (slope2 - slope1) = x
+    // x = (b1 - b2) / (slope2 - slope1)
+    val (x1, y1) = (0, evaluate("lrnp", expressions.updated("humn", 0)))
+    val (x2, y2) = (1, evaluate("lrnp", expressions.updated("humn", 1)))
+    val (x3, y3) = (0, evaluate("ptnb", expressions.updated("humn", 0)))
+    val (x4, y4) = (1, evaluate("ptnb", expressions.updated("humn", 1)))
+    val slope1 = (y2 - y1) / (x2 - x1)
+    val slope2 = (y4 - y3) / (x4 - x3)
+    val b1 = evaluate("lrnp", expressions.updated("humn", 0))
+    val b2 = evaluate("ptnb", expressions.updated("humn", 0))
+    val p2 = (b1 - b2) / (slope2 - slope1)
+
     println(s"Part1: $p1")
+    println(s"Part2: $p2")
 }
 
-def evaluate(monkey: String, expressions: Map[String, Expression]): Long = {
+def evaluate(monkey: String, expressions: Map[String, Expression]): BigDecimal = {
     expressions.get(monkey).get match {
-        case (num: Long) => num
+        case (num: BigDecimal) => num
         case (m1: String, op: String, m2: String) => {
             val num1 = evaluate(m1, expressions)
             val num2 = evaluate(m2, expressions)
