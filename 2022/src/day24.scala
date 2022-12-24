@@ -26,14 +26,13 @@ def bfs(blizzards: List[(Char, Int, Int)], maxi: Int, maxj: Int): Int = {
 
     val visited: Set[(Int, Int, Int)] = Set()
 
-    var queue = List((0, 1, blizzards, 0, List[(Int, Int)]()))
+    var queue = List((0, 1, blizzards, 0))
     while (queue.nonEmpty) {
-        var (i, j, bzs, time, path) = queue.head
+        var (i, j, bzs, time) = queue.head
         queue = queue.tail
 
         if (i == maxi && j == maxj - 1) {
             println(s"FOUND IT $time")
-            println(path)
             return time
         }
 
@@ -42,13 +41,11 @@ def bfs(blizzards: List[(Char, Int, Int)], maxi: Int, maxj: Int): Int = {
             val nextBlizzardsPositions = nextBlizzards.map((_, i, j) => (i, j)).toSet
 
             val next = moves
-                .map((di, dj) =>
-                    (i + di, j + dj, nextBlizzards, time + 1, path :+ (i + di, j + dj))
-                )
-                .filter((i, j, _, _, _) =>
+                .map((di, dj) => (i + di, j + dj, nextBlizzards, time + 1))
+                .filter((i, j, _, _) =>
                     i > 0 && j > 0 && ((i < maxi && j < maxj) || (i == maxi && j == maxj - 1))
                 )
-                .filter((i, j, _, _, _) => !nextBlizzardsPositions.contains((i, j)))
+                .filter((i, j, _, _) => !nextBlizzardsPositions.contains((i, j)))
 
             queue = queue ::: next
         }
@@ -76,5 +73,4 @@ def step(
 }
 
 def warp(x: Int, minx: Int, maxx: Int): Int =
-    val res = if (x <= minx) maxx - 1 else if (x >= maxx) minx + 1 else x
-    res
+    if (x == minx) maxx - 1 else if (x == maxx) minx + 1 else x
