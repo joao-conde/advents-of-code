@@ -18,15 +18,15 @@ def main(args: Array[String]): Unit = {
         .toList
 
     val p1 = bfs(blizzards, maxi, maxj)
-    println(p1)
+    println(s"Part1: $p1")
 }
 
 def bfs(blizzards: List[(Char, Int, Int)], maxi: Int, maxj: Int): Int = {
+    val period = maxi * maxj
+    val holes = List((0, 1), (maxi, maxj - 1))
     val moves = List((0, 0), (-1, 0), (1, 0), (0, -1), (0, 1))
 
     val visited: Set[(Int, Int, Int)] = Set()
-    val holes = List((0, 1), (maxi, maxj - 1))
-
     var queue = List((0, 1, blizzards, 0))
     while (queue.nonEmpty) {
         var (i, j, bzs, time) = queue.head
@@ -35,7 +35,7 @@ def bfs(blizzards: List[(Char, Int, Int)], maxi: Int, maxj: Int): Int = {
         if (i == maxi && j == maxj - 1)
             return time
 
-        if (!visited.contains((i, j, time))) {
+        if (!visited.contains((i, j, time % period))) {
             val nextBlizzards = step(bzs, 0, maxi, 0, maxj)
             val nextBlizzardsPositions = nextBlizzards.map((_, i, j) => (i, j)).toSet
 
@@ -48,10 +48,10 @@ def bfs(blizzards: List[(Char, Int, Int)], maxi: Int, maxj: Int): Int = {
 
             queue = queue ::: next
         }
-        visited.addOne((i, j, time))
+        visited.addOne((i, j, time % period))
     }
 
-    0
+    -1
 }
 
 def step(
@@ -61,6 +61,9 @@ def step(
     minj: Int,
     maxj: Int
 ): List[(Char, Int, Int)] = {
+    def warp(x: Int, minx: Int, maxx: Int): Int =
+        if (x == minx) maxx - 1 else if (x == maxx) minx + 1 else x
+
     blizzards
         .map({
             case ('^', i, j) => ('^', i - 1, j)
@@ -70,6 +73,3 @@ def step(
         })
         .map((c, i, j) => (c, warp(i, mini, maxi), warp(j, minj, maxj)))
 }
-
-def warp(x: Int, minx: Int, maxx: Int): Int =
-    if (x == minx) maxx - 1 else if (x == maxx) minx + 1 else x
