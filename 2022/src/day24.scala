@@ -22,12 +22,13 @@ def main(args: Array[String]): Unit = {
 }
 
 def bfs(blizzards: List[(Char, Int, Int)], maxi: Int, maxj: Int): Int = {
-    val period = maxi * maxj
-    val holes = List((0, 1), (maxi, maxj - 1))
+    val start = (0, 1)
+    val end = (maxi, maxj - 1)
+    val period = (maxi - 1) * (maxj - 1)
     val moves = List((0, 0), (-1, 0), (1, 0), (0, -1), (0, 1))
 
     val visited: Set[(Int, Int, Int)] = Set()
-    var queue = List((0, 1, blizzards, 0))
+    var queue = List((start(0), start(1), blizzards, 0))
     while (queue.nonEmpty) {
         var (i, j, bzs, time) = queue.head
         queue = queue.tail
@@ -42,7 +43,7 @@ def bfs(blizzards: List[(Char, Int, Int)], maxi: Int, maxj: Int): Int = {
             val next = moves
                 .map((di, dj) => (i + di, j + dj, nextBlizzards, time + 1))
                 .filter((i, j, _, _) =>
-                    holes.contains((i, j)) || (i > 0 && j > 0 && i < maxi && j < maxj)
+                    (i, j) == start || (i, j) == end || (i > 0 && j > 0 && i < maxi && j < maxj)
                 )
                 .filter((i, j, _, _) => !nextBlizzardsPositions.contains((i, j)))
 
