@@ -17,13 +17,23 @@ def main(args: Array[String]): Unit = {
         )
         .toList
 
-    val p1 = bfs(blizzards, maxi, maxj)
-    println(s"Part1: $p1")
+    val (t1, bzs1) = bfs(blizzards, maxi, maxj, (0, 1), (maxi, maxj - 1))
+    println(t1)
+    val (t2, bzs2) = bfs(bzs1, maxi, maxj, (maxi, maxj - 1), (0, 1))
+    println(t2)
+    val (t3, bzs3) = bfs(bzs2, maxi, maxj, (0, 1), (maxi, maxj - 1))
+    println(t3)
+    println(s"Part1: $t1")
+    println(s"Part2: ${t1 + t2 + t3}")
 }
 
-def bfs(blizzards: List[(Char, Int, Int)], maxi: Int, maxj: Int): Int = {
-    val start = (0, 1)
-    val end = (maxi, maxj - 1)
+def bfs(
+    blizzards: List[(Char, Int, Int)],
+    maxi: Int,
+    maxj: Int,
+    start: (Int, Int),
+    end: (Int, Int)
+): (Int, List[(Char, Int, Int)]) = {
     val period = (maxi - 1) * (maxj - 1)
     val moves = List((0, 0), (-1, 0), (1, 0), (0, -1), (0, 1))
 
@@ -33,8 +43,8 @@ def bfs(blizzards: List[(Char, Int, Int)], maxi: Int, maxj: Int): Int = {
         var (i, j, bzs, time) = queue.head
         queue = queue.tail
 
-        if (i == maxi && j == maxj - 1)
-            return time
+        if ((i, j) == end)
+            return (time, bzs)
 
         if (!visited.contains((i, j, time % period))) {
             val nextBlizzards = step(bzs, 0, maxi, 0, maxj)
@@ -52,7 +62,7 @@ def bfs(blizzards: List[(Char, Int, Int)], maxi: Int, maxj: Int): Int = {
         visited.addOne((i, j, time % period))
     }
 
-    -1
+    (-1, List())
 }
 
 def step(
