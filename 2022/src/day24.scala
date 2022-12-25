@@ -18,12 +18,10 @@ def main(args: Array[String]): Unit = {
         .toList
 
     val (t1, bzs1) = bfs(blizzards, maxi, maxj, (0, 1), (maxi, maxj - 1))
-    println(t1)
-    val (t2, bzs2) = bfs(bzs1, maxi, maxj, (maxi, maxj - 1), (0, 1))
-    println(t2)
-    val (t3, bzs3) = bfs(bzs2, maxi, maxj, (0, 1), (maxi, maxj - 1))
-    println(t3)
     println(s"Part1: $t1")
+
+    val (t2, bzs2) = bfs(bzs1, maxi, maxj, (maxi, maxj - 1), (0, 1))
+    val (t3, bzs3) = bfs(bzs2, maxi, maxj, (0, 1), (maxi, maxj - 1))
     println(s"Part2: ${t1 + t2 + t3}")
 }
 
