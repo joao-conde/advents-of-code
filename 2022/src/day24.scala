@@ -25,16 +25,15 @@ def bfs(blizzards: List[(Char, Int, Int)], maxi: Int, maxj: Int): Int = {
     val moves = List((0, 0), (-1, 0), (1, 0), (0, -1), (0, 1))
 
     val visited: Set[(Int, Int, Int)] = Set()
+    val holes = List((0, 1), (maxi, maxj - 1))
 
     var queue = List((0, 1, blizzards, 0))
     while (queue.nonEmpty) {
         var (i, j, bzs, time) = queue.head
         queue = queue.tail
 
-        if (i == maxi && j == maxj - 1) {
-            println(s"FOUND IT $time")
+        if (i == maxi && j == maxj - 1)
             return time
-        }
 
         if (!visited.contains((i, j, time))) {
             val nextBlizzards = step(bzs, 0, maxi, 0, maxj)
@@ -43,7 +42,7 @@ def bfs(blizzards: List[(Char, Int, Int)], maxi: Int, maxj: Int): Int = {
             val next = moves
                 .map((di, dj) => (i + di, j + dj, nextBlizzards, time + 1))
                 .filter((i, j, _, _) =>
-                    i > 0 && j > 0 && ((i < maxi && j < maxj) || (i == maxi && j == maxj - 1))
+                    holes.contains((i, j)) || (i > 0 && j > 0 && i < maxi && j < maxj)
                 )
                 .filter((i, j, _, _) => !nextBlizzardsPositions.contains((i, j)))
 
