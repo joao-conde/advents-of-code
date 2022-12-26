@@ -1,5 +1,4 @@
 import scala.io.Source.fromFile
-import scala.math.pow
 import scala.util.Using
 
 def main(args: Array[String]): Unit = {
