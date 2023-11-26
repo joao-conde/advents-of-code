@@ -9,7 +9,8 @@ From the [Advent Of Code](https://adventofcode.com/about) page on December 2017:
 ## Language used for each year
 
 |                 Year                  |  Language  | Completion |
-| :-----------------------------------: | :--------: |:----------:|
+| :-----------------------------------: | :--------: | :--------: |
+| [2023](https://adventofcode.com/2023) |   Elixir   |   00/50    |
 | [2022](https://adventofcode.com/2022) |   Scala    |   43/50    |
 | [2021](https://adventofcode.com/2021) | TypeScript |   41/50    |
 | [2020](https://adventofcode.com/2020) |    Rust    |   50/50    |
