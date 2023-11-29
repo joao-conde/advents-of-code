@@ -1,26 +1,14 @@
 defmodule Day02 do
-  @alias %{
-    "X" => "A",
-    "Y" => "B",
-    "Z" => "C"
-  }
+  @alias %{"X" => "A", "Y" => "B", "Z" => "C"}
 
-  @weakness %{
-    "A" => "B",
-    "B" => "C",
-    "C" => "A"
-  }
+  @weakness %{"A" => "B", "B" => "C", "C" => "A"}
 
-  @points %{
-    "A" => 1,
-    "B" => 2,
-    "C" => 3
-  }
+  @points %{"A" => 1, "B" => 2, "C" => 3}
 
   def main do
     rounds = get_rounds()
-    p1 = Enum.map(rounds, fn [op, me] -> score(@alias[me], op) end) |> Enum.sum()
-    p2 = Enum.map(rounds, fn [op, strat] -> score(move(op, strat), op) end) |> Enum.sum()
+    p1 = rounds |> Enum.map(fn [op, me] -> score(@alias[me], op) end) |> Enum.sum()
+    p2 = rounds |> Enum.map(fn [op, strat] -> score(move(op, strat), op) end) |> Enum.sum()
     IO.puts("Part1: #{p1}")
     IO.puts("Part2: #{p2}")
   end
