@@ -1,6 +1,6 @@
 defmodule Day01 do
   def main do
-    calories = Day01.get_calories()
+    calories = get_calories()
     p1 = calories |> List.last()
     p2 = calories |> Enum.take(-3) |> Enum.sum()
     IO.puts("Part1: #{p1}")
