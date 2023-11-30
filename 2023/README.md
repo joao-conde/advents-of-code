@@ -7,12 +7,12 @@ The following assumes you are at the project root level (same as this `README.md
 To run the solution for a given day:
 
 ```bash
-$ elixir src/day[01-25].ex
+$ cargo run --bin day[01-25]
 ```
 
 Solutions developed with:
 
 ```bash
-$ elixir --version
-Elixir 1.15.7 (compiled with Erlang/OTP 26)
+$ rustc --version
+rustc 1.74.0
 ```

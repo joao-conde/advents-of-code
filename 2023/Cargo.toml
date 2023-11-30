@@ -1,13 +1,9 @@
 [package]
-name = "aoc2020"
+name = "aoc2023"
 version = "1.0.0"
 authors = ["João Conde <joaodiasconde@gmail.com>"]
-edition = "2018"
-default-run = "aoc2020"
-
-[dependencies]
-regex = "1"
-itertools = "0.9"
+edition = "2021"
+default-run = "aoc2023"
 
 [profile.release]
 opt-level = 3
