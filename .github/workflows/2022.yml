@@ -5,11 +5,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - run: curl https://raw.githubusercontent.com/scalameta/scalafmt/master/bin/install-scalafmt-native.sh | bash -s -- $VERSION $INSTALL_LOCATION
-        env:
-          VERSION: 3.6.1
-          INSTALL_LOCATION: .
+      - run: curl https://raw.githubusercontent.com/scalameta/scalafmt/master/bin/install-scalafmt-native.sh | bash -s -- 3.6.1 $(pwd)/scalafmt
       - run: ls
-      - run: ./scalafmt-native
-      - run: ./scalafmt-native --version
-      - run: ./scalafmt-native src/*.scala
+      - run: ./scalafmt
+      - run: ./scalafmt --version
+      - run: ./scalafmt src/*.scala
