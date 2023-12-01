@@ -1,0 +1,14 @@
+name: AoC 2018 Workflow
+on: [push]
+jobs:
+  main:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 14.15.1
+      - run: npm install
+        working-directory: 2018/
+      - run: npm run pretty
+        working-directory: 2018/
