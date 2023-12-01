@@ -5,5 +5,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - run: sbt scalafmtSbtCheck scalafmtCheck test:scalafmtCheck
-        working-directory: 2022/
+      - run: curl https://raw.githubusercontent.com/scalameta/scalafmt/master/bin/install-scalafmt-native.sh | bash -s -- $VERSION $INSTALL_LOCATION
+        env:
+          VERSION: 3.6.1
+          INSTALL_LOCATION: .
+      - run: ls
+      - run: ./scalafmt-native
+      - run: ./scalafmt-native --version
+      - run: ./scalafmt-native src/*.scala
