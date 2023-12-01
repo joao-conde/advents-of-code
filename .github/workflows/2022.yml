@@ -1,0 +1,8 @@
+name: AoC 2022 Workflow
+on: [push]
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: openlawteam/scalafmt-ci@v2
