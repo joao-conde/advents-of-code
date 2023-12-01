@@ -7,5 +7,5 @@ jobs:
       - uses: actions/checkout@v2
       - run: curl https://raw.githubusercontent.com/scalameta/scalafmt/master/bin/install-scalafmt-native.sh | bash -s -- 3.6.1 $(pwd)/scalafmt
         working-directory: 2022
-      - run: ./scalafmt --check --config .scalafmt.conf src/*.scala
+      - run: ./scalafmt --test --config .scalafmt.conf src/*.scala
         working-directory: 2022
