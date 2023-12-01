@@ -9,7 +9,7 @@
         "lint": "eslint \"./**/*.js\"",
         "lint-fix": "eslint \"./**/*.js\" --fix",
         "prettier": "prettier \"./**/*.{js,json}\" --write",
-        "pretty": "yarn run prettier && yarn run lint-fix"
+        "pretty": "npm run prettier && npm run lint-fix"
     },
     "devDependencies": {
         "eslint": "^7.32.0",
