@@ -1,17 +1,11 @@
 use std::collections::HashSet;
 use std::fs;
-use std::iter::FromIterator;
 
 fn main() {
     let input = fs::read_to_string("input/day06").expect("failure opening input file");
     let groups = input
         .split("\n\n")
-        .map(|group| {
-            group
-                .lines()
-                .map(|vote| HashSet::from_iter(vote.chars()))
-                .collect()
-        })
+        .map(|group| group.lines().map(|vote| vote.chars().collect()).collect())
         .collect::<Vec<Vec<HashSet<char>>>>();
 
     let p1 = groups

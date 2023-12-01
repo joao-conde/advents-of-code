@@ -5,6 +5,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+      - run: rustup install 1.50.0
+      - run: rustup default 1.50.0
       - run: rustup component add rustfmt
       - run: rustup component add clippy
       - run: cargo fmt --all -- --check
