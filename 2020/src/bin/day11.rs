@@ -29,6 +29,7 @@ fn stabilize(mut seats: Grid, visible_fn: VisibleFn, tolerance: usize) -> usize 
     }
 }
 
+#[allow(clippy::ptr_arg)]
 fn step(seats: &Grid, visible_fn: &VisibleFn, tolerance: usize) -> Grid {
     let mut next_seats = seats.to_owned();
     for i in 0..seats.len() {
@@ -47,6 +48,7 @@ fn step(seats: &Grid, visible_fn: &VisibleFn, tolerance: usize) -> Grid {
     next_seats
 }
 
+#[allow(clippy::ptr_arg)]
 fn visible1(seats: &Grid, i: usize, j: usize) -> Vec<&char> {
     [
         (-1, -1),
@@ -68,6 +70,7 @@ fn visible1(seats: &Grid, i: usize, j: usize) -> Vec<&char> {
     .collect()
 }
 
+#[allow(clippy::ptr_arg)]
 fn visible2(seats: &Grid, i: usize, j: usize) -> Vec<&char> {
     [
         (-1, -1),
