@@ -10,7 +10,7 @@
         "watch": "tsc -w -p tsconfig.json",
         "lint": "eslint \"./**/*.ts\" --fix",
         "prettier": "prettier \"./**/*.{ts,json}\" --write",
-        "pretty": "yarn prettier && yarn lint"
+        "pretty": "npm prettier && npm lint"
     },
     "devDependencies": {
         "@types/node": "^16.11.10",

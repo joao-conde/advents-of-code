@@ -8,9 +8,9 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 16.13.0
-      - run: yarn install
+      - run: npm install
         working-directory: 2021/
-      - run: yarn run build
+      - run: npm run build
         working-directory: 2021/
-      - run: yarn run pretty
+      - run: npm run pretty
         working-directory: 2021/
