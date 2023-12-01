@@ -1,7 +1,6 @@
 use std::cmp::Ordering;
 use std::collections::HashSet;
 use std::fs;
-use std::iter::FromIterator;
 
 const PREAMBLE_SIZE: usize = 25;
 
@@ -19,7 +18,7 @@ fn main() {
 fn p1(nums: &[i64]) -> i64 {
     (PREAMBLE_SIZE..nums.len())
         .find(|i| {
-            let preamble: HashSet<&i64> = HashSet::from_iter(nums[i - PREAMBLE_SIZE..*i].iter());
+            let preamble: HashSet<&i64> = nums[i - PREAMBLE_SIZE..*i].iter().collect();
             preamble
                 .iter()
                 .map(|p| nums[*i as usize] - *p)

@@ -83,11 +83,11 @@ fn main() {
         for edge in tile.get_edges() {
             borders_to_tiles
                 .entry(edge.clone())
-                .or_insert(Vec::new())
+                .or_insert_with(Vec::new)
                 .push(id);
             borders_to_tiles
                 .entry(edge.into_iter().rev().collect())
-                .or_insert(Vec::new())
+                .or_insert_with(Vec::new)
                 .push(id);
         }
     }
