@@ -1,0 +1,11 @@
+name: AoC 2021 Workflow
+on: [push]
+jobs:
+  main:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - run: yarn run build
+        working-directory: 2021/
+      - run: yarn run pretty
+        working-directory: 2021/
