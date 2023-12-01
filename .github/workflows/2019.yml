@@ -1,0 +1,11 @@
+name: AoC 2019 Workflow
+on: [push]
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - run: sudo apt-get install -y -q python3-pip
+      - run: pip install --user cpplint
+      - run: cpplint --recursive --extensions=h,cpp src/
+        working-directory: 2019/
