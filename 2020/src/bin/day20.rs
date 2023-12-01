@@ -249,11 +249,14 @@ fn find_match(
 fn rotate_90_matrix<T: Clone + Default>(m: &[Vec<T>]) -> Vec<Vec<T>> {
     let (h, w) = (m.len(), m[0].len());
     let mut rot = vec![vec![T::default(); w]; h];
+
+    #[allow(clippy::needless_range_loop)]
     for i in 0..h {
         for j in 0..w {
             rot[j][w - 1 - i] = m[i][j].clone();
         }
     }
+
     rot
 }
 
