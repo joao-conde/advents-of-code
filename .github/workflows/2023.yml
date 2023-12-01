@@ -1,0 +1,15 @@
+name: AoC 2023 Workflow
+on: [push]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - run: rustup component add rustfmt
+      - run: rustup component add clippy
+      - run: cargo fmt --all -- --check
+        working-directory: 2023/
+      - run: cargo clippy -- -D clippy::all
+        working-directory: 2023/
+      - run: cargo build --release
+        working-directory: 2023/
