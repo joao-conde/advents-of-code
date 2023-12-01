@@ -14,5 +14,5 @@ Solutions developed with:
 
 ```bash
 $ rustc --version
-rustc 1.74.0
+rustc 1.74.0 (79e9716c9 2023-11-13)
 ```
