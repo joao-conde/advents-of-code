@@ -1,6 +1,5 @@
 use std::collections::{HashMap, HashSet};
 use std::fs;
-use std::iter::FromIterator;
 
 // (0, 0) as the first # in second line
 const MONSTER_DELTAS: [(isize, isize); 15] = [
@@ -152,6 +151,7 @@ fn build_image(
     }
 
     // for all rows x cols, except first col
+    #[allow(clippy::needless_range_loop)]
     for i in 0..size {
         for j in 1..size {
             let left_tile = image[i][j - 1].clone();
@@ -192,7 +192,7 @@ fn build_image(
 
 fn compute_roughness(mut image: Vec<Vec<char>>) -> usize {
     let total_hashtags = image.iter().flatten().filter(|&&c| c == '#').count();
-    let monster_coords = HashSet::from_iter(MONSTER_DELTAS.iter().cloned());
+    let monster_coords = MONSTER_DELTAS.iter().cloned().collect();
     for r in 0..8 {
         let num_monsters = count_monsters(&image, &monster_coords);
         if num_monsters != 0 {
