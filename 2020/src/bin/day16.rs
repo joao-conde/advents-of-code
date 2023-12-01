@@ -23,7 +23,6 @@ fn p1(rules: &[Rule], tickets: &[Ticket]) -> usize {
         .sum()
 }
 
-#[allow(clippy::ptr_arg)]
 fn p2(rules: &[Rule], tickets: &[Ticket], ticket: &Ticket) -> usize {
     let valid_tickets = tickets
         .iter()

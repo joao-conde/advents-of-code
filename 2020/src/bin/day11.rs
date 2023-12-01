@@ -68,7 +68,7 @@ fn visible1(seats: &Grid, i: usize, j: usize) -> Vec<&char> {
     .collect()
 }
 
-fn visible2(seats: &Vec<Vec<char>>, i: usize, j: usize) -> Vec<&char> {
+fn visible2(seats: &Grid, i: usize, j: usize) -> Vec<&char> {
     [
         (-1, -1),
         (-1, 0),
