@@ -1,4 +1,4 @@
-name: AoC 2023 Workflow
+name: AoC 2020 Workflow
 on: [push]
 jobs:
   check:
@@ -8,8 +8,8 @@ jobs:
       - run: rustup component add rustfmt
       - run: rustup component add clippy
       - run: cargo fmt --all -- --check
-        working-directory: 2023/
+        working-directory: 2020/
       - run: cargo clippy -- -D clippy::all
-        working-directory: 2023/
+        working-directory: 2020/
       - run: cargo build --release
-        working-directory: 2023/
+        working-directory: 2020/
