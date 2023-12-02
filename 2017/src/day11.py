@@ -6,6 +6,7 @@ input_file.close()
 
 # PART 1 & 2
 
+
 # distance between A and B in a hex grid (with cube coordinates)
 def hex_grid_distance(a, b):
     return (abs(a[0] - b[0]) + abs(a[1] - b[1]) + abs(a[2] - b[2])) // 2

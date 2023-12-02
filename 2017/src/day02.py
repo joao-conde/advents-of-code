@@ -2,6 +2,7 @@ input_file = open("input/day02")
 lines = input_file.readlines()
 input_file.close()
 
+
 # PART1
 def get_row_diff(row):
     return max(row) - min(row)
@@ -14,6 +15,7 @@ for line in lines:
     checksum1 = checksum1 + get_row_diff(line)
 
 print("The checksum1 is " + str(checksum1))
+
 
 # PART2
 def get_even_div(row, el):

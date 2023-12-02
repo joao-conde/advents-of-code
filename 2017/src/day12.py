@@ -9,13 +9,11 @@ def find_connections(prog, connections, explored=None):
 
     programs = set()
     for program in connections[prog]:
-
         # Add known DIRECT CONNECTION
         programs.add(program)
 
         # If direct connection not explored, do so
         if program not in explored:
-
             explored.append(prog)
             indirect_cons = find_connections(program, connections, explored)
 

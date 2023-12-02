@@ -1,4 +1,4 @@
-name: AoC 2023 Workflow
+name: 2023
 on: [push]
 jobs:
   main:

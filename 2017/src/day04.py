@@ -2,6 +2,7 @@ input_file = open("input/day04")
 lines = input_file.readlines()
 input_file.close()
 
+
 # PART1
 def valid_pass_p1(pp):
     words = pp.split(" ")

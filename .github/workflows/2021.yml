@@ -1,4 +1,4 @@
-name: AoC 2021 Workflow
+name: 2021
 on: [push]
 jobs:
   main:

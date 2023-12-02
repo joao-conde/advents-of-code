@@ -4,6 +4,7 @@ input_file = open("input/day03")
 puzzle_input = int(input_file.read())
 input_file.close()
 
+
 # PART1
 def manhattan_distance(origin_row, origin_col, dest_row, dest_col):
     return abs(dest_row - origin_row) + abs(dest_col - origin_col)
@@ -105,6 +106,7 @@ distance = manhattan_distance(center, center, elX, elY)
 print("Distance: " + str(distance))
 
 # PART2
+
 
 # sum of al surrounding elements
 def surround_sum(grid, pos_x, pos_y):
