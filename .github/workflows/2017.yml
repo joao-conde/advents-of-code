@@ -1,0 +1,16 @@
+name: AoC 2017 Workflow
+on: [push]
+jobs:
+  main:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v4
+        with:
+          python-version: 3.8.10
+      - run: pip install pylint
+      - run: pip install black
+      - run: pylint src/
+        working-directory: 2017/
+      - run: black . --check
+        working-directory: 2017/
