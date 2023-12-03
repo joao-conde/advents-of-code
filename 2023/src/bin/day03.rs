@@ -32,7 +32,8 @@ fn main() {
             parts.extend(&new_parts);
 
             if is_gear(*char, new_parts.len()) {
-                gear_ratios.push(new_parts.iter().map(|p: &Part| p.3).product());
+                let gear_ratio = new_parts.iter().map(|p: &Part| p.3).product();
+                gear_ratios.push(gear_ratio);
             }
         }
     }
