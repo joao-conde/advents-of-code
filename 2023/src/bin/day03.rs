@@ -24,17 +24,15 @@ fn main() {
                 (i + 1, j),
                 (i + 1, j + 1),
             ];
-
-            let numbers: HashSet<Part> = neighbors
+            let new_parts: HashSet<Part> = neighbors
                 .iter()
                 .filter(|(i, j)| in_bounds(&lines, *i, *j))
                 .flat_map(|(i, j)| part_from(&lines, *i, *j))
                 .collect();
+            parts.extend(&new_parts);
 
-            parts.extend(&numbers);
-
-            if is_gear(*char, numbers.len()) {
-                gear_ratios.push(numbers.iter().map(|(_, _, _, n)| n).product());
+            if is_gear(*char, new_parts.len()) {
+                gear_ratios.push(new_parts.iter().map(|(_, _, _, n)| n).product());
             }
         }
     }
