@@ -4,12 +4,10 @@ type Part = (usize, usize, usize, usize);
 
 fn main() {
     let input = std::fs::read_to_string("input/day03").unwrap();
-
     let lines: Vec<Vec<char>> = input.lines().map(|l| l.chars().collect()).collect();
 
     let mut gear_ratios = vec![];
     let mut parts = HashSet::new();
-
     for (i, line) in lines.iter().enumerate() {
         for (j, char) in line.iter().enumerate() {
             if !is_symbol(*char) {
