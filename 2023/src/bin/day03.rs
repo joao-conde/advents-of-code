@@ -12,8 +12,8 @@ fn main() {
     let mut part_numbers = HashSet::new();
     for i in 0..rows {
         for j in 0..cols {
-            if !lines[i][j].is_digit(10) && lines[i][j] != '.' {
-                let neighbors = vec![
+            if !lines[i][j].is_ascii_digit() && lines[i][j] != '.' {
+                let neighbors = [
                     (i - 1, j - 1),
                     (i - 1, j),
                     (i - 1, j + 1),
@@ -46,22 +46,22 @@ fn main() {
 }
 
 fn take_from(lines: &Vec<Vec<char>>, i: usize, j: usize) -> Option<(usize, usize, usize, usize)> {
-    if !lines[i][j].is_digit(10) {
+    if !lines[i][j].is_ascii_digit() {
         return None;
     }
 
     let mut start = j;
-    while start > 0 && lines[i][start - 1].is_digit(10) {
+    while start > 0 && lines[i][start - 1].is_ascii_digit() {
         start -= 1;
     }
 
     let mut end = j;
-    while end < lines.len() - 1 && lines[i][end + 1].is_digit(10) {
+    while end < lines.len() - 1 && lines[i][end + 1].is_ascii_digit() {
         end += 1;
     }
 
     let number: String = lines[i][start..end + 1].iter().collect();
     let number = number.parse().ok();
 
-    number.and_then(|n| Some((i, start, end, n)))
+    number.map(|n| (i, start, end, n))
 }
