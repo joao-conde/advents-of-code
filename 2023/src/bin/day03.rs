@@ -44,7 +44,7 @@ fn main() {
     println!("Part2: {p2}");
 }
 
-fn part_from(lines: &Vec<Vec<char>>, i: usize, j: usize) -> Option<Part> {
+fn part_from(lines: &[Vec<char>], i: usize, j: usize) -> Option<Part> {
     if !lines[i][j].is_ascii_digit() {
         return None;
     }
