@@ -59,7 +59,7 @@ fn part_from(lines: &Vec<Vec<char>>, i: usize, j: usize) -> Option<Part> {
     }
 
     let number: String = lines[i][start..end + 1].iter().collect();
-    let number: usize = number.parse().ok()?;
+    let number = number.parse().ok()?;
     Some((i, start, end, number))
 }
 
