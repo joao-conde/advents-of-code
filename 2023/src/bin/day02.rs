@@ -24,27 +24,26 @@ impl From<&str> for Game {
 
         let sets = sets.trim().split(';').map(|s| s.split(',').map(str::trim));
 
-        let mut game = Game {
-            id,
-            max_reds: 0,
-            max_greens: 0,
-            max_blues: 0,
-        };
-
+        let (mut max_reds, mut max_greens, mut max_blues) = (0, 0, 0);
         for set in sets {
             for draw in set {
                 let (number, color) = draw.split_once(' ').unwrap();
                 let number: usize = number.parse().unwrap();
                 match color {
-                    "red" => game.max_reds = number.max(game.max_reds),
-                    "green" => game.max_greens = number.max(game.max_greens),
-                    "blue" => game.max_blues = number.max(game.max_blues),
+                    "red" => max_reds = number.max(max_reds),
+                    "green" => max_greens = number.max(max_greens),
+                    "blue" => max_blues = number.max(max_blues),
                     _ => unreachable!(),
                 }
             }
         }
 
-        game
+        Game {
+            id,
+            max_reds,
+            max_greens,
+            max_blues,
+        }
     }
 }
 
@@ -58,7 +57,6 @@ fn main() {
         .map(|g| g.id)
         .sum();
     let p2: usize = games.iter().map(Game::power).sum();
-
     println!("Part1: {p1}");
     println!("Part2: {p2}");
 }
