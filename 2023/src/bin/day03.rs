@@ -1,51 +1,53 @@
 use std::collections::HashSet;
 
+type Part = (usize, usize, usize, usize);
+
 fn main() {
     let input = std::fs::read_to_string("input/day03").unwrap();
 
     let lines: Vec<Vec<char>> = input.lines().map(|l| l.chars().collect()).collect();
 
-    let rows = lines.len();
-    let cols = lines[0].len();
+    let mut gear_ratios = vec![];
+    let mut parts = HashSet::new();
 
-    let mut gear_ratios: Vec<usize> = vec![];
-    let mut part_numbers = HashSet::new();
-    for i in 0..rows {
-        for j in 0..cols {
-            if !lines[i][j].is_ascii_digit() && lines[i][j] != '.' {
-                let neighbors = [
-                    (i - 1, j - 1),
-                    (i - 1, j),
-                    (i - 1, j + 1),
-                    (i, j - 1),
-                    (i, j + 1),
-                    (i + 1, j - 1),
-                    (i + 1, j),
-                    (i + 1, j + 1),
-                ];
+    for (i, line) in lines.iter().enumerate() {
+        for (j, char) in line.iter().enumerate() {
+            if !is_symbol(*char) {
+                continue;
+            }
 
-                let numbers: HashSet<(usize, usize, usize, usize)> = neighbors
-                    .iter()
-                    .filter(|(i, j)| lines.get(*i).and_then(|l| l.get(*j)).is_some())
-                    .flat_map(|(i, j)| take_from(&lines, *i, *j))
-                    .collect();
+            let neighbors = [
+                (i - 1, j - 1),
+                (i - 1, j),
+                (i - 1, j + 1),
+                (i, j - 1),
+                (i, j + 1),
+                (i + 1, j - 1),
+                (i + 1, j),
+                (i + 1, j + 1),
+            ];
 
-                part_numbers.extend(&numbers);
+            let numbers: HashSet<Part> = neighbors
+                .iter()
+                .filter(|(i, j)| in_bounds(&lines, *i, *j))
+                .flat_map(|(i, j)| part_from(&lines, *i, *j))
+                .collect();
 
-                if lines[i][j] == '*' && numbers.len() == 2 {
-                    gear_ratios.push(numbers.iter().map(|(_, _, _, n)| n).product());
-                }
+            parts.extend(&numbers);
+
+            if is_gear(*char, numbers.len()) {
+                gear_ratios.push(numbers.iter().map(|(_, _, _, n)| n).product());
             }
         }
     }
 
-    let p1: usize = part_numbers.iter().map(|(_, _, _, n)| n).sum();
+    let p1: usize = parts.iter().map(|(_, _, _, n)| n).sum();
     let p2: usize = gear_ratios.iter().sum();
     println!("Part1: {p1}");
     println!("Part2: {p2}");
 }
 
-fn take_from(lines: &Vec<Vec<char>>, i: usize, j: usize) -> Option<(usize, usize, usize, usize)> {
+fn part_from(lines: &Vec<Vec<char>>, i: usize, j: usize) -> Option<Part> {
     if !lines[i][j].is_ascii_digit() {
         return None;
     }
@@ -61,7 +63,18 @@ fn take_from(lines: &Vec<Vec<char>>, i: usize, j: usize) -> Option<(usize, usize
     }
 
     let number: String = lines[i][start..end + 1].iter().collect();
-    let number = number.parse().ok();
+    let number: usize = number.parse().ok()?;
+    Some((i, start, end, number))
+}
 
-    number.map(|n| (i, start, end, n))
+fn in_bounds(lines: &[Vec<char>], i: usize, j: usize) -> bool {
+    lines.get(i).and_then(|l| l.get(j)).is_some()
+}
+
+fn is_symbol(c: char) -> bool {
+    !c.is_ascii_digit() && c != '.'
+}
+
+fn is_gear(c: char, adjacent: usize) -> bool {
+    c == '*' && adjacent == 2
 }
