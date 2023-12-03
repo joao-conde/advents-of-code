@@ -32,12 +32,12 @@ fn main() {
             parts.extend(&new_parts);
 
             if is_gear(*char, new_parts.len()) {
-                gear_ratios.push(new_parts.iter().map(|(_, _, _, n)| n).product());
+                gear_ratios.push(new_parts.iter().map(|p: &Part| p.3).product());
             }
         }
     }
 
-    let p1: usize = parts.iter().map(|(_, _, _, n)| n).sum();
+    let p1: usize = parts.iter().map(|p: &Part| p.3).sum();
     let p2: usize = gear_ratios.iter().sum();
     println!("Part1: {p1}");
     println!("Part2: {p2}");
