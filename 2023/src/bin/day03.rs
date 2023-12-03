@@ -55,7 +55,7 @@ fn part_from(lines: &Vec<Vec<char>>, i: usize, j: usize) -> Option<Part> {
     }
 
     let mut end = j;
-    while end < lines.len() - 1 && lines[i][end + 1].is_ascii_digit() {
+    while end < lines[i].len() - 1 && lines[i][end + 1].is_ascii_digit() {
         end += 1;
     }
 
