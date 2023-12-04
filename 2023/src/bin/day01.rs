@@ -1,18 +1,18 @@
 fn main() {
     let input = std::fs::read_to_string("input/day01").unwrap();
-    let p1: usize = input.lines().map(calibration_value).sum();
-    let p2: usize = input.lines().map(ammend).sum();
+    let p1: usize = input.lines().map(p1_calibration_value).sum();
+    let p2: usize = input.lines().map(p2_calibration_value).sum();
     println!("Part1: {p1}");
     println!("Part2: {p2}");
 }
 
-fn calibration_value(line: &str) -> usize {
+fn p1_calibration_value(line: &str) -> usize {
     let d1 = line.chars().find(|c| c.is_numeric()).unwrap();
     let d2 = line.chars().rev().find(|c| c.is_numeric()).unwrap();
     format!("{d1}{d2}").parse().unwrap()
 }
 
-fn ammend(line: &str) -> usize {
+fn p2_calibration_value(line: &str) -> usize {
     let line = line
         .replace("one", "o1e")
         .replace("two", "t2o")
@@ -23,5 +23,5 @@ fn ammend(line: &str) -> usize {
         .replace("seven", "s7n")
         .replace("eight", "e8t")
         .replace("nine", "n9e");
-    calibration_value(&line)
+    p1_calibration_value(&line)
 }
