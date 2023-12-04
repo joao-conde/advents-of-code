@@ -24,16 +24,8 @@ fn card_matches(line: &str) -> usize {
     let (_, numbers) = line.split_once(':').unwrap();
     let (winning, owned) = numbers.split_once('|').unwrap();
 
-    let winning_set: HashSet<usize> = winning
-        .split(' ')
-        .filter(|n| !n.is_empty())
-        .map(|n| n.parse().unwrap())
-        .collect();
-    let owned_set: HashSet<usize> = owned
-        .split(' ')
-        .filter(|n| !n.is_empty())
-        .map(|n| n.parse().unwrap())
-        .collect();
+    let winning_set: HashSet<usize> = winning.split(' ').flat_map(|n| n.parse()).collect();
+    let owned_set: HashSet<usize> = owned.split(' ').flat_map(|n| n.parse()).collect();
 
     winning_set.intersection(&owned_set).count()
 }
