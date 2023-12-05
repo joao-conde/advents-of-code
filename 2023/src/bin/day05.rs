@@ -9,16 +9,15 @@ fn main() {
 
     let mut blocks = input.split("\n\n");
 
-    let seeds = blocks.next().unwrap();
-    let (_, seeds) = seeds.split_once(':').unwrap();
+    let (_, seeds) = blocks.next().unwrap().split_once(':').unwrap();
     let seeds: Vec<usize> = seeds.split(' ').flat_map(str::parse).collect();
 
     let mut maps: Vec<Vec<MapRule>> = vec![];
     for block in blocks {
         let (_, rules) = block.split_once(':').unwrap();
-
-        let rules = rules.trim().split('\n');
         let rules = rules
+            .trim()
+            .split('\n')
             .map(|rule| {
                 let mut rule = rule.splitn(3, ' ');
                 let dst = rule.next().unwrap().parse().unwrap();
