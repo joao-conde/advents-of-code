@@ -1,6 +1,39 @@
 use std::collections::HashSet;
 
-type Part = (usize, usize, usize, usize);
+#[derive(PartialEq, Eq, Hash)]
+struct Part {
+    line_idx: usize,
+    col_start: usize,
+    col_end: usize,
+    value: usize,
+}
+
+impl Part {
+    fn from_position(lines: &[Vec<char>], i: usize, j: usize) -> Option<Part> {
+        if !lines[i][j].is_ascii_digit() {
+            return None;
+        }
+
+        let mut start = j;
+        while start > 0 && lines[i][start - 1].is_ascii_digit() {
+            start -= 1;
+        }
+
+        let mut end = j;
+        while end < lines[i].len() - 1 && lines[i][end + 1].is_ascii_digit() {
+            end += 1;
+        }
+
+        let number: String = lines[i][start..end + 1].iter().collect();
+        let number = number.parse().ok()?;
+        Some(Part {
+            line_idx: i,
+            col_start: start,
+            col_end: end,
+            value: number,
+        })
+    }
+}
 
 fn main() {
     let input = std::fs::read_to_string("input/day03").unwrap();
@@ -27,41 +60,22 @@ fn main() {
             let adjacent: HashSet<Part> = neighbors
                 .iter()
                 .filter(|(i, j)| in_bounds(&lines, *i, *j))
-                .flat_map(|(i, j)| part_from(&lines, *i, *j))
+                .flat_map(|(i, j)| Part::from_position(&lines, *i, *j))
                 .collect();
-            parts.extend(&adjacent);
 
             if is_gear(*char, adjacent.len()) {
-                let gear_ratio = adjacent.iter().map(|p: &Part| p.3).product();
+                let gear_ratio = adjacent.iter().map(|p: &Part| p.value).product();
                 gear_ratios.push(gear_ratio);
             }
+
+            parts.extend(adjacent);
         }
     }
 
-    let p1: usize = parts.iter().map(|p: &Part| p.3).sum();
+    let p1: usize = parts.iter().map(|p| p.value).sum();
     let p2: usize = gear_ratios.iter().sum();
     println!("Part1: {p1}");
     println!("Part2: {p2}");
-}
-
-fn part_from(lines: &[Vec<char>], i: usize, j: usize) -> Option<Part> {
-    if !lines[i][j].is_ascii_digit() {
-        return None;
-    }
-
-    let mut start = j;
-    while start > 0 && lines[i][start - 1].is_ascii_digit() {
-        start -= 1;
-    }
-
-    let mut end = j;
-    while end < lines[i].len() - 1 && lines[i][end + 1].is_ascii_digit() {
-        end += 1;
-    }
-
-    let number: String = lines[i][start..end + 1].iter().collect();
-    let number = number.parse().ok()?;
-    Some((i, start, end, number))
 }
 
 fn in_bounds(lines: &[Vec<char>], i: usize, j: usize) -> bool {
