@@ -1,9 +1,9 @@
 fn main() {
     let input = std::fs::read_to_string("input/day06").unwrap();
 
-    let (times, distances) = input.split_once('\n').unwrap();
-    let (_, times_line) = times.split_once("Time:").unwrap();
-    let (_, distances_line) = distances.split_once("Distance:").unwrap();
+    let (times_line, distances_line) = input.split_once('\n').unwrap();
+    let (_, times_line) = times_line.split_once("Time:").unwrap();
+    let (_, distances_line) = distances_line.split_once("Distance:").unwrap();
 
     let times = times_line
         .split(' ')
@@ -13,10 +13,10 @@ fn main() {
         .split(' ')
         .filter(|s| !s.is_empty())
         .flat_map(|s| s.parse::<usize>());
-
-    let races = times.zip(distances);
-
-    let p1: usize = races.map(|(t, d)| better_moves(t, d)).product();
+    let p1: usize = times
+        .zip(distances)
+        .map(|(t, d)| better_moves(t, d))
+        .product();
     println!("Part1: {p1}");
 
     let time: usize = times_line
@@ -31,7 +31,6 @@ fn main() {
         .collect::<String>()
         .parse()
         .unwrap();
-
     let p2: usize = better_moves(time, distance);
     println!("Part2: {p2}");
 }
