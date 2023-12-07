@@ -19,7 +19,7 @@ enum HandKind {
     High(Card),
 }
 
-#[derive(Clone, Copy, Debug, Hash, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash)]
 enum Card {
     Ace,
     King,
