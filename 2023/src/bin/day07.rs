@@ -22,13 +22,14 @@ enum HandKind {
     High(Card),
 }
 
-#[derive(Clone, Copy, Debug, Hash, PartialEq, Eq, PartialOrd)]
+#[derive(Clone, Copy, Debug, Hash, PartialEq, Eq)]
 enum Card {
     Ace,
     King,
     Queen,
     Jack,
     Number(usize),
+    Joker,
 }
 
 impl Card {
@@ -39,6 +40,7 @@ impl Card {
             Self::Queen => 12,
             Self::Jack => 11,
             Self::Number(n) => *n,
+            Self::Joker => 1,
         }
     }
 }
@@ -56,9 +58,9 @@ impl From<char> for Card {
     }
 }
 
-impl Ord for Card {
-    fn cmp(&self, other: &Self) -> Ordering {
-        self.strength().cmp(&other.strength())
+impl PartialOrd for Card {
+    fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
+        Some(self.strength().cmp(&other.strength()))
     }
 }
 
@@ -75,7 +77,7 @@ impl Hand {
                     .filter(|(c1, c2)| c1 != c2)
                     .nth(0)
                     .unwrap();
-                c1.cmp(c2)
+                c1.partial_cmp(c2).unwrap()
             }
         }
     }
@@ -94,13 +96,19 @@ impl From<&str> for Hand {
 
 impl HandKind {
     fn new(cards: [Card; 5]) -> HandKind {
-        let counts: HashMap<Card, usize> = cards.iter().fold(HashMap::new(), |mut map, c| {
+        let mut counts: HashMap<Card, usize> = cards.iter().fold(HashMap::new(), |mut map, c| {
             *map.entry(*c).or_insert(0) += 1;
             map
         });
 
+        let jokers = counts.remove(&Card::Joker).unwrap_or(0);
+
         let mut counts: Vec<(Card, usize)> = counts.into_iter().collect();
         counts.sort_by_key(|(_, cnt)| Reverse(*cnt));
+
+        if counts.get(0).is_some() {
+            counts[0].1 += jokers
+        }
 
         match (counts.get(0), counts.get(1)) {
             (Some((c1, cnt1)), _) if *cnt1 == 5 => HandKind::Five(*c1),
@@ -114,7 +122,7 @@ impl HandKind {
             }
             (Some((c1, cnt1)), _) if *cnt1 == 2 => HandKind::OnePair(*c1),
             (Some((c1, _)), _) => HandKind::High(*c1),
-            _ => unreachable!(),
+            (None, _) => HandKind::Five(Card::Ace),
         }
     }
 
@@ -139,4 +147,25 @@ fn main() {
 
     let p1: usize = hands.iter().enumerate().map(|(i, h)| (i + 1) * h.bid).sum();
     println!("Part1: {p1}");
+
+    let mut hands: Vec<Hand> = hands
+        .into_iter()
+        .map(|h| {
+            let cards = h.cards.map(|c| match c {
+                Card::Jack => Card::Joker,
+                card => card,
+            });
+            let kind = HandKind::new(cards);
+
+            Hand {
+                cards,
+                kind,
+                bid: h.bid,
+            }
+        })
+        .collect();
+    hands.sort_by(Hand::cmp_strength);
+
+    let p2: usize = hands.iter().enumerate().map(|(i, h)| (i + 1) * h.bid).sum();
+    println!("Part2: {p2}");
 }
