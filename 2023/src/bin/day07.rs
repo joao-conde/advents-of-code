@@ -1,12 +1,14 @@
 use std::cmp::{Ordering, Reverse};
 use std::collections::HashMap;
 
+#[derive(PartialEq, Eq)]
 struct Hand {
     cards: [Card; 5],
     kind: HandKind,
     bid: usize,
 }
 
+#[derive(PartialEq, Eq, PartialOrd, Ord)]
 enum HandKind {
     Five(Card),
     Four(Card),
@@ -27,30 +29,6 @@ enum Card {
     Joker,
 }
 
-impl Hand {
-    fn cmp_strength(h1: &Hand, h2: &Hand) -> Ordering {
-        let s1 = h1.kind.strength();
-        let s2 = h2.kind.strength();
-        match s1.cmp(&s2) {
-            Ordering::Less => Ordering::Less,
-            Ordering::Greater => Ordering::Greater,
-            Ordering::Equal => {
-                // find the first pair of cards in both hands
-                // that differs and compare that pair, if none
-                // compares the first pair (will return equal)
-                let (c1, c2) = h1
-                    .cards
-                    .iter()
-                    .zip(h2.cards.iter())
-                    .filter(|(c1, c2)| c1 != c2)
-                    .nth(0)
-                    .unwrap_or((&h1.cards[0], &h2.cards[0]));
-                c1.partial_cmp(c2).unwrap()
-            }
-        }
-    }
-}
-
 impl From<&str> for Hand {
     fn from(line: &str) -> Self {
         let (cards, bid) = line.split_once(' ').unwrap();
@@ -59,6 +37,36 @@ impl From<&str> for Hand {
         let kind = HandKind::new(cards);
         let bid = bid.parse().unwrap();
         Hand { cards, kind, bid }
+    }
+}
+
+impl Ord for Hand {
+    fn cmp(&self, other: &Self) -> Ordering {
+        let s1 = self.kind.strength();
+        let s2 = other.kind.strength();
+        match s1.cmp(&s2) {
+            Ordering::Less => Ordering::Less,
+            Ordering::Greater => Ordering::Greater,
+            Ordering::Equal => {
+                // find the first pair of cards in both hands
+                // that differs and compare that pair, if none
+                // compares the first pair (will return equal)
+                let (c1, c2) = self
+                    .cards
+                    .iter()
+                    .zip(other.cards.iter())
+                    .filter(|(c1, c2)| c1 != c2)
+                    .nth(0)
+                    .unwrap_or((&self.cards[0], &other.cards[0]));
+                c1.partial_cmp(c2).unwrap()
+            }
+        }
+    }
+}
+
+impl PartialOrd for Hand {
+    fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
+        Some(self.cmp(other))
     }
 }
 
@@ -139,9 +147,15 @@ impl From<char> for Card {
     }
 }
 
+impl Ord for Card {
+    fn cmp(&self, other: &Self) -> Ordering {
+        self.strength().cmp(&other.strength())
+    }
+}
+
 impl PartialOrd for Card {
     fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
-        Some(self.strength().cmp(&other.strength()))
+        Some(self.cmp(other))
     }
 }
 
@@ -149,7 +163,7 @@ fn main() {
     let input = std::fs::read_to_string("input/day07").unwrap();
 
     let mut regular_hands: Vec<Hand> = input.lines().map(|l| l.into()).collect();
-    regular_hands.sort_by(Hand::cmp_strength);
+    regular_hands.sort();
 
     let mut joker_hands: Vec<Hand> = input
         .lines()
@@ -167,7 +181,7 @@ fn main() {
             }
         })
         .collect();
-    joker_hands.sort_by(Hand::cmp_strength);
+    joker_hands.sort();
 
     let p1: usize = regular_hands
         .iter()
