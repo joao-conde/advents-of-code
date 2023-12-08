@@ -22,52 +22,55 @@ fn main() {
     println!("Part2: {p2}");
 }
 
-fn p1(instructions: &Vec<char>, maps: &HashMap<&str, (&str, &str)>) -> usize {
-    let mut i = 0;
-    let mut cur = "AAA";
-    while cur != "ZZZ" {
-        let instruction = instructions[i % instructions.len()];
-        let (left, right) = maps[cur];
-        let next = match instruction {
-            'L' => left,
-            'R' => right,
-            _ => unreachable!(),
-        };
-        cur = next;
-        i += 1;
-    }
-
-    i
+fn p1(instructions: &[char], maps: &HashMap<&str, (&str, &str)>) -> usize {
+    navigate(&["AAA"], &["ZZZ"], instructions, maps)
 }
 
-fn p2(instructions: &Vec<char>, maps: &HashMap<&str, (&str, &str)>) -> usize {
-    let srcs: Vec<(&str, usize)> = maps
+fn p2(instructions: &[char], maps: &HashMap<&str, (&str, &str)>) -> usize {
+    let srcs: Vec<&str> = maps
         .clone()
         .into_keys()
-        .filter(|k| k.chars().last().unwrap() == 'A')
-        .map(|k| (k, 0))
+        .filter(|k| k.ends_with('A'))
         .collect();
+    let dsts: Vec<&str> = maps
+        .clone()
+        .into_keys()
+        .filter(|k| k.ends_with('Z'))
+        .collect();
+    navigate(&srcs, &dsts, instructions, maps)
+}
 
-    let mut curs = srcs;
-    let mut found = vec![];
-    while let Some((node, cnt)) = curs.pop() {
-        if node.chars().last().unwrap() == 'Z' {
-            found.push((node, cnt))
-        } else {
-            let instruction = instructions[cnt % instructions.len()];
-            let next = match instruction {
-                'L' => maps[node].0,
-                'R' => maps[node].1,
-                _ => unreachable!(),
-            };
-            curs.push((next, cnt + 1));
-        }
-    }
-
-    found
+fn navigate(
+    srcs: &[&str],
+    dsts: &[&str],
+    instructions: &[char],
+    maps: &HashMap<&str, (&str, &str)>,
+) -> usize {
+    let steps: Vec<usize> = srcs
         .iter()
-        .map(|(_, cnt)| cnt)
-        .fold(found[0].1, |acc, cnt| lcm(acc, *cnt))
+        .map(|s| steps(s, dsts, instructions, maps))
+        .collect();
+    steps.iter().fold(steps[0], |acc, s| lcm(acc, *s))
+}
+
+fn steps<'a>(
+    mut src: &'a str,
+    dsts: &[&str],
+    instructions: &[char],
+    maps: &HashMap<&str, (&'a str, &'a str)>,
+) -> usize {
+    let mut steps = 0;
+    while !dsts.contains(&src) {
+        let instruction = &instructions[steps % instructions.len()];
+        let next = match instruction {
+            'L' => maps[src].0,
+            'R' => maps[src].1,
+            _ => unreachable!(),
+        };
+        src = next;
+        steps += 1;
+    }
+    steps
 }
 
 fn lcm(first: usize, second: usize) -> usize {
@@ -75,21 +78,16 @@ fn lcm(first: usize, second: usize) -> usize {
 }
 
 fn gcd(first: usize, second: usize) -> usize {
-    let mut max = first;
-    let mut min = second;
-    if min > max {
-        let val = max;
-        max = min;
-        min = val;
-    }
+    let mut max = usize::max(first, second);
+    let mut min = usize::min(first, second);
 
     loop {
-        let res = max % min;
-        if res == 0 {
+        let remainder = max % min;
+        if remainder == 0 {
             return min;
         }
 
         max = min;
-        min = res;
+        min = remainder;
     }
 }
