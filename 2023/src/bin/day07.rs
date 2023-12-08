@@ -32,7 +32,7 @@ enum Card {
 impl From<&str> for Hand {
     fn from(line: &str) -> Self {
         let (cards, bid) = line.split_once(' ').unwrap();
-        let cards = cards.chars().map(|c| c.into()).collect::<Vec<Card>>();
+        let cards: Vec<Card> = cards.chars().map(|c| c.into()).collect();
         let cards = cards.try_into().unwrap();
         let kind = HandKind::new(cards);
         let bid = bid.parse().unwrap();
@@ -49,8 +49,7 @@ impl Ord for Hand {
             Ordering::Greater => Ordering::Greater,
             Ordering::Equal => {
                 // find the first pair of cards in both hands
-                // that differs and compare that pair, if none
-                // compares the first pair (will return equal)
+                // that differs and compare it
                 let (c1, c2) = self
                     .cards
                     .iter()
