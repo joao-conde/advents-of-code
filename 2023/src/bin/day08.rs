@@ -54,20 +54,21 @@ fn navigate(
 }
 
 fn steps<'a>(
-    mut src: &'a str,
+    src: &'a str,
     dsts: &[&str],
     instructions: &[char],
     maps: &HashMap<&str, (&'a str, &'a str)>,
 ) -> usize {
+    let mut cur = src;
     let mut steps = 0;
-    while !dsts.contains(&src) {
+    while !dsts.contains(&cur) {
         let instruction = &instructions[steps % instructions.len()];
         let next = match instruction {
-            'L' => maps[src].0,
-            'R' => maps[src].1,
+            'L' => maps[cur].0,
+            'R' => maps[cur].1,
             _ => unreachable!(),
         };
-        src = next;
+        cur = next;
         steps += 1;
     }
     steps
