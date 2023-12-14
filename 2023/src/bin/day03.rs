@@ -79,7 +79,7 @@ fn main() {
 }
 
 fn in_bounds(lines: &[Vec<char>], i: usize, j: usize) -> bool {
-    lines.get(i).and_then(|l| l.get(j)).is_some()
+    lines.get(i).map(|l| l.get(j)).is_some()
 }
 
 fn is_symbol(c: char) -> bool {
