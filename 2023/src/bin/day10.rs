@@ -54,12 +54,10 @@ fn main() {
         }
     }
 
-    println!("p1: {max_steps}");
+    println!("Part1: {max_steps}");
 
-    let x: usize = (0..nrows).map(|i| inside_loop(&grid, &visited, i)).sum();
-    println!("p2: {x}");
-
-    inside_loop(&grid, &visited, 2);
+    let enclosed: usize = (0..nrows).map(|i| inside_loop(&grid, &visited, i)).sum();
+    println!("Part2: {enclosed}");
 }
 
 fn inside_loop(grid: &[Vec<char>], visited: &HashSet<(usize, usize)>, i: usize) -> usize {
