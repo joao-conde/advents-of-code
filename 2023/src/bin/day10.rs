@@ -85,11 +85,9 @@ fn count_enclosed_tiles(
             // we cross a tile that represents a vertical
             // wall we enter or leave the loop
             inside = match tile {
-                '|' => !inside,
-                'J' => !inside,
-                'L' => !inside,
+                '|' | 'J' | 'L' => !inside,
                 _ => inside,
-            }
+            };
         } else if inside {
             counts += 1;
         }
