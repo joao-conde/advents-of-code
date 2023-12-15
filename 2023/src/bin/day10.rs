@@ -2,28 +2,41 @@ use std::collections::{HashSet, VecDeque};
 
 fn main() {
     let input = std::fs::read_to_string("input/day10").unwrap();
-
     let grid: Vec<Vec<char>> = input.lines().map(|l| l.chars().collect()).collect();
-    let nrows = grid.len();
-    let ncols = grid[0].len();
 
+    let (loop_tiles, p1) = find_loop_tiles(&grid);
+    println!("Part1: {p1}");
+
+    let p2: usize = grid
+        .iter()
+        .enumerate()
+        .map(|(i, _)| count_enclosed_tiles(&grid, &loop_tiles, i))
+        .sum();
+    println!("Part2: {p2}");
+}
+
+fn find_loop_tiles(grid: &[Vec<char>]) -> (HashSet<(usize, usize)>, usize) {
+    // tiles and the connections they can receive
     let north_conns = ['|', 'L', 'J', 'S'];
     let south_conns = ['|', '7', 'F', 'S'];
     let west_conns = ['-', 'J', '7', 'S'];
     let east_conns = ['-', 'L', 'F', 'S'];
 
+    // grid dimensions and starting point
+    let nrows = grid.len();
+    let ncols = grid[0].len();
     let (si, sj) = grid
         .iter()
         .enumerate()
         .find_map(|(i, row)| row.iter().position(|&c| c == 'S').map(|j| (i, j)))
         .unwrap();
 
-    let mut deque: VecDeque<(usize, usize, usize)> = VecDeque::new();
-    let mut visited: HashSet<(usize, usize)> = HashSet::new();
-
-    deque.push_back((si, sj, 0));
-
+    // initialize structures for breadth-first search
+    // and keep track of maximum distance from start
     let mut max_steps = 0;
+    let mut visited: HashSet<(usize, usize)> = HashSet::new();
+    let mut deque: VecDeque<(usize, usize, usize)> = VecDeque::new();
+    deque.push_back((si, sj, 0));
 
     while let Some((i, j, distance)) = deque.pop_front() {
         if visited.contains(&(i, j)) {
@@ -31,7 +44,6 @@ fn main() {
         }
 
         visited.insert((i, j));
-
         max_steps = max_steps.max(distance);
 
         let cur_tile = grid[i][j];
@@ -54,31 +66,31 @@ fn main() {
         }
     }
 
-    println!("Part1: {max_steps}");
-
-    let enclosed: usize = (0..nrows).map(|i| inside_loop(&grid, &visited, i)).sum();
-    println!("Part2: {enclosed}");
+    (visited, max_steps)
 }
 
-fn inside_loop(grid: &[Vec<char>], visited: &HashSet<(usize, usize)>, i: usize) -> usize {
+fn count_enclosed_tiles(
+    grid: &[Vec<char>],
+    loop_tiles: &HashSet<(usize, usize)>,
+    i: usize,
+) -> usize {
     let mut counts = 0;
     let mut inside = false;
 
+    // raycast the entire row and keep track of loop
+    // entrances and exits, counting enclosed tiles
     for (j, &tile) in grid[i].iter().enumerate() {
-        if visited.contains(&(i, j)) {
+        if loop_tiles.contains(&(i, j)) {
+            // we traverse the row horizontally so when
+            // we cross a tile that represents a vertical
+            // wall we enter or leave the loop
             inside = match tile {
                 '|' => !inside,
                 'J' => !inside,
-                '-' => inside,
                 'L' => !inside,
-                '7' => inside,
-                'F' => inside,
-                'S' => inside,
-                _ => unreachable!(),
+                _ => inside,
             }
-        };
-
-        if inside && !visited.contains(&(i, j)) {
+        } else if inside {
             counts += 1;
         }
     }
