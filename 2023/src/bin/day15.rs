@@ -39,15 +39,15 @@ fn fill_boxes<'a>(steps: &[&'a str]) -> (Vec<Vec<&'a str>>, HashMap<&'a str, usi
     (boxes, lengths)
 }
 
-fn ha256(value: &str) -> usize {
-    value
-        .chars()
-        .fold(0, |hash, c| ((hash + c as usize) * 17) % 256)
-}
-
 fn focus_power(label: &str, boxes: &[Vec<&str>], focal_lengths: &HashMap<&str, usize>) -> usize {
     let box_i = ha256(label);
     let slot = boxes[box_i].iter().position(|l| l == &label).unwrap();
     let focal_length = focal_lengths[label];
     (box_i + 1) * (slot + 1) * focal_length
+}
+
+fn ha256(value: &str) -> usize {
+    value
+        .chars()
+        .fold(0, |hash, c| ((hash + c as usize) * 17) % 256)
 }
