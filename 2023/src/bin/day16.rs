@@ -1,6 +1,6 @@
 use std::collections::HashSet;
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
+#[derive(Clone, Copy, PartialEq, Eq, Hash)]
 enum Direction {
     Right,
     Left,
@@ -80,7 +80,6 @@ fn energized(grid: &[Vec<Tile>], start: (isize, isize, Direction)) -> usize {
             let tile = &grid[i as usize][j as usize];
 
             if tile == &Tile::MirrorLeft {
-                // '\'
                 dir = match dir {
                     Direction::Right => Direction::Down,
                     Direction::Left => Direction::Up,
@@ -88,7 +87,6 @@ fn energized(grid: &[Vec<Tile>], start: (isize, isize, Direction)) -> usize {
                     Direction::Down => Direction::Right,
                 }
             } else if tile == &Tile::MirrorRight {
-                // '/'
                 dir = match dir {
                     Direction::Right => Direction::Up,
                     Direction::Left => Direction::Down,
