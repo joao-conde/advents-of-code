@@ -22,16 +22,17 @@ fn fill_boxes<'a>(steps: &[&'a str]) -> (Vec<Vec<&'a str>>, HashMap<&'a str, usi
 
     for step in steps {
         if let Some((label, length)) = step.split_once('=') {
-            let length: usize = length.parse().unwrap();
-            lengths.insert(label, length);
-
             let box_i = ha256(label);
             if !boxes[box_i].contains(&label) {
                 boxes[box_i].push(label);
             }
+
+            let length: usize = length.parse().unwrap();
+            lengths.insert(label, length);
         } else if let Some((label, _)) = step.split_once('-') {
             let box_i = ha256(label);
             boxes[box_i].retain(|l| l != &label);
+
             lengths.remove(label);
         }
     }
