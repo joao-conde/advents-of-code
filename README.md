@@ -14,7 +14,7 @@ Specific versions detailed in each year's README file.
 
 |                 Year                  |  Language  | Completion |
 | :-----------------------------------: | :--------: | :--------: |
-| [2023](https://adventofcode.com/2023) |    Rust    |   11/50    |
+| [2023](https://adventofcode.com/2023) |    Rust    |   21/50    |
 | [2022](https://adventofcode.com/2022) |   Scala    |   43/50    |
 | [2021](https://adventofcode.com/2021) | TypeScript |   41/50    |
 | [2020](https://adventofcode.com/2020) |    Rust    |   50/50    |
