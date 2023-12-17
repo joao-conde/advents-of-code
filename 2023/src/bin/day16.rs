@@ -4,22 +4,40 @@ type Beam = (isize, isize, Direction);
 
 #[derive(Clone, Copy, PartialEq, Eq, Hash)]
 enum Direction {
-    Right,
-    Left,
     Up,
     Down,
+    Left,
+    Right,
 }
 
 impl Direction {
     fn is_horizontal(&self) -> bool {
         match self {
-            Direction::Right | Direction::Left => true,
             Direction::Up | Direction::Down => false,
+            Direction::Right | Direction::Left => true,
         }
     }
 
     fn is_vertical(&self) -> bool {
         !self.is_horizontal()
+    }
+
+    fn mirrored_left(&self) -> Direction {
+        match self {
+            Direction::Up => Direction::Left,
+            Direction::Down => Direction::Right,
+            Direction::Left => Direction::Up,
+            Direction::Right => Direction::Down,
+        }
+    }
+
+    fn mirrored_right(&self) -> Direction {
+        match self {
+            Direction::Up => Direction::Right,
+            Direction::Down => Direction::Left,
+            Direction::Left => Direction::Down,
+            Direction::Right => Direction::Up,
+        }
     }
 }
 
@@ -53,22 +71,8 @@ fn energized(grid: &[Vec<char>], start: Beam) -> usize {
             energized.insert((i, j));
 
             match grid[i as usize][j as usize] {
-                '\\' => {
-                    dir = match dir {
-                        Direction::Right => Direction::Down,
-                        Direction::Left => Direction::Up,
-                        Direction::Up => Direction::Left,
-                        Direction::Down => Direction::Right,
-                    }
-                }
-                '/' => {
-                    dir = match dir {
-                        Direction::Right => Direction::Up,
-                        Direction::Left => Direction::Down,
-                        Direction::Up => Direction::Right,
-                        Direction::Down => Direction::Left,
-                    }
-                }
+                '\\' => dir = dir.mirrored_left(),
+                '/' => dir = dir.mirrored_right(),
                 '|' if dir.is_horizontal() => {
                     beams.push((i - 1, j, Direction::Up));
                     beams.push((i + 1, j, Direction::Down));
@@ -83,10 +87,10 @@ fn energized(grid: &[Vec<char>], start: Beam) -> usize {
             };
 
             match dir {
-                Direction::Right => j += 1,
-                Direction::Left => j -= 1,
                 Direction::Up => i -= 1,
                 Direction::Down => i += 1,
+                Direction::Left => j -= 1,
+                Direction::Right => j += 1,
             };
         }
     }
