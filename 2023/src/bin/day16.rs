@@ -1,33 +1,13 @@
 use std::collections::HashSet;
 
+type Beam = (isize, isize, Direction);
+
 #[derive(Clone, Copy, PartialEq, Eq, Hash)]
 enum Direction {
     Right,
     Left,
     Up,
     Down,
-}
-
-#[derive(PartialEq)]
-enum Tile {
-    Empty,
-    MirrorRight,
-    MirrorLeft,
-    SplitVertical,
-    SplitHorizontal,
-}
-
-impl From<char> for Tile {
-    fn from(value: char) -> Self {
-        match value {
-            '.' => Tile::Empty,
-            '/' => Tile::MirrorRight,
-            '\\' => Tile::MirrorLeft,
-            '|' => Tile::SplitVertical,
-            '-' => Tile::SplitHorizontal,
-            _ => unreachable!(),
-        }
-    }
 }
 
 impl Direction {
@@ -46,10 +26,7 @@ impl Direction {
 fn main() {
     let input = std::fs::read_to_string("input/day16").unwrap();
 
-    let grid: Vec<Vec<Tile>> = input
-        .lines()
-        .map(|l| l.chars().map(|c| c.into()).collect())
-        .collect();
+    let grid: Vec<Vec<char>> = input.lines().map(|l| l.chars().collect()).collect();
 
     let p1 = energized(&grid, (0, 0, Direction::Right));
     println!("Part1: {p1}");
@@ -62,63 +39,62 @@ fn main() {
     println!("Part2: {p2}");
 }
 
-fn energized(grid: &[Vec<Tile>], start: (isize, isize, Direction)) -> usize {
+fn energized(grid: &[Vec<char>], start: Beam) -> usize {
     let nrows = grid.len() as isize;
     let ncols = grid[0].len() as isize;
 
-    let mut beams: Vec<(isize, isize, Direction)> = Vec::new();
-    let mut beams_seen: HashSet<(isize, isize, Direction)> = HashSet::new();
+    let mut beams = vec![start];
+    let mut beams_seen: HashSet<Beam> = HashSet::new();
     let mut energized: HashSet<(isize, isize)> = HashSet::new();
-
-    beams.push(start);
 
     while let Some((mut i, mut j, mut dir)) = beams.pop() {
         while i >= 0 && i < nrows && j >= 0 && j < ncols && !beams_seen.contains(&(i, j, dir)) {
-            energized.insert((i, j));
             beams_seen.insert((i, j, dir));
+            energized.insert((i, j));
 
-            let tile = &grid[i as usize][j as usize];
-
-            if tile == &Tile::MirrorLeft {
-                dir = match dir {
-                    Direction::Right => Direction::Down,
-                    Direction::Left => Direction::Up,
-                    Direction::Up => Direction::Left,
-                    Direction::Down => Direction::Right,
+            match grid[i as usize][j as usize] {
+                '\\' => {
+                    dir = match dir {
+                        Direction::Right => Direction::Down,
+                        Direction::Left => Direction::Up,
+                        Direction::Up => Direction::Left,
+                        Direction::Down => Direction::Right,
+                    }
                 }
-            } else if tile == &Tile::MirrorRight {
-                dir = match dir {
-                    Direction::Right => Direction::Up,
-                    Direction::Left => Direction::Down,
-                    Direction::Up => Direction::Right,
-                    Direction::Down => Direction::Left,
+                '/' => {
+                    dir = match dir {
+                        Direction::Right => Direction::Up,
+                        Direction::Left => Direction::Down,
+                        Direction::Up => Direction::Right,
+                        Direction::Down => Direction::Left,
+                    }
                 }
-            } else if dir.is_horizontal() && tile == &Tile::SplitVertical {
-                beams.push((i - 1, j, Direction::Up));
-                beams.push((i + 1, j, Direction::Down));
-                break;
-            } else if dir.is_vertical() && tile == &Tile::SplitHorizontal {
-                beams.push((i, j - 1, Direction::Left));
-                beams.push((i, j + 1, Direction::Right));
-                break;
-            }
+                '|' if dir.is_horizontal() => {
+                    beams.push((i - 1, j, Direction::Up));
+                    beams.push((i + 1, j, Direction::Down));
+                    break;
+                }
+                '-' if dir.is_vertical() => {
+                    beams.push((i, j - 1, Direction::Left));
+                    beams.push((i, j + 1, Direction::Right));
+                    break;
+                }
+                _ => (),
+            };
 
-            if dir == Direction::Up {
-                i -= 1;
-            } else if dir == Direction::Down {
-                i += 1;
-            } else if dir == Direction::Left {
-                j -= 1;
-            } else if dir == Direction::Right {
-                j += 1;
-            }
+            match dir {
+                Direction::Right => j += 1,
+                Direction::Left => j -= 1,
+                Direction::Up => i -= 1,
+                Direction::Down => i += 1,
+            };
         }
     }
 
     energized.len()
 }
 
-fn build_starts(grid: &[Vec<Tile>]) -> Vec<(isize, isize, Direction)> {
+fn build_starts(grid: &[Vec<char>]) -> Vec<Beam> {
     let nrows = grid.len() as isize;
     let ncols = grid[0].len() as isize;
     let mut starts = vec![];
