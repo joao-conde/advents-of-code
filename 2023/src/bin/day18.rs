@@ -24,7 +24,7 @@ fn p2_plan(input: &str) -> Vec<(char, usize)> {
         .map(|l| {
             let (_, hex) = l.split_once("(#").unwrap();
             let meters = usize::from_str_radix(&hex[..5], 16).unwrap();
-            let dir = match hex.chars().nth(5).unwrap().to_digit(16).unwrap() {
+            let dir = match usize::from_str_radix(&hex[5..=5], 16).unwrap() {
                 0 => 'R',
                 1 => 'D',
                 2 => 'L',
@@ -34,10 +34,6 @@ fn p2_plan(input: &str) -> Vec<(char, usize)> {
             (dir, meters)
         })
         .collect()
-}
-
-fn lagoon_capacity(edge: &[(isize, isize)]) -> usize {
-    edge.len() + pick_theorem(edge)
 }
 
 fn build_edge(plan: &[(char, usize)]) -> Vec<(isize, isize)> {
@@ -63,13 +59,16 @@ fn build_edge(plan: &[(char, usize)]) -> Vec<(isize, isize)> {
     edge
 }
 
+fn lagoon_capacity(edge: &[(isize, isize)]) -> usize {
+    edge.len() + pick_theorem(edge)
+}
+
 fn pick_theorem(edge: &[(isize, isize)]) -> usize {
     shoelace_area(edge) - (edge.len() / 2)
 }
 
 fn shoelace_area(edge: &[(isize, isize)]) -> usize {
     let edge_len = edge.len();
-
     (0..edge_len)
         .map(|i| {
             let (x1, y1) = edge[i];
