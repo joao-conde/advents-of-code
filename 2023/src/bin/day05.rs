@@ -8,19 +8,19 @@ fn main() {
     let input = std::fs::read_to_string("input/day05").unwrap();
     let (seeds, maps) = parse_input(&input);
 
-    let seeds1 = seeds.iter().map(|s| (*s, *s)).collect();
+    let seeds1: Vec<(usize, usize)> = seeds.iter().map(|s| (*s, *s)).collect();
     let p1 = find_lowest_location(&seeds1, &maps);
     println!("Part1: {p1}");
 
-    let seeds2 = seeds.chunks(2).map(|s| (s[0], s[0] + s[1] - 1)).collect();
+    let seeds2: Vec<(usize, usize)> = seeds.chunks(2).map(|s| (s[0], s[0] + s[1] - 1)).collect();
     let p2 = find_lowest_location(&seeds2, &maps);
     println!("Part2: {p2}");
 }
 
-fn find_lowest_location(seeds: &Vec<(usize, usize)>, maps: &Vec<Vec<MapRule>>) -> usize {
+fn find_lowest_location(seeds: &[(usize, usize)], maps: &[Vec<MapRule>]) -> usize {
     let mut location = 0;
     loop {
-        let seed = seed_from_location(location, &maps);
+        let seed = seed_from_location(location, maps);
         let inside = seeds.iter().any(|(s, e)| (*s..=*e).contains(&seed));
         if inside {
             return location;
@@ -29,13 +29,13 @@ fn find_lowest_location(seeds: &Vec<(usize, usize)>, maps: &Vec<Vec<MapRule>>) -
     }
 }
 
-fn seed_from_location(location: usize, maps: &Vec<Vec<MapRule>>) -> usize {
+fn seed_from_location(location: usize, maps: &[Vec<MapRule>]) -> usize {
     maps.iter()
         .rev()
         .fold(location, |dst, rules| src_from_dst(dst, rules))
 }
 
-fn src_from_dst(dst: usize, rules: &Vec<MapRule>) -> usize {
+fn src_from_dst(dst: usize, rules: &[MapRule]) -> usize {
     rules
         .iter()
         .find(|r| dst >= r.dst && dst <= r.dst + r.len)
@@ -54,7 +54,7 @@ fn parse_input(input: &str) -> (Vec<usize>, Vec<Vec<MapRule>>) {
         let (_, rules) = block.split_once(':').unwrap();
         let rules = rules
             .trim()
-            .split('\n')
+            .lines()
             .map(|rule| {
                 let mut rule = rule.splitn(3, ' ');
                 let dst = rule.next().unwrap().parse().unwrap();
