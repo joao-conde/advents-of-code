@@ -32,9 +32,9 @@ class GridCluster:
 
     def do_virus_burst(self):
         if (self.carrierRow, self.carrierCol) not in self.grid:
-            self.grid[
-                (self.carrierRow, self.carrierCol)
-            ] = NodeState.CLEAN  # "expand" grid if need be
+            self.grid[(self.carrierRow, self.carrierCol)] = (
+                NodeState.CLEAN
+            )  # "expand" grid if need be
         self.update_direction()
         self.update_current_node_state()
         self.move_carrier()
