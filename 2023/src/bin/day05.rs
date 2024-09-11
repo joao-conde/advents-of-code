@@ -20,16 +20,16 @@ fn main() {
 fn find_lowest_location(seeds: &[(usize, usize)], maps: &[Vec<MapRule>]) -> usize {
     let mut location = 0;
     loop {
-        let seed = seed_from_location(location, maps);
-        let inside = seeds.iter().any(|(s, e)| (*s..=*e).contains(&seed));
-        if inside {
+        let src = src_from_location(location, maps);
+        let is_seed = seeds.iter().any(|(s, e)| (*s..=*e).contains(&src));
+        if is_seed {
             return location;
         }
         location += 1;
     }
 }
 
-fn seed_from_location(location: usize, maps: &[Vec<MapRule>]) -> usize {
+fn src_from_location(location: usize, maps: &[Vec<MapRule>]) -> usize {
     maps.iter()
         .rev()
         .fold(location, |dst, rules| src_from_dst(dst, rules))
