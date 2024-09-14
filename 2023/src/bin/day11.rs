@@ -1,52 +1,37 @@
+type Point = (usize, usize);
+
 fn main() {
     let input = std::fs::read_to_string("input/day11").unwrap();
 
     let universe: Vec<Vec<char>> = input.lines().map(|l| l.chars().collect()).collect();
-
-    let galaxies: Vec<(usize, usize)> = universe
+    let galaxies: Vec<Point> = universe
         .iter()
         .enumerate()
         .flat_map(|(i, r)| {
             r.iter()
                 .enumerate()
                 .map(|(j, _)| (i, j))
-                .collect::<Vec<(usize, usize)>>()
+                .collect::<Vec<Point>>()
         })
         .filter(|&(i, j)| universe[i][j] == '#')
         .collect();
 
-    let pairs: Vec<((usize, usize), (usize, usize))> = galaxies
-        .iter()
-        .flat_map(|g1| galaxies.iter().map(|g2| (*g1, *g2)))
-        .filter(|(g1, g2)| g1 != g2)
-        .collect();
+    let galaxy_pairs = unordered_pairs(&galaxies);
 
-    let mut unique = vec![];
-    for (g1, g2) in pairs {
-        if !unique.contains(&(g2, g1)) {
-            unique.push((g1, g2))
-        }
-    }
-
-    let sum: usize = unique
+    let p1: usize = galaxy_pairs
         .iter()
         .map(|(g1, g2)| distance(&universe, 2, *g1, *g2))
         .sum();
-    dbg!(sum);
+    println!("Part1: {p1}");
 
-    let sum: usize = unique
+    let p2: usize = galaxy_pairs
         .iter()
         .map(|(g1, g2)| distance(&universe, 1_000_000, *g1, *g2))
         .sum();
-    dbg!(sum);
+    println!("Part2: {p2}");
 }
 
-fn distance(
-    universe: &Vec<Vec<char>>,
-    expansion: usize,
-    g1: (usize, usize),
-    g2: (usize, usize),
-) -> usize {
+fn distance(universe: &Vec<Vec<char>>, expansion: usize, g1: Point, g2: Point) -> usize {
     let nrows = universe.len();
     let ncols = universe[0].len();
 
@@ -67,4 +52,21 @@ fn distance(
         + (max_i - min_i)
         + (empty_rows * (expansion - 1))
         + (empty_cols * (expansion - 1))
+}
+
+fn unordered_pairs(points: &[Point]) -> Vec<(Point, Point)> {
+    let pairs: Vec<(Point, Point)> = points
+        .iter()
+        .flat_map(|g1| points.iter().map(|g2| (*g1, *g2)))
+        .filter(|(g1, g2)| g1 != g2)
+        .collect();
+
+    let mut unique = vec![];
+    for (g1, g2) in pairs {
+        if !unique.contains(&(g2, g1)) {
+            unique.push((g1, g2))
+        }
+    }
+
+    unique
 }
