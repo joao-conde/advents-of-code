@@ -3,7 +3,7 @@ use std::str::FromStr;
 #[derive(Clone, PartialEq)]
 struct Platform {
     rocks: Vec<Vec<Tile>>,
-    cubes: Vec<Cube>,
+    cube_positions: Vec<Point>,
     nrows: usize,
     ncols: usize,
 }
@@ -30,7 +30,7 @@ impl Platform {
     fn slide_north(&mut self) {
         let previous = self.rocks.clone();
 
-        for cube in &self.cubes {
+        for cube in &self.cube_positions {
             let rocks_below = (cube.i + 1..self.nrows)
                 .take_while(|i| previous[*i][cube.j] != Tile::Cube)
                 .filter(|i| previous[*i][cube.j] == Tile::Round)
@@ -46,7 +46,7 @@ impl Platform {
     fn slide_west(&mut self) {
         let previous = self.rocks.clone();
 
-        for cube in &self.cubes {
+        for cube in &self.cube_positions {
             let rocks_right = (cube.j + 1..self.ncols)
                 .take_while(|j| previous[cube.i][*j] != Tile::Cube)
                 .filter(|j| previous[cube.i][*j] == Tile::Round)
@@ -62,7 +62,7 @@ impl Platform {
     fn slide_south(&mut self) {
         let previous = self.rocks.clone();
 
-        for cube in &self.cubes {
+        for cube in &self.cube_positions {
             let to = cube.i.saturating_sub(1);
             let rocks_above = (0..=to)
                 .rev()
@@ -83,7 +83,7 @@ impl Platform {
     fn slide_east(&mut self) {
         let previous = self.rocks.clone();
 
-        for cube in &self.cubes {
+        for cube in &self.cube_positions {
             let to = cube.j.saturating_sub(1);
 
             let rocks_left = (0..=to)
@@ -128,13 +128,13 @@ impl FromStr for Platform {
         let cubes = rocks
             .iter()
             .enumerate()
-            .flat_map(|(i, row)| row.iter().enumerate().map(move |(j, _)| Cube { i, j }))
+            .flat_map(|(i, row)| row.iter().enumerate().map(move |(j, _)| Point { i, j }))
             .filter(|cube| rocks[cube.i][cube.j] == Tile::Cube)
             .collect();
 
         Ok(Self {
             rocks,
-            cubes,
+            cube_positions: cubes,
             nrows,
             ncols,
         })
@@ -142,7 +142,7 @@ impl FromStr for Platform {
 }
 
 #[derive(Clone, PartialEq)]
-struct Cube {
+struct Point {
     i: usize,
     j: usize,
 }
