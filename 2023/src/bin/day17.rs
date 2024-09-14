@@ -188,5 +188,5 @@ fn heat_loss(map: &Vec<Vec<u32>>, min_moves: usize, max_moves: usize) -> u32 {
         }
     }
 
-    0
+    unreachable!()
 }
