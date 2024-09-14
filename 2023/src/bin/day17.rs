@@ -126,12 +126,20 @@ fn main() {
         .map(|l| l.chars().flat_map(|c| c.to_digit(10)).collect())
         .collect();
 
+    let p1 = heat_loss(&map, 0, 3);
+    println!("Part1: {p1}");
+
+    let p2 = heat_loss(&map, 4, 10);
+    println!("Part2: {p2}");
+}
+
+fn heat_loss(map: &Vec<Vec<u32>>, min_streak: usize, max_streak: usize) -> u32 {
     let nrows = map.len();
     let ncols = map[0].len();
 
-    let mut points: BinaryHeap<State> = BinaryHeap::new();
     let mut visited = HashSet::new();
 
+    let mut points: BinaryHeap<State> = BinaryHeap::new();
     points.push(State {
         i: 0,
         j: 0,
@@ -141,10 +149,8 @@ fn main() {
     });
 
     while let Some(state) = points.pop() {
-        if state.i == nrows - 1 && state.j == ncols - 1 && state.streak >= 4 {
-            dbg!(&state);
-            println!("found it with {}", state.cost);
-            return;
+        if state.i == nrows - 1 && state.j == ncols - 1 && state.streak >= min_streak {
+            return state.cost;
         }
 
         if state.i >= nrows || state.j >= ncols {
@@ -156,7 +162,7 @@ fn main() {
         }
         visited.insert((state.i, state.j, state.direction, state.streak));
 
-        if state.streak >= 4 {
+        if state.streak >= min_streak {
             if let Some(state) = state.turn_right().forward(&map) {
                 points.push(state);
             }
@@ -167,10 +173,12 @@ fn main() {
         }
 
         // if we dont have to move yet, explore going forward
-        if state.streak < 10 {
+        if state.streak < max_streak {
             if let Some(state) = state.forward(&map) {
                 points.push(state);
             }
         }
     }
+
+    0
 }
