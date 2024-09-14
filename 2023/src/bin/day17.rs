@@ -141,7 +141,7 @@ fn main() {
     });
 
     while let Some(state) = points.pop() {
-        if state.i == nrows - 1 && state.j == ncols - 1 {
+        if state.i == nrows - 1 && state.j == ncols - 1 && state.streak >= 4 {
             dbg!(&state);
             println!("found it with {}", state.cost);
             return;
@@ -156,16 +156,18 @@ fn main() {
         }
         visited.insert((state.i, state.j, state.direction, state.streak));
 
-        if let Some(state) = state.turn_right().forward(&map) {
-            points.push(state);
-        }
+        if state.streak >= 4 {
+            if let Some(state) = state.turn_right().forward(&map) {
+                points.push(state);
+            }
 
-        if let Some(state) = state.turn_left().forward(&map) {
-            points.push(state);
+            if let Some(state) = state.turn_left().forward(&map) {
+                points.push(state);
+            }
         }
 
         // if we dont have to move yet, explore going forward
-        if state.streak < 3 {
+        if state.streak < 10 {
             if let Some(state) = state.forward(&map) {
                 points.push(state);
             }
