@@ -5,15 +5,17 @@ fn main() {
         .map(|l| l.split_whitespace().map(|x| x.parse().unwrap()).collect())
         .collect();
 
-    let p1: isize = report.iter().map(expand).map(extrapolate_forwards).sum();
+    let expanded_report = report.into_iter().map(expand);
+
+    let p1: isize = expanded_report.clone().map(extrapolate_forwards).sum();
     println!("Part1: {p1}");
 
-    let p2: isize = report.iter().map(expand).map(extrapolate_backwards).sum();
+    let p2: isize = expanded_report.map(extrapolate_backwards).sum();
     println!("Part2: {p2}");
 }
 
-fn expand(history: &Vec<isize>) -> Vec<Vec<isize>> {
-    let mut sequence = history.clone();
+fn expand(history: Vec<isize>) -> Vec<Vec<isize>> {
+    let mut sequence = history.to_owned();
     let mut sequences = vec![sequence.clone()];
 
     while !sequence.iter().all(|x| *x == 0) {
