@@ -7,8 +7,10 @@ fn main() {
         .collect();
 
     let p1: isize = report.iter().map(expand).map(extrapolate).sum();
-
     dbg!(p1);
+
+    let p2: isize = report.iter().map(expand).map(extrapolate_rev).sum();
+    dbg!(p2);
 }
 
 fn expand(history: &Vec<isize>) -> Vec<Vec<isize>> {
@@ -29,4 +31,11 @@ fn extrapolate(predictions: Vec<Vec<isize>>) -> isize {
         .iter()
         .rev()
         .fold(0, |last, seq| seq.last().unwrap() + last)
+}
+
+fn extrapolate_rev(predictions: Vec<Vec<isize>>) -> isize {
+    predictions
+        .iter()
+        .rev()
+        .fold(0, |last, seq| seq.iter().rev().last().unwrap() - last)
 }
