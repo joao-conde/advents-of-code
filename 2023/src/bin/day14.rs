@@ -28,77 +28,72 @@ impl Platform {
     }
 
     fn slide_north(&mut self) {
-        let previous = self.rocks.clone();
+        let rocks = self.rocks.clone();
 
         for cube in &self.cube_positions {
             let rocks_below = (cube.i + 1..self.nrows)
-                .take_while(|i| previous[*i][cube.j] != Tile::Cube)
-                .filter(|i| previous[*i][cube.j] == Tile::Round)
+                .take_while(|i| rocks[*i][cube.j] != Tile::Cube)
+                .filter(|i| rocks[*i][cube.j] == Tile::Round)
                 .count();
 
             (cube.i + 1..=cube.i + rocks_below).for_each(|i| self.rocks[i][cube.j] = Tile::Round);
             (cube.i + rocks_below + 1..self.nrows)
-                .take_while(|i| previous[*i][cube.j] != Tile::Cube)
+                .take_while(|i| rocks[*i][cube.j] != Tile::Cube)
                 .for_each(|i| self.rocks[i][cube.j] = Tile::Empty);
         }
     }
 
     fn slide_west(&mut self) {
-        let previous = self.rocks.clone();
+        let rocks = self.rocks.clone();
 
         for cube in &self.cube_positions {
             let rocks_right = (cube.j + 1..self.ncols)
-                .take_while(|j| previous[cube.i][*j] != Tile::Cube)
-                .filter(|j| previous[cube.i][*j] == Tile::Round)
+                .take_while(|j| rocks[cube.i][*j] != Tile::Cube)
+                .filter(|j| rocks[cube.i][*j] == Tile::Round)
                 .count();
 
             (cube.j + 1..=cube.j + rocks_right).for_each(|j| self.rocks[cube.i][j] = Tile::Round);
             (cube.j + rocks_right + 1..self.ncols)
-                .take_while(|j| previous[cube.i][*j] != Tile::Cube)
+                .take_while(|j| rocks[cube.i][*j] != Tile::Cube)
                 .for_each(|j| self.rocks[cube.i][j] = Tile::Empty);
         }
     }
 
     fn slide_south(&mut self) {
-        let previous = self.rocks.clone();
+        let rocks = self.rocks.clone();
 
         for cube in &self.cube_positions {
             let to = cube.i.saturating_sub(1);
             let rocks_above = (0..=to)
                 .rev()
-                .take_while(|i| previous[*i][cube.j] != Tile::Cube)
-                .filter(|i| previous[*i][cube.j] == Tile::Round)
+                .take_while(|i| rocks[*i][cube.j] != Tile::Cube)
+                .filter(|i| rocks[*i][cube.j] == Tile::Round)
                 .count();
 
-            if rocks_above > 0 {
-                (cube.i - rocks_above..cube.i).for_each(|i| self.rocks[i][cube.j] = Tile::Round);
-                (0..cube.i - rocks_above)
-                    .rev()
-                    .take_while(|i| previous[*i][cube.j] != Tile::Cube)
-                    .for_each(|i| self.rocks[i][cube.j] = Tile::Empty);
-            }
+            (cube.i - rocks_above..cube.i).for_each(|i| self.rocks[i][cube.j] = Tile::Round);
+            (0..cube.i - rocks_above)
+                .rev()
+                .take_while(|i| rocks[*i][cube.j] != Tile::Cube)
+                .for_each(|i| self.rocks[i][cube.j] = Tile::Empty);
         }
     }
 
     fn slide_east(&mut self) {
-        let previous = self.rocks.clone();
+        let rocks = self.rocks.clone();
 
         for cube in &self.cube_positions {
             let to = cube.j.saturating_sub(1);
-
             let rocks_left = (0..=to)
                 .rev()
-                .take_while(|j| previous[cube.i][*j] != Tile::Cube)
-                .filter(|j| previous[cube.i][*j] == Tile::Round)
+                .take_while(|j| rocks[cube.i][*j] != Tile::Cube)
+                .filter(|j| rocks[cube.i][*j] == Tile::Round)
                 .count();
 
-            if rocks_left > 0 {
-                (cube.j - rocks_left..cube.j).for_each(|j| self.rocks[cube.i][j] = Tile::Round);
-                (0..cube.j - rocks_left)
-                    .rev()
-                    .take_while(|j| previous[cube.i][*j] != Tile::Cube)
-                    .for_each(|j| self.rocks[cube.i][j] = Tile::Empty);
-            }
+            (cube.j - rocks_left..cube.j).for_each(|j| self.rocks[cube.i][j] = Tile::Round);
+            (0..cube.j - rocks_left)
+                .rev()
+                .take_while(|j| rocks[cube.i][*j] != Tile::Cube)
+                .for_each(|j| self.rocks[cube.i][j] = Tile::Empty);
         }
     }
 }
