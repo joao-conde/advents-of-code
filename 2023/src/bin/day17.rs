@@ -2,6 +2,89 @@ use std::cmp::Ordering;
 use std::collections::{BinaryHeap, HashSet};
 use std::hash::Hash;
 
+// State representing a node in the graph of different possible paths.
+// Used in the Dijkstra's algorithm. States are considered equal by comparing
+// every field but the cost.
+// States are ordered with the cost however.
+#[derive(Clone, Copy, Eq)]
+struct State {
+    i: usize,
+    j: usize,
+    direction: Direction,
+    moves: usize,
+    cost: u32,
+}
+
+impl Ord for State {
+    fn cmp(&self, other: &Self) -> Ordering {
+        self.cost.cmp(&other.cost).reverse()
+    }
+}
+
+impl PartialOrd for State {
+    fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
+        Some(self.cmp(other))
+    }
+}
+
+impl PartialEq for State {
+    fn eq(&self, other: &Self) -> bool {
+        self.i == other.i
+            && self.j == other.j
+            && self.direction == other.direction
+            && self.moves == other.moves
+    }
+}
+
+impl Hash for State {
+    fn hash<H: std::hash::Hasher>(&self, state: &mut H) {
+        self.i.hash(state);
+        self.j.hash(state);
+        self.direction.hash(state);
+        self.moves.hash(state);
+    }
+}
+
+impl State {
+    fn forward(&self, map: &Vec<Vec<u32>>) -> Option<State> {
+        let nrows = map.len();
+        let ncols = map[0].len();
+
+        let (di, dj) = self.direction.delta();
+
+        let ni = self.i.checked_add_signed(di).filter(|i| *i < nrows)?;
+        let nj = self.j.checked_add_signed(dj).filter(|j| *j < ncols)?;
+
+        Some(Self {
+            i: ni,
+            j: nj,
+            direction: self.direction,
+            moves: self.moves + 1,
+            cost: self.cost + map[ni][nj],
+        })
+    }
+
+    fn turn_right(&self) -> State {
+        Self {
+            i: self.i,
+            j: self.j,
+            direction: self.direction.turn_right(),
+            moves: 0,
+            cost: self.cost,
+        }
+    }
+
+    fn turn_left(&self) -> State {
+        Self {
+            i: self.i,
+            j: self.j,
+            direction: self.direction.turn_left(),
+            moves: 0,
+            cost: self.cost,
+        }
+    }
+}
+
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
 enum Direction {
     Up,
@@ -39,85 +122,6 @@ impl Direction {
     }
 }
 
-#[derive(Debug, Clone, Eq)]
-struct State {
-    i: usize,
-    j: usize,
-    direction: Direction,
-    streak: usize,
-    cost: u32,
-}
-
-impl Hash for State {
-    fn hash<H: std::hash::Hasher>(&self, state: &mut H) {
-        self.i.hash(state);
-        self.j.hash(state);
-        self.direction.hash(state);
-        self.streak.hash(state);
-    }
-}
-
-impl PartialEq for State {
-    fn eq(&self, other: &Self) -> bool {
-        self.i == other.i
-            && self.j == other.j
-            && self.direction == other.direction
-            && self.streak == other.streak
-    }
-}
-
-impl Ord for State {
-    fn cmp(&self, other: &Self) -> Ordering {
-        self.cost.cmp(&other.cost).reverse()
-    }
-}
-
-impl PartialOrd for State {
-    fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
-        Some(self.cmp(other))
-    }
-}
-
-impl State {
-    fn forward(&self, map: &Vec<Vec<u32>>) -> Option<State> {
-        let nrows = map.len();
-        let ncols = map[0].len();
-
-        let (di, dj) = self.direction.delta();
-
-        let ni = self.i.checked_add_signed(di).filter(|i| *i < nrows)?;
-        let nj = self.j.checked_add_signed(dj).filter(|j| *j < ncols)?;
-
-        Some(Self {
-            i: ni,
-            j: nj,
-            direction: self.direction,
-            streak: self.streak + 1,
-            cost: self.cost + map[ni][nj],
-        })
-    }
-
-    fn turn_right(&self) -> State {
-        Self {
-            i: self.i,
-            j: self.j,
-            direction: self.direction.turn_right(),
-            streak: 0,
-            cost: self.cost,
-        }
-    }
-
-    fn turn_left(&self) -> State {
-        Self {
-            i: self.i,
-            j: self.j,
-            direction: self.direction.turn_left(),
-            streak: 0,
-            cost: self.cost,
-        }
-    }
-}
-
 fn main() {
     let input = std::fs::read_to_string("input/day17").unwrap();
 
@@ -133,49 +137,53 @@ fn main() {
     println!("Part2: {p2}");
 }
 
-fn heat_loss(map: &Vec<Vec<u32>>, min_streak: usize, max_streak: usize) -> u32 {
+// Minimum heat loss computation using Dijkstra's algorithm.
+fn heat_loss(map: &Vec<Vec<u32>>, min_moves: usize, max_moves: usize) -> u32 {
     let nrows = map.len();
     let ncols = map[0].len();
 
     let mut visited = HashSet::new();
-
-    let mut points: BinaryHeap<State> = BinaryHeap::new();
-    points.push(State {
+    let mut states = BinaryHeap::new();
+    states.push(State {
         i: 0,
         j: 0,
         direction: Direction::Right,
-        streak: 0,
+        moves: 0,
         cost: 0,
     });
 
-    while let Some(state) = points.pop() {
-        if state.i == nrows - 1 && state.j == ncols - 1 && state.streak >= min_streak {
+    while let Some(state) = states.pop() {
+        // if we have reached the bottom-right grid position with our
+        // required minimum number of moves we found the minimum cost
+        if state.i == nrows - 1 && state.j == ncols - 1 && state.moves >= min_moves {
             return state.cost;
         }
 
-        if state.i >= nrows || state.j >= ncols {
+        // if we have seen this state (same position, direction and moves)
+        // we skip expanding this path, otherwise mark it as seen
+        if visited.contains(&state) {
             continue;
         }
+        visited.insert(state);
 
-        if visited.contains(&(state.i, state.j, state.direction, state.streak)) {
-            continue;
-        }
-        visited.insert((state.i, state.j, state.direction, state.streak));
-
-        if state.streak >= min_streak {
-            if let Some(state) = state.turn_right().forward(&map) {
-                points.push(state);
+        // if we are in a state that has made the minimum number of moves
+        // this means we can afford to try to turn left or right
+        // we dont turn if out of bounds
+        if state.moves >= min_moves {
+            if let Some(state) = state.turn_right().forward(map) {
+                states.push(state);
             }
 
-            if let Some(state) = state.turn_left().forward(&map) {
-                points.push(state);
+            if let Some(state) = state.turn_left().forward(map) {
+                states.push(state);
             }
         }
 
-        // if we dont have to move yet, explore going forward
-        if state.streak < max_streak {
-            if let Some(state) = state.forward(&map) {
-                points.push(state);
+        // if we are in a state that has not yet reached the maximum number
+        // of moves we can afford to move forward
+        if state.moves < max_moves {
+            if let Some(state) = state.forward(map) {
+                states.push(state);
             }
         }
     }
