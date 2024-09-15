@@ -2,7 +2,7 @@ use std::str::FromStr;
 
 #[derive(Clone, PartialEq)]
 struct Platform {
-    rocks: Vec<Vec<Tile>>,
+    tiles: Vec<Vec<Tile>>,
     cube_positions: Vec<Point>,
     nrows: usize,
     ncols: usize,
@@ -10,7 +10,7 @@ struct Platform {
 
 impl Platform {
     fn total_load(&self) -> usize {
-        let unpadded_rocks = self.rocks.iter().skip(1).rev().skip(1).rev();
+        let unpadded_rocks = self.tiles.iter().skip(1).rev().skip(1).rev();
         let unpadded_nrows = self.nrows - 2;
         unpadded_rocks
             .enumerate()
@@ -28,72 +28,72 @@ impl Platform {
     }
 
     fn slide_north(&mut self) {
-        let rocks = self.rocks.clone();
+        let tiles = self.tiles.clone();
 
         for cube in &self.cube_positions {
             let rocks_below = (cube.i + 1..self.nrows)
-                .take_while(|i| rocks[*i][cube.j] != Tile::Cube)
-                .filter(|i| rocks[*i][cube.j] == Tile::Round)
+                .take_while(|i| tiles[*i][cube.j] != Tile::Cube)
+                .filter(|i| tiles[*i][cube.j] == Tile::Round)
                 .count();
 
-            (cube.i + 1..=cube.i + rocks_below).for_each(|i| self.rocks[i][cube.j] = Tile::Round);
+            (cube.i + 1..=cube.i + rocks_below).for_each(|i| self.tiles[i][cube.j] = Tile::Round);
             (cube.i + rocks_below + 1..self.nrows)
-                .take_while(|i| rocks[*i][cube.j] != Tile::Cube)
-                .for_each(|i| self.rocks[i][cube.j] = Tile::Empty);
+                .take_while(|i| tiles[*i][cube.j] != Tile::Cube)
+                .for_each(|i| self.tiles[i][cube.j] = Tile::Empty);
         }
     }
 
     fn slide_west(&mut self) {
-        let rocks = self.rocks.clone();
+        let tiles = self.tiles.clone();
 
         for cube in &self.cube_positions {
             let rocks_right = (cube.j + 1..self.ncols)
-                .take_while(|j| rocks[cube.i][*j] != Tile::Cube)
-                .filter(|j| rocks[cube.i][*j] == Tile::Round)
+                .take_while(|j| tiles[cube.i][*j] != Tile::Cube)
+                .filter(|j| tiles[cube.i][*j] == Tile::Round)
                 .count();
 
-            (cube.j + 1..=cube.j + rocks_right).for_each(|j| self.rocks[cube.i][j] = Tile::Round);
+            (cube.j + 1..=cube.j + rocks_right).for_each(|j| self.tiles[cube.i][j] = Tile::Round);
             (cube.j + rocks_right + 1..self.ncols)
-                .take_while(|j| rocks[cube.i][*j] != Tile::Cube)
-                .for_each(|j| self.rocks[cube.i][j] = Tile::Empty);
+                .take_while(|j| tiles[cube.i][*j] != Tile::Cube)
+                .for_each(|j| self.tiles[cube.i][j] = Tile::Empty);
         }
     }
 
     fn slide_south(&mut self) {
-        let rocks = self.rocks.clone();
+        let tiles = self.tiles.clone();
 
         for cube in &self.cube_positions {
             let to = cube.i.saturating_sub(1);
             let rocks_above = (0..=to)
                 .rev()
-                .take_while(|i| rocks[*i][cube.j] != Tile::Cube)
-                .filter(|i| rocks[*i][cube.j] == Tile::Round)
+                .take_while(|i| tiles[*i][cube.j] != Tile::Cube)
+                .filter(|i| tiles[*i][cube.j] == Tile::Round)
                 .count();
 
-            (cube.i - rocks_above..cube.i).for_each(|i| self.rocks[i][cube.j] = Tile::Round);
+            (cube.i - rocks_above..cube.i).for_each(|i| self.tiles[i][cube.j] = Tile::Round);
             (0..cube.i - rocks_above)
                 .rev()
-                .take_while(|i| rocks[*i][cube.j] != Tile::Cube)
-                .for_each(|i| self.rocks[i][cube.j] = Tile::Empty);
+                .take_while(|i| tiles[*i][cube.j] != Tile::Cube)
+                .for_each(|i| self.tiles[i][cube.j] = Tile::Empty);
         }
     }
 
     fn slide_east(&mut self) {
-        let rocks = self.rocks.clone();
+        let tiles = self.tiles.clone();
 
         for cube in &self.cube_positions {
             let to = cube.j.saturating_sub(1);
             let rocks_left = (0..=to)
                 .rev()
-                .take_while(|j| rocks[cube.i][*j] != Tile::Cube)
-                .filter(|j| rocks[cube.i][*j] == Tile::Round)
+                .take_while(|j| tiles[cube.i][*j] != Tile::Cube)
+                .filter(|j| tiles[cube.i][*j] == Tile::Round)
                 .count();
 
-            (cube.j - rocks_left..cube.j).for_each(|j| self.rocks[cube.i][j] = Tile::Round);
+            (cube.j - rocks_left..cube.j).for_each(|j| self.tiles[cube.i][j] = Tile::Round);
             (0..cube.j - rocks_left)
                 .rev()
-                .take_while(|j| rocks[cube.i][*j] != Tile::Cube)
-                .for_each(|j| self.rocks[cube.i][j] = Tile::Empty);
+                .take_while(|j| tiles[cube.i][*j] != Tile::Cube)
+                .for_each(|j| self.tiles[cube.i][j] = Tile::Empty);
         }
     }
 }
@@ -128,7 +128,7 @@ impl FromStr for Platform {
             .collect();
 
         Ok(Self {
-            rocks,
+            tiles: rocks,
             cube_positions: cubes,
             nrows,
             ncols,
