@@ -21,6 +21,40 @@ fn main() {
     println!("Part2: {p2}");
 }
 
+fn longest_path(map: &Vec<Vec<char>>) -> usize {
+    // build our graph and statically define start
+    // and end points as defined in the problem
+    let start = (0, 1);
+    let end = (map.len() - 1, map[0].len() - 2);
+    let graph = build_graph(map, start, end);
+
+    // do a DFS where each state has the current
+    // position, path length and nodes visited
+    let mut longest = 0;
+    let mut stack = vec![(start, 0, HashSet::new())];
+    while let Some((cur, length, path)) = stack.pop() {
+        // if we reached an end state record check and upate
+        // the longest length we have seen
+        if cur == end {
+            longest = usize::max(longest, length);
+            continue;
+        }
+
+        // for each of the node's neighbors mark them to explore
+        // updating the current path and path length
+        let neighbors = graph.get(&cur).unwrap();
+        for (neighbor, cost) in neighbors {
+            if !path.contains(neighbor) {
+                let mut next_path = path.clone();
+                next_path.insert(cur);
+                stack.push((*neighbor, cost + length, next_path));
+            }
+        }
+    }
+
+    longest
+}
+
 // Builds the problem graph and performs edge contraction.
 fn build_graph(
     map: &Vec<Vec<char>>,
@@ -84,40 +118,6 @@ fn build_graph(
     }
 
     graph
-}
-
-fn longest_path(map: &Vec<Vec<char>>) -> usize {
-    // build our graph and statically define start
-    // and end points as defined in the problem
-    let start = (0, 1);
-    let end = (map.len() - 1, map[0].len() - 2);
-    let graph = build_graph(map, start, end);
-
-    // do a DFS where each state has the current
-    // position, path length and nodes visited
-    let mut longest = 0;
-    let mut stack = vec![(start, 0, HashSet::new())];
-    while let Some((cur, length, path)) = stack.pop() {
-        // if we reached an end state record check and upate
-        // the longest length we have seen
-        if cur == end {
-            longest = usize::max(longest, length);
-            continue;
-        }
-
-        // for each of the node's neighbors mark them to explore
-        // updating the current path and path length
-        let neighbors = graph.get(&cur).unwrap();
-        for (neighbor, cost) in neighbors {
-            if !path.contains(neighbor) {
-                let mut next_path = path.clone();
-                next_path.insert(cur);
-                stack.push((*neighbor, cost + length, next_path));
-            }
-        }
-    }
-
-    longest
 }
 
 fn neighbors(map: &Vec<Vec<char>>, i: usize, j: usize) -> Vec<Point> {
