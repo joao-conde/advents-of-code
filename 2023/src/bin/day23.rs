@@ -1,10 +1,11 @@
 use std::collections::{HashMap, HashSet};
 
 type Point = (usize, usize);
+type Map = Vec<Vec<char>>;
 
 fn main() {
     let input = std::fs::read_to_string("input/day23").unwrap();
-    let slippery_map: Vec<Vec<char>> = input.lines().map(|l| l.chars().collect()).collect();
+    let slippery_map: Map = input.lines().map(|l| l.chars().collect()).collect();
 
     let p1 = longest_path(&slippery_map);
     println!("Part1: {p1}");
@@ -21,7 +22,7 @@ fn main() {
     println!("Part2: {p2}");
 }
 
-fn longest_path(map: &Vec<Vec<char>>) -> usize {
+fn longest_path(map: &Map) -> usize {
     // build our graph and statically define start
     // and end points as defined in the problem
     let start = (0, 1);
@@ -56,11 +57,7 @@ fn longest_path(map: &Vec<Vec<char>>) -> usize {
 }
 
 // Builds the problem graph and performs edge contraction.
-fn build_graph(
-    map: &Vec<Vec<char>>,
-    start: Point,
-    end: Point,
-) -> HashMap<Point, HashMap<Point, usize>> {
+fn build_graph(map: &Map, start: Point, end: Point) -> HashMap<Point, HashMap<Point, usize>> {
     let mut graph: HashMap<Point, HashMap<Point, usize>> = HashMap::new();
     graph.insert(start, HashMap::new());
     graph.insert(end, HashMap::new());
@@ -74,8 +71,8 @@ fn build_graph(
                 continue;
             }
 
-            let neighbors = neighbors(map, i, j).len();
-            if neighbors > 2 {
+            let neighbors = neighbors(map, (i, j));
+            if neighbors.len() > 2 {
                 nodes.push((i, j));
             }
         }
@@ -83,35 +80,24 @@ fn build_graph(
 
     // for each node fill out its adjacency list
     // of neighbors and distance to them
-    for (si, sj) in &nodes {
-        let si = *si;
-        let sj = *sj;
-
+    for node in &nodes {
         let mut seen = HashSet::new();
-        let mut stack = vec![(si, sj, 0)];
-        while let Some((i, j, length)) = stack.pop() {
+        let mut stack = vec![(*node, 0)];
+        while let Some((cur, length)) = stack.pop() {
             // if we reached another node add it as a neighbor
             // with the computed distance and move on to the next
-            if (si, sj) != (i, j) && nodes.contains(&(i, j)) {
-                graph.entry((si, sj)).or_default().insert((i, j), length);
+            if *node != cur && nodes.contains(&cur) {
+                graph.entry(*node).or_default().insert(cur, length);
                 continue;
             }
 
-            let neighbors = match map[i][j] {
-                '>' => vec![(i, j + 1)],
-                '<' => vec![(i, j - 1)],
-                '^' => vec![(i - 1, j)],
-                'v' => vec![(i + 1, j)],
-                '.' => neighbors(map, i, j),
-                _ => unreachable!(),
-            };
-
             // for each of the node's neighbors that was
             // not already seen we add to be explored
-            for (ni, nj) in neighbors {
-                if !seen.contains(&(ni, nj)) {
-                    stack.push((ni, nj, length + 1));
-                    seen.insert((ni, nj));
+            let neighbors = neighbors(map, cur);
+            for neighbor in neighbors {
+                if !seen.contains(&neighbor) {
+                    stack.push((neighbor, length + 1));
+                    seen.insert(neighbor);
                 }
             }
         }
@@ -120,7 +106,18 @@ fn build_graph(
     graph
 }
 
-fn neighbors(map: &Vec<Vec<char>>, i: usize, j: usize) -> Vec<Point> {
+fn neighbors(map: &Map, (i, j): Point) -> Vec<Point> {
+    match map[i][j] {
+        '>' => vec![(i, j + 1)],
+        '<' => vec![(i, j - 1)],
+        '^' => vec![(i - 1, j)],
+        'v' => vec![(i + 1, j)],
+        '.' => adjacent(map, (i, j)),
+        _ => unreachable!(),
+    }
+}
+
+fn adjacent(map: &Map, (i, j): Point) -> Vec<Point> {
     let nrows = map.len() as isize;
     let ncols = map[0].len() as isize;
 
