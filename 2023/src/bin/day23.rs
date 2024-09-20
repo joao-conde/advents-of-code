@@ -21,12 +21,15 @@ fn main() {
     println!("Part2: {p2}");
 }
 
+// Builds the problem graph and performs edge contraction.
 fn build_graph(
     map: &Vec<Vec<char>>,
     start: Point,
     end: Point,
 ) -> HashMap<Point, HashMap<Point, usize>> {
     let mut graph: HashMap<Point, HashMap<Point, usize>> = HashMap::new();
+    graph.insert(start, HashMap::new());
+    graph.insert(end, HashMap::new());
 
     // find nodes which are the intersection points where we
     // have a choice other than going back or forwards
@@ -37,16 +40,15 @@ fn build_graph(
                 continue;
             }
 
-            let neighbors = neighbors(map, i, j).iter().count();
+            let neighbors = neighbors(map, i, j).len();
             if neighbors > 2 {
                 nodes.push((i, j));
             }
         }
     }
 
-    graph.insert(start, HashMap::new());
-    graph.insert(end, HashMap::new());
-
+    // for each node fill out its adjacency list
+    // of neighbors and distance to them
     for (si, sj) in &nodes {
         let si = *si;
         let sj = *sj;
@@ -54,11 +56,10 @@ fn build_graph(
         let mut seen = HashSet::new();
         let mut stack = vec![(si, sj, 0)];
         while let Some((i, j, length)) = stack.pop() {
+            // if we reached another node add it as a neighbor
+            // with the computed distance and move on to the next
             if (si, sj) != (i, j) && nodes.contains(&(i, j)) {
-                graph
-                    .entry((si, sj))
-                    .or_insert_with(HashMap::new)
-                    .insert((i, j), length);
+                graph.entry((si, sj)).or_default().insert((i, j), length);
                 continue;
             }
 
@@ -71,6 +72,8 @@ fn build_graph(
                 _ => unreachable!(),
             };
 
+            // for each of the node's neighbors that was
+            // not already seen we add to be explored
             for (ni, nj) in neighbors {
                 if !seen.contains(&(ni, nj)) {
                     stack.push((ni, nj, length + 1));
@@ -84,26 +87,32 @@ fn build_graph(
 }
 
 fn longest_path(map: &Vec<Vec<char>>) -> usize {
+    // build our graph and statically define start
+    // and end points as defined in the problem
     let start = (0, 1);
     let end = (map.len() - 1, map[0].len() - 2);
-
     let graph = build_graph(map, start, end);
 
+    // do a DFS where each state has the current
+    // position, path length and nodes visited
     let mut longest = 0;
-
-    let mut stack = vec![(0, 1, 0, HashSet::new())];
-    while let Some((i, j, length, path)) = stack.pop() {
-        if (i, j) == end {
+    let mut stack = vec![(start, 0, HashSet::new())];
+    while let Some((cur, length, path)) = stack.pop() {
+        // if we reached an end state record check and upate
+        // the longest length we have seen
+        if cur == end {
             longest = usize::max(longest, length);
             continue;
         }
 
-        let edges = graph.get(&(i, j)).unwrap();
-        for ((ni, nj), n) in edges {
-            if !path.contains(&(*ni, *nj)) {
+        // for each of the node's neighbors mark them to explore
+        // updating the current path and path length
+        let neighbors = graph.get(&cur).unwrap();
+        for (neighbor, cost) in neighbors {
+            if !path.contains(neighbor) {
                 let mut next_path = path.clone();
-                next_path.insert((i, j));
-                stack.push((*ni, *nj, n + length, next_path));
+                next_path.insert(cur);
+                stack.push((*neighbor, cost + length, next_path));
             }
         }
     }
