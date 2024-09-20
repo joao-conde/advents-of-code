@@ -4,21 +4,32 @@ type Point = (usize, usize);
 
 fn main() {
     let input = std::fs::read_to_string("input/day23").unwrap();
+    let slippery_map: Vec<Vec<char>> = input.lines().map(|l| l.chars().collect()).collect();
 
-    let map: Vec<Vec<char>> = input.lines().map(|l| l.chars().collect()).collect();
+    let p1 = longest_path(&slippery_map);
+    println!("Part1: {p1}");
 
-    let longest = longest_path(&map);
-    dbg!(longest);
+    let normal_map = slippery_map
+        .iter()
+        .map(|r| {
+            r.iter()
+                .map(|c| if *c == '#' { '#' } else { '.' })
+                .collect()
+        })
+        .collect();
+    let p2 = longest_path(&normal_map);
+    println!("Part2: {p2}");
 }
 
-fn build_graph(map: &Vec<Vec<char>>) -> HashMap<Point, HashMap<Point, usize>> {
-    let start = (0, 1);
-    let end = (map.len() - 1, map[0].len() - 2);
-
+fn build_graph(
+    map: &Vec<Vec<char>>,
+    start: Point,
+    end: Point,
+) -> HashMap<Point, HashMap<Point, usize>> {
     let mut graph: HashMap<Point, HashMap<Point, usize>> = HashMap::new();
 
     // find nodes which are the intersection points where we
-    // have a choice other than the previous or next '.'
+    // have a choice other than going back or forwards
     let mut nodes = vec![start, end];
     for (i, row) in map.iter().enumerate() {
         for (j, c) in row.iter().enumerate() {
@@ -73,17 +84,27 @@ fn build_graph(map: &Vec<Vec<char>>) -> HashMap<Point, HashMap<Point, usize>> {
 }
 
 fn longest_path(map: &Vec<Vec<char>>) -> usize {
-    let graph = build_graph(map);
+    let start = (0, 1);
+    let end = (map.len() - 1, map[0].len() - 2);
+
+    let graph = build_graph(map, start, end);
 
     let mut longest = 0;
 
-    let mut stack = vec![(0, 1, 0)];
-    while let Some((i, j, length)) = stack.pop() {
-        longest = usize::max(longest, length);
+    let mut stack = vec![(0, 1, 0, HashSet::new())];
+    while let Some((i, j, length, path)) = stack.pop() {
+        if (i, j) == end {
+            longest = usize::max(longest, length);
+            continue;
+        }
 
         let edges = graph.get(&(i, j)).unwrap();
         for ((ni, nj), n) in edges {
-            stack.push((*ni, *nj, n + length));
+            if !path.contains(&(*ni, *nj)) {
+                let mut next_path = path.clone();
+                next_path.insert((i, j));
+                stack.push((*ni, *nj, n + length, next_path));
+            }
         }
     }
 
