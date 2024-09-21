@@ -267,8 +267,9 @@ fn combinations(workflows: &HashMap<WorkflowId, Workflow>) -> usize {
             }
             RuleTree::Workflow(name) => queue.push((&workflows[name].rules, x, m, a, s)),
             RuleTree::Verdict(Verdict::Accepted) => {
-                combinations +=
+                let path_combinations =
                     (x.1 + 1 - x.0) * (m.1 + 1 - m.0) * (a.1 + 1 - a.0) * (s.1 + 1 - s.0);
+                combinations += path_combinations;
             }
             RuleTree::Verdict(Verdict::Rejected) => (),
         }
