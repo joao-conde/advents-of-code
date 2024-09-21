@@ -38,6 +38,35 @@ enum Operator {
     LesserThan,
 }
 
+impl Workflow {
+    fn test(&self, part: &Part) -> String {
+        self.rules.test(part)
+    }
+}
+
+impl RuleTree {
+    fn test(&self, part: &Part) -> String {
+        match self {
+            RuleTree::Test {
+                operand1,
+                operator,
+                operand2,
+                true_branch,
+                false_branch,
+            } => {
+                if operator.test(part.get(operand1), *operand2) {
+                    true_branch.test(part)
+                } else {
+                    false_branch.test(part)
+                }
+            }
+            RuleTree::Accepted => "A".to_string(),
+            RuleTree::Rejected => "R".to_string(),
+            RuleTree::Workflow(name) => name.to_string(),
+        }
+    }
+}
+
 impl Part {
     fn get(&self, component: &str) -> usize {
         match component {
@@ -110,7 +139,7 @@ impl From<&str> for RuleTree {
 
             let (test, true_branch) = rule.split_once(':').unwrap();
 
-            if !test.contains(">") && !test.contains("<") {
+            if !test.contains('>') && !test.contains('<') {
                 RuleTree::Workflow(test.to_string())
             } else {
                 let operator = if test.contains('>') {
@@ -150,12 +179,27 @@ fn main() {
             acc
         });
 
-    // px{a<2006:qkq,m>2090:A,rfg}
-    //       a < 2006
-    //      qkq      m>2090
-    //              A       rfg
+    let p1: usize = parts
+        .iter()
+        .filter(|p| accepted(&workflows, p))
+        .map(|p| p.rating())
+        .sum();
+    println!("Part1: {p1}");
 
-    dbg!(combinations(&workflows));
+    let p2 = combinations(&workflows);
+    println!("Part2: {p2}");
+}
+
+fn accepted(workflows: &HashMap<String, Workflow>, part: &Part) -> bool {
+    let mut workflow = &workflows["in"];
+    loop {
+        let result = workflow.test(part);
+        match result.as_str() {
+            "A" => return true,
+            "R" => return false,
+            next_workflow => workflow = &workflows[next_workflow],
+        }
+    }
 }
 
 fn combinations(workflows: &HashMap<String, Workflow>) -> usize {
@@ -211,7 +255,7 @@ fn combinations(workflows: &HashMap<String, Workflow>) -> usize {
             }
             RuleTree::Accepted => {
                 combinations +=
-                    ((x.1 + 1 - x.0) * (m.1 + 1 - m.0) * (a.1 + 1 - a.0) * (s.1 + 1 - s.0));
+                    (x.1 + 1 - x.0) * (m.1 + 1 - m.0) * (a.1 + 1 - a.0) * (s.1 + 1 - s.0);
             }
             RuleTree::Rejected => (),
             RuleTree::Workflow(name) => queue.push((&workflows[name].rules, x, m, a, s)),
