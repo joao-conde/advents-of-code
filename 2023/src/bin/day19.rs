@@ -179,7 +179,7 @@ fn combinations(workflows: &HashMap<String, Workflow>) -> usize {
                 false_branch,
             } => {
                 let true_bounds = |(lb, ub)| match operator {
-                    Operator::GreaterThan => (usize::max(lb + 1, *operand2), ub),
+                    Operator::GreaterThan => (usize::max(lb, *operand2) + 1, ub),
                     Operator::LesserThan => (lb, usize::min(ub, *operand2) - 1),
                 };
 
