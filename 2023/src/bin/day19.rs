@@ -15,35 +15,27 @@ struct Part {
 #[derive(Debug)]
 struct Workflow {
     name: String,
-    rules: Vec<Rule>,
+    rules: RuleTree,
 }
 
 #[derive(Debug)]
-enum Rule {
+enum RuleTree {
     Test {
         operand1: String,
         operator: Operator,
         operand2: usize,
-        success: String,
+        true_branch: Box<RuleTree>,
+        false_branch: Box<RuleTree>,
     },
-    Result(String),
+    Accepted,
+    Rejected,
+    Workflow(String),
 }
 
 #[derive(Debug)]
 enum Operator {
     GreaterThan,
     LesserThan,
-}
-
-impl Workflow {
-    fn test(&self, part: &Part) -> String {
-        for rule in &self.rules {
-            if let Some(result) = rule.test(part) {
-                return result;
-            }
-        }
-        unreachable!()
-    }
 }
 
 impl Part {
@@ -99,53 +91,48 @@ impl From<&str> for Workflow {
         let captures = re.captures(value).unwrap();
 
         let name = captures["name"].to_string();
-        let rules = captures["rules"]
-            .split(',')
-            .map(|r| {
-                if let Some((condition, success)) = r.split_once(':') {
-                    let operator = if condition.contains('>') {
-                        Operator::GreaterThan
-                    } else {
-                        Operator::LesserThan
-                    };
-
-                    let (operand1, operand2) = condition.split_once(&operator.to_string()).unwrap();
-                    let operand1 = operand1.to_string();
-                    let operand2 = operand2.parse().unwrap();
-                    let success = success.to_string();
-
-                    Rule::Test {
-                        operand1,
-                        operator,
-                        operand2,
-                        success,
-                    }
-                } else {
-                    Rule::Result(r.to_string())
-                }
-            })
-            .collect();
+        let rules = RuleTree::from(&captures["rules"]);
 
         Workflow { name, rules }
     }
 }
 
-impl Rule {
-    fn test(&self, part: &Part) -> Option<String> {
-        match self {
-            Rule::Test {
-                operand1,
-                operator,
-                operand2,
-                success,
-            } => {
-                if operator.test(part.get(operand1), *operand2) {
-                    Some(success.to_string())
+impl From<&str> for RuleTree {
+    fn from(value: &str) -> Self {
+        if value == "A" {
+            RuleTree::Accepted
+        } else if value == "R" {
+            RuleTree::Rejected
+        } else {
+            let Some((rule, others)) = value.split_once(',') else {
+                return RuleTree::Workflow(value.to_string());
+            };
+
+            let (test, true_branch) = rule.split_once(':').unwrap();
+
+            if !test.contains(">") && !test.contains("<") {
+                RuleTree::Workflow(test.to_string())
+            } else {
+                let operator = if test.contains('>') {
+                    Operator::GreaterThan
                 } else {
-                    None
+                    Operator::LesserThan
+                };
+
+                let (operand1, operand2) = test.split_once(&operator.to_string()).unwrap();
+                let operand1 = operand1.to_string();
+                let operand2 = operand2.parse().unwrap();
+                let true_branch = Box::new(RuleTree::from(true_branch));
+                let false_branch = Box::new(RuleTree::from(others));
+
+                RuleTree::Test {
+                    operand1,
+                    operator,
+                    operand2,
+                    true_branch,
+                    false_branch,
                 }
             }
-            Rule::Result(result) => Some(result.to_string()),
         }
     }
 }
@@ -163,22 +150,73 @@ fn main() {
             acc
         });
 
-    let p1: usize = parts
-        .iter()
-        .filter(|p| accepted(&workflows, p))
-        .map(|p| p.rating())
-        .sum();
-    dbg!(p1);
+    // px{a<2006:qkq,m>2090:A,rfg}
+    //       a < 2006
+    //      qkq      m>2090
+    //              A       rfg
+
+    dbg!(combinations(&workflows));
 }
 
-fn accepted(workflows: &HashMap<String, Workflow>, part: &Part) -> bool {
-    let mut workflow = &workflows["in"];
-    loop {
-        let result = workflow.test(part);
-        match result.as_str() {
-            "A" => return true,
-            "R" => return false,
-            next_workflow => workflow = &workflows[next_workflow],
+fn combinations(workflows: &HashMap<String, Workflow>) -> usize {
+    let mut combinations = 0;
+
+    let mut queue = vec![(
+        &workflows["in"].rules,
+        (1, 4000),
+        (1, 4000),
+        (1, 4000),
+        (1, 4000),
+    )];
+
+    while let Some((tree, x, m, a, s)) = queue.pop() {
+        match tree {
+            RuleTree::Test {
+                operand1,
+                operator,
+                operand2,
+                true_branch,
+                false_branch,
+            } => {
+                let true_bounds = |(lb, ub)| match operator {
+                    Operator::GreaterThan => (usize::max(lb + 1, *operand2), ub),
+                    Operator::LesserThan => (lb, usize::min(ub, *operand2) - 1),
+                };
+
+                let false_bounds = |(lb, ub)| match operator {
+                    Operator::LesserThan => (usize::max(lb, *operand2), ub),
+                    Operator::GreaterThan => (lb, usize::min(ub, *operand2)),
+                };
+
+                let (mut tx, mut tm, mut ta, mut ts) = (x, m, a, s);
+                match operand1.as_str() {
+                    "x" => tx = true_bounds(tx),
+                    "m" => tm = true_bounds(tm),
+                    "a" => ta = true_bounds(ta),
+                    "s" => ts = true_bounds(ts),
+                    _ => unreachable!(),
+                }
+
+                let (mut fx, mut fm, mut fa, mut fs) = (x, m, a, s);
+                match operand1.as_str() {
+                    "x" => fx = false_bounds(fx),
+                    "m" => fm = false_bounds(fm),
+                    "a" => fa = false_bounds(fa),
+                    "s" => fs = false_bounds(fs),
+                    _ => unreachable!(),
+                }
+
+                queue.push((&true_branch, tx, tm, ta, ts));
+                queue.push((&false_branch, fx, fm, fa, fs));
+            }
+            RuleTree::Accepted => {
+                combinations +=
+                    ((x.1 + 1 - x.0) * (m.1 + 1 - m.0) * (a.1 + 1 - a.0) * (s.1 + 1 - s.0));
+            }
+            RuleTree::Rejected => (),
+            RuleTree::Workflow(name) => queue.push((&workflows[name].rules, x, m, a, s)),
         }
     }
+
+    combinations
 }
