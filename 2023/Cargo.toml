@@ -9,3 +9,6 @@ default-run = "aoc2023"
 opt-level = 3
 debug = false
 lto = true
+
+[dependencies]
+regex = "1.10.6"
