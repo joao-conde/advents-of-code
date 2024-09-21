@@ -100,10 +100,10 @@ impl From<&str> for Workflow {
 
         let name = captures["name"].to_string();
         let rules = captures["rules"]
-            .split(",")
+            .split(',')
             .map(|r| {
-                if let Some((condition, success)) = r.split_once(":") {
-                    let operator = if condition.contains(">") {
+                if let Some((condition, success)) = r.split_once(':') {
+                    let operator = if condition.contains('>') {
                         Operator::GreaterThan
                     } else {
                         Operator::LesserThan
