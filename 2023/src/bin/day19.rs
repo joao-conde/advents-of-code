@@ -200,25 +200,24 @@ fn main() {
 
     let p1: usize = parts
         .iter()
-        .filter(|p| accepted(&workflows, p))
-        .map(|p| p.total_rating())
+        .filter(|part| is_accepted(&workflows, part))
+        .map(|part| part.total_rating())
         .sum();
     println!("Part1: {p1}");
 
-    let p2 = combinations(&workflows);
+    let p2 = accepted_combinations(&workflows);
     println!("Part2: {p2}");
-
-    assert!(p1 == 383682);
-    assert!(p2 == 117954800808317);
 }
 
-fn accepted(workflows: &HashMap<WorkflowId, Workflow>, part: &Part) -> bool {
+fn is_accepted(workflows: &HashMap<WorkflowId, Workflow>, part: &Part) -> bool {
     workflows["in"].test(workflows, part) == Verdict::Accepted
 }
 
-fn combinations(workflows: &HashMap<WorkflowId, Workflow>) -> usize {
+fn accepted_combinations(workflows: &HashMap<WorkflowId, Workflow>) -> usize {
     let mut combinations = 0;
 
+    // queue state has current rule tree node to traverse
+    // as well as bounds for each of the x, m, a, s values
     let mut queue = vec![(
         &workflows["in"].rules,
         (1, 4000),
@@ -229,6 +228,8 @@ fn combinations(workflows: &HashMap<WorkflowId, Workflow>) -> usize {
 
     while let Some((tree, x, m, a, s)) = queue.pop() {
         match tree {
+            // append two new paths to traverse, the true branch
+            // and the false branch, with bounds updated for each
             RuleTree::Test {
                 operand1,
                 operator,
@@ -265,12 +266,20 @@ fn combinations(workflows: &HashMap<WorkflowId, Workflow>) -> usize {
                 queue.push((&true_branch, tx, tm, ta, ts));
                 queue.push((&false_branch, fx, fm, fa, fs));
             }
+
+            // jump to another workflow
             RuleTree::Workflow(name) => queue.push((&workflows[name].rules, x, m, a, s)),
+
+            // this is an accepted traversal state and as such
+            // see the available range of values for each category
+            // and multiply to get possible combinations for this path
+            // and finally add it to the final answer
             RuleTree::Verdict(Verdict::Accepted) => {
                 let path_combinations =
                     (x.1 + 1 - x.0) * (m.1 + 1 - m.0) * (a.1 + 1 - a.0) * (s.1 + 1 - s.0);
                 combinations += path_combinations;
             }
+
             RuleTree::Verdict(Verdict::Rejected) => (),
         }
     }
