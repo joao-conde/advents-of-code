@@ -4,11 +4,13 @@ jobs:
   main:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-elixir@v1
+      - uses: actions/checkout@v4
+      - uses: erlef/setup-beam@v1
         with:
           otp-version: 27.1.2
           elixir-version: 1.17.3
+      - run: mix deps.get
+        working-directory: 2024/
       - run: mix format --check-formatted
         working-directory: 2024/
       - run: mix credo
