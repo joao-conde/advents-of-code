@@ -7,7 +7,7 @@ The following assumes you are at the project root level (same as this `README.md
 To run the solution for a given day:
 
 ```bash
-$ elixir src/day[01-25]
+$ elixir src/day[01-25].ex
 ```
 
 Solutions developed with:
