@@ -1,17 +1,21 @@
 defmodule Day01 do
   def solve do
     [left, right] = parse_lists("input/day01")
-    IO.inspect(part1(left, right), label: "Part1")
-    IO.inspect(part2(left, right), label: "Part2")
+
+    p1 = distance(left, right)
+    IO.puts("Part1: #{p1}")
+
+    p2 = similarity(left, right)
+    IO.puts("Part2: #{p2}")
   end
 
-  def part1(left, right) do
+  def distance(left, right) do
     Enum.zip(left, right)
     |> Enum.map(fn {x1, x2} -> abs(x2 - x1) end)
     |> Enum.sum()
   end
 
-  def part2(left, right) do
+  def similarity(left, right) do
     frequencies = Enum.frequencies(right)
 
     Enum.map(left, fn x1 -> x1 * Map.get(frequencies, x1, 0) end)

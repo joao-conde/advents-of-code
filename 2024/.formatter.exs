@@ -1,3 +1,3 @@
 [
-  inputs: ["mix.exs", ".formatter.exs", "src/*.ex"]
+  inputs: [".credo.exs", ".formatter.exs", "mix.exs", "src/*.ex"]
 ]
