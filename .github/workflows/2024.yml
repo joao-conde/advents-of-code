@@ -1,0 +1,13 @@
+name: 2024
+on: [push]
+jobs:
+  main:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-elixir@v1
+        with:
+          otp-version: 27
+          elixir-version: 1.17.3
+      - run: mix format --check-formatted
+        working-directory: 2024/
