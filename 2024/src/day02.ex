@@ -32,8 +32,7 @@ defmodule Day02 do
 
   def find_report_mistake(report) do
     diffs =
-      report
-      |> Enum.chunk_every(2, 1, :discard)
+      Enum.chunk_every(report, 2, 1, :discard)
       |> Enum.map(fn [x1, x2] -> x1 - x2 end)
 
     positives = Enum.count(diffs, fn x -> x > 0 end)
