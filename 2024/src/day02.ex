@@ -9,15 +9,15 @@ defmodule Day02 do
     IO.puts("Part2: #{p2}")
   end
 
-  def safe_reports(reports, allowed) do
-    Enum.count(reports, fn report -> safe_report(report, allowed) end)
+  def safe_reports(reports, corrections) do
+    Enum.count(reports, fn report -> safe_report(report, corrections) end)
   end
 
-  def safe_report(report, allowed) do
+  def safe_report(report, corrections) do
     mistake_index = find_report_mistake(report)
 
     cond do
-      allowed < 0 ->
+      corrections < 0 ->
         false
 
       mistake_index == nil ->
@@ -26,7 +26,7 @@ defmodule Day02 do
       true ->
         removed_left = remove_index(report, mistake_index)
         removed_right = remove_index(report, mistake_index + 1)
-        safe_report(removed_left, allowed - 1) || safe_report(removed_right, allowed - 1)
+        safe_report(removed_left, corrections - 1) || safe_report(removed_right, corrections - 1)
     end
   end
 
