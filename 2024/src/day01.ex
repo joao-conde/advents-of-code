@@ -1,6 +1,6 @@
 defmodule Day01 do
   def solve do
-    [left, right] = parse_lists("input/day01")
+    {left, right} = parse_lists("input/day01")
 
     p1 = distance(left, right)
     IO.puts("Part1: #{p1}")
@@ -25,10 +25,13 @@ defmodule Day01 do
   def parse_lists(input) do
     File.read!(input)
     |> String.split("\n")
-    |> Enum.map(&String.split/1)
-    |> Enum.map(fn pair -> Enum.map(pair, &String.to_integer/1) end)
-    |> Enum.reduce([[], []], fn [x1, x2], [left, right] -> [[x1 | left], [x2 | right]] end)
-    |> Enum.map(fn list -> Enum.sort(list) end)
+    |> Enum.map(&parse_line/1)
+    |> Enum.reduce({[], []}, fn [x1, x2], {left, right} -> {[x1 | left], [x2 | right]} end)
+    |> then(fn {left, right} -> {Enum.sort(left), Enum.sort(right)} end)
+  end
+
+  def parse_line(line) do
+    String.split(line) |> Enum.map(&String.to_integer/1)
   end
 end
 
