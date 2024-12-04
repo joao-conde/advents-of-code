@@ -8,33 +8,19 @@ defmodule Day03 do
   end
 
   def parse_instructions(input, include_do) do
-    text = File.read!(input)
-
-    Regex.scan(~r/mul\((\d+),(\d+)\)|(do\(\))|(don't\(\))/, text, capture: :all_but_first)
-    |> Enum.map(fn matches ->
-      Enum.filter(matches, fn match -> valid_match(match, include_do) end)
-    end)
-    |> Enum.filter(fn matches -> !Enum.empty?(matches) end)
-    |> remove_disabled
+    File.read!(input)
+    |> parse_matches(include_do)
+    |> remove_disabled_instructions()
   end
 
-  def remove_disabled(instructions) do
-    List.foldl(instructions, {[], true}, fn match, {muls, enabled} ->
-      case match do
-        ["do()"] ->
-          {muls, true}
+  def parse_matches(text, include_do) do
+    Regex.scan(~r/mul\((\d+),(\d+)\)|(do\(\))|(don't\(\))/, text, capture: :all_but_first)
+    |> Enum.map(&filter_matches(&1, include_do))
+    |> Enum.reject(&Enum.empty?/1)
+  end
 
-        ["don't()"] ->
-          {muls, false}
-
-        _ ->
-          cond do
-            enabled -> {[match | muls], true}
-            !enabled -> {muls, false}
-          end
-      end
-    end)
-    |> elem(0)
+  def filter_matches(matches, include_do) do
+    Enum.filter(matches, &valid_match(&1, include_do))
   end
 
   def valid_match(match, include_do) do
@@ -44,6 +30,18 @@ defmodule Day03 do
       "don't()" -> include_do
       _ -> true
     end
+  end
+
+  def remove_disabled_instructions(instructions) do
+    Enum.reduce(instructions, {[], true}, fn match, {muls, enabled} ->
+      case match do
+        ["do()"] -> {muls, true}
+        ["don't()"] -> {muls, false}
+        _ when enabled -> {[match | muls], enabled}
+        _ -> {muls, enabled}
+      end
+    end)
+    |> elem(0)
   end
 
   def process_muls(muls) do
