@@ -50,8 +50,8 @@ defmodule Day02 do
 
   def generate_corrections(report, mistake_index) do
     [
-      remove_index(report, mistake_index),
-      remove_index(report, mistake_index + 1)
+      List.delete_at(list, index)(report, mistake_index),
+      List.delete_at(list, index)(report, mistake_index + 1)
     ]
   end
 
@@ -63,10 +63,6 @@ defmodule Day02 do
 
   def parse_report(line) do
     String.split(line) |> Enum.map(&String.to_integer/1)
-  end
-
-  def remove_index(list, index) do
-    Enum.take(list, index) ++ Enum.drop(list, index + 1)
   end
 end
 
