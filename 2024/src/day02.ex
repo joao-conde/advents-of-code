@@ -14,56 +14,59 @@ defmodule Day02 do
   end
 
   def safe_report(report, corrections) do
-    mistake_index = find_report_mistake(report)
-
-    cond do
-      corrections < 0 ->
-        false
-
-      mistake_index == nil ->
+    case find_report_mistake(report) do
+      nil ->
         true
 
-      true ->
-        removed_left = remove_index(report, mistake_index)
-        removed_right = remove_index(report, mistake_index + 1)
-        safe_report(removed_left, corrections - 1) || safe_report(removed_right, corrections - 1)
+      mistake_index when corrections > 0 ->
+        generate_corrections(report, mistake_index)
+        |> Enum.any?(fn correction -> safe_report(correction, corrections - 1) end)
+
+      _ ->
+        false
     end
   end
 
-  def find_report_mistake(report) do
-    diffs =
-      Enum.chunk_every(report, 2, 1, :discard)
-      |> Enum.map(fn [x1, x2] -> x1 - x2 end)
+  def generate_corrections(report, mistake_index) do
+    [
+      remove_index(report, mistake_index),
+      remove_index(report, mistake_index + 1)
+    ]
+  end
 
-    positives = Enum.count(diffs, fn x -> x > 0 end)
-    negatives = length(diffs) - positives
+  def find_report_mistake(report) do
+    diffs = calculate_diffs(report)
 
     sorted_by =
-      if positives > negatives do
+      if Enum.count(diffs, fn x -> x > 0 end) > length(diffs) / 2 do
         :decreasing
       else
         :increasing
       end
 
-    Enum.find_index(diffs, fn diff -> !valid_diff(diff, sorted_by) end)
+    Enum.find_index(diffs, fn diff -> not valid_diff(diff, sorted_by) end)
   end
 
-  def valid_diff(diff, sorted_by) do
-    abs(diff) >= 1 && abs(diff) <= 3 &&
-      ((sorted_by == :decreasing && diff > 0) ||
-         (sorted_by == :increasing && diff < 0))
+  def calculate_diffs(report) do
+    Enum.chunk_every(report, 2, 1, :discard)
+    |> Enum.map(fn [x1, x2] -> x1 - x2 end)
   end
+
+  def valid_diff(diff, :decreasing), do: diff > 0 and abs(diff) in 1..3
+  def valid_diff(diff, :increasing), do: diff < 0 and abs(diff) in 1..3
 
   def parse_reports(input) do
     File.read!(input)
     |> String.split("\n")
-    |> Enum.map(&String.split/1)
-    |> Enum.map(fn report -> Enum.map(report, &String.to_integer/1) end)
+    |> Enum.map(&parse_report/1)
+  end
+
+  def parse_report(line) do
+    String.split(line) |> Enum.map(&String.to_integer/1)
   end
 
   def remove_index(list, index) do
-    Enum.slice(list, 0, index) ++
-      Enum.slice(list, index + 1, length(list) - index)
+    Enum.take(list, index) ++ Enum.drop(list, index + 1)
   end
 end
 
