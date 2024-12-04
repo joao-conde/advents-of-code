@@ -27,13 +27,6 @@ defmodule Day02 do
     end
   end
 
-  def generate_corrections(report, mistake_index) do
-    [
-      remove_index(report, mistake_index),
-      remove_index(report, mistake_index + 1)
-    ]
-  end
-
   def find_report_mistake(report) do
     diffs = calculate_diffs(report)
 
@@ -54,6 +47,13 @@ defmodule Day02 do
 
   def valid_diff(diff, :decreasing), do: diff > 0 and abs(diff) in 1..3
   def valid_diff(diff, :increasing), do: diff < 0 and abs(diff) in 1..3
+
+  def generate_corrections(report, mistake_index) do
+    [
+      remove_index(report, mistake_index),
+      remove_index(report, mistake_index + 1)
+    ]
+  end
 
   def parse_reports(input) do
     File.read!(input)
