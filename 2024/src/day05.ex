@@ -27,8 +27,7 @@ defmodule Day05 do
 
   def sort_update(update, rules) do
     Enum.sort(update, fn a, b ->
-      come_after = Map.get(rules, a, [])
-      b in come_after
+      Map.get(rules, a, []) |> Enum.member?(b)
     end)
   end
 
