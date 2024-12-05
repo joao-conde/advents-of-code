@@ -10,17 +10,17 @@ defmodule Day02 do
   end
 
   def safe_reports(reports, corrections) do
-    Enum.count(reports, fn report -> safe_report(report, corrections) end)
+    Enum.count(reports, fn report -> safe_report?(report, corrections) end)
   end
 
-  def safe_report(report, corrections) do
+  def safe_report?(report, corrections) do
     case find_report_mistake(report) do
       nil ->
         true
 
       mistake_index when corrections > 0 ->
         generate_corrections(report, mistake_index)
-        |> Enum.any?(fn correction -> safe_report(correction, corrections - 1) end)
+        |> Enum.any?(fn correction -> safe_report?(correction, corrections - 1) end)
 
       _ ->
         false
