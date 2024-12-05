@@ -1,71 +1,76 @@
 defmodule Day04 do
   def solve do
-    matrix = parse_matrix("input/day04")
-    count_xmas(matrix) |> IO.inspect()
+    soup = parse_soup("input/day04")
+
+    p1 = count_pattern(soup, "X", &count_xmas/3)
+    IO.puts("Part1: #{p1}")
+
+    p2 = count_pattern(soup, "A", &count_x_mas/3)
+    IO.puts("Part2: #{p2}")
   end
 
-  def count_xmas(matrix) do
-    Enum.map(matrix, &Enum.with_index/1)
+  def count_pattern(soup, from, count_pattern_fn) do
+    Enum.map(soup, &Enum.with_index/1)
     |> Enum.with_index()
     |> Enum.flat_map(fn {row, i} -> Enum.map(row, fn {c, j} -> {c, i, j} end) end)
-    |> Enum.filter(fn {c, _, _} -> c == "X" end)
-    |> Enum.map(fn {_, i, j} -> count_rec(matrix, i, j) end)
+    |> Enum.filter(fn {c, _, _} -> c == from end)
+    |> Enum.map(fn {_, i, j} -> count_pattern_fn.(soup, i, j) end)
     |> Enum.sum()
   end
 
-  def count_rec(matrix, i, j) do
-    count_rec_help(matrix, i, j, {-1, 0}) +
-      count_rec_help(matrix, i, j, {-1, 1}) +
-      count_rec_help(matrix, i, j, {0, 1}) +
-      count_rec_help(matrix, i, j, {1, 1}) +
-      count_rec_help(matrix, i, j, {1, 0}) +
-      count_rec_help(matrix, i, j, {1, -1}) +
-      count_rec_help(matrix, i, j, {0, -1}) +
-      count_rec_help(matrix, i, j, {-1, -1})
+  def count_xmas(soup, i, j) do
+    [
+      {-1, 0},
+      {-1, 1},
+      {0, 1},
+      {1, 1},
+      {1, 0},
+      {1, -1},
+      {0, -1},
+      {-1, -1}
+    ]
+    |> Enum.map(fn delta -> get_word(soup, i, j, delta, 4) end)
+    |> Enum.count(fn word -> word == "XMAS" end)
   end
 
-  def count_rec_help(matrix, i, j, dir) do
-    current = matrix |> Enum.at(i) |> Enum.at(j)
+  def get_word(soup, i, j, {di, dj}, length) do
+    is = Stream.iterate(i, fn i -> i + di end) |> Enum.take(length)
+    js = Stream.iterate(j, fn j -> j + dj end) |> Enum.take(length)
 
-    cond do
-      current == "S" ->
-        1
-
-      current in ["X", "M", "A"] ->
-        case neighbors(matrix, i, j, current, dir) do
-          {ni, nj} -> count_rec_help(matrix, ni, nj, dir)
-          nil -> 0
-        end
-
-      true ->
-        0
-    end
+    Enum.zip(is, js)
+    |> Enum.filter(fn {i, j} ->
+      i >= 0 and j >= 0 and i < length(soup) and j < length(Enum.at(soup, i))
+    end)
+    |> Enum.map(fn {i, j} -> matrix_at(soup, i, j) end)
+    |> Enum.join("")
   end
 
-  def neighbors(matrix, i, j, c, {di, dj}) do
-    ni = i + di
-    nj = j + dj
+  def count_x_mas(soup, i, j) do
+    line1 =
+      [
+        {-1, -1},
+        {1, 1}
+      ]
+      |> Enum.map(fn delta -> get_word(soup, i, j, delta, 2) end)
 
-    if ni >= 0 and nj >= 0 and ni < length(matrix) and nj < length(Enum.at(matrix, ni)) and
-         Enum.at(Enum.at(matrix, ni), nj) == next_letter(c) do
-      {ni, nj}
-    else
-      nil
-    end
+    line2 =
+      [
+        {-1, 1},
+        {1, -1}
+      ]
+      |> Enum.map(fn delta -> get_word(soup, i, j, delta, 2) end)
+
+    if "AM" in line1 and "AS" in line1 and "AM" in line2 and "AS" in line2, do: 1, else: 0
   end
 
-  def next_letter(letter) do
-    case letter do
-      "X" -> "M"
-      "M" -> "A"
-      "A" -> "S"
-    end
-  end
-
-  def parse_matrix(input) do
+  def parse_soup(input) do
     File.read!(input)
     |> String.split()
     |> Enum.map(&String.graphemes/1)
+  end
+
+  def matrix_at(matrix, i, j) do
+    matrix |> Enum.at(i) |> Enum.at(j)
   end
 end
 
