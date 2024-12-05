@@ -20,10 +20,10 @@ defmodule Day03 do
   end
 
   def filter_matches(matches, include_do) do
-    Enum.filter(matches, &valid_match(&1, include_do))
+    Enum.filter(matches, &valid_match?(&1, include_do))
   end
 
-  def valid_match(match, include_do) do
+  def valid_match?(match, include_do) do
     case match do
       "" -> false
       "do()" -> include_do
