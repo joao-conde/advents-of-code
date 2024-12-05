@@ -50,15 +50,17 @@ defmodule Day05 do
   def parse_input(input) do
     File.read!(input)
     |> String.split("\n\n", parts: 2)
-    |> List.to_tuple()
-    |> then(fn {rules, updates} -> {parse_rules(rules), parse_updates(updates)} end)
+    |> then(fn [rules, updates] -> {parse_rules(rules), parse_updates(updates)} end)
   end
 
   def parse_rules(rules_input) do
     rules_input
     |> String.split()
-    |> Enum.map(fn rule -> String.split(rule, "|", parts: 2) end)
-    |> Enum.group_by(fn [x, _] -> String.to_integer(x) end, fn [_, y] -> String.to_integer(y) end)
+    |> Enum.map(fn rule -> String.split(rule, "|") end)
+    |> Enum.group_by(
+      fn [x, _] -> String.to_integer(x) end,
+      fn [_, y] -> String.to_integer(y) end
+    )
   end
 
   def parse_updates(updates_input) do
