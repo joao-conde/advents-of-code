@@ -2,37 +2,42 @@ defmodule Day05 do
   def solve do
     {rules, updates} = parse_input("input/day05")
 
-    p1 =
-      updates
-      |> Enum.filter(fn update -> valid_update?(update, rules) end)
-      |> Enum.map(fn update -> Enum.at(update, div(length(update), 2)) end)
-      |> Enum.sum()
-
+    p1 = ordered_updates(updates, rules) |> score_updates()
     IO.puts("Part1: #{p1}")
 
-    p2 =
-      updates
-      |> Enum.filter(fn update -> not valid_update?(update, rules) end)
-      |> Enum.map(fn update -> sort_update(update, rules) end)
-      |> Enum.map(fn update -> Enum.at(update, div(length(update), 2)) end)
-      |> Enum.sum()
-
+    p2 = unordered_updates(updates, rules) |> sort_updates(rules) |> score_updates()
     IO.puts("Part2: #{p2}")
+  end
+
+  def ordered_updates(updates, rules) do
+    Enum.filter(updates, fn update -> ordered_update?(update, rules) end)
+  end
+
+  def unordered_updates(updates, rules) do
+    Enum.filter(updates, fn update -> not ordered_update?(update, rules) end)
+  end
+
+  def score_updates(updates) do
+    Enum.map(updates, fn update -> Enum.at(update, div(length(update), 2)) end) |> Enum.sum()
+  end
+
+  def sort_updates(updates, rules) do
+    Enum.map(updates, fn update -> sort_update(update, rules) end)
   end
 
   def sort_update(update, rules) do
     Enum.sort(update, fn a, b ->
-      afters = Map.get(rules, a, [])
-      b in afters
+      come_after = Map.get(rules, a, [])
+      b in come_after
     end)
   end
 
-  def valid_update?(update, rules) do
+  def ordered_update?(update, rules) do
     reduced =
       Enum.reduce_while(update, [], fn x, seen ->
-        afters = Map.get(rules, x, [])
+        come_after = Map.get(rules, x, [])
 
-        if(Enum.any?(afters, fn a -> a in seen end)) do
+        if Enum.any?(come_after, fn a -> a in seen end) do
           {:halt, []}
         else
           {:cont, [x | seen]}
