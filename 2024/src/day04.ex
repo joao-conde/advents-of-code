@@ -47,7 +47,7 @@ defmodule Day04 do
     Stream.iterate(i, fn i -> i + di end)
     |> Enum.take(length)
     |> Enum.zip(Stream.iterate(j, fn j -> j + dj end) |> Enum.take(length))
-    |> Enum.filter(fn {i, j} -> not out_of_bounds(soup, i, j) end)
+    |> Enum.filter(fn {i, j} -> not out_of_bounds?(soup, i, j) end)
     |> Enum.map_join("", fn {i, j} -> matrix_at(soup, i, j) end)
   end
 
@@ -61,7 +61,7 @@ defmodule Day04 do
     matrix |> Enum.at(i) |> Enum.at(j)
   end
 
-  def out_of_bounds(matrix, i, j) do
+  def out_of_bounds?(matrix, i, j) do
     i < 0 or j < 0 or i >= length(matrix) or j >= length(Enum.at(matrix, i))
   end
 end
