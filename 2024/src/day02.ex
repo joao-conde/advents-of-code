@@ -37,7 +37,7 @@ defmodule Day02 do
         :increasing
       end
 
-    Enum.find_index(diffs, fn diff -> not valid_diff(diff, sorted_by) end)
+    Enum.find_index(diffs, fn diff -> not valid_diff?(diff, sorted_by) end)
   end
 
   def calculate_diffs(report) do
@@ -45,13 +45,13 @@ defmodule Day02 do
     |> Enum.map(fn [x1, x2] -> x1 - x2 end)
   end
 
-  def valid_diff(diff, :decreasing), do: diff > 0 and abs(diff) in 1..3
-  def valid_diff(diff, :increasing), do: diff < 0 and abs(diff) in 1..3
+  def valid_diff?(diff, :decreasing), do: diff > 0 and abs(diff) in 1..3
+  def valid_diff?(diff, :increasing), do: diff < 0 and abs(diff) in 1..3
 
   def generate_corrections(report, mistake_index) do
     [
-      List.delete_at(list, index)(report, mistake_index),
-      List.delete_at(list, index)(report, mistake_index + 1)
+      List.delete_at(report, mistake_index),
+      List.delete_at(report, mistake_index + 1)
     ]
   end
 
