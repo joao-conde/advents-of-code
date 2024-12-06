@@ -13,9 +13,7 @@ defmodule Day06 do
   end
 
   def find_guard(map) do
-    map
-    |> Enum.find(fn {_, v} -> v == "^" end)
-    |> elem(0)
+    map |> Enum.find_value(fn {k, v} -> if v == "^", do: k end)
   end
 
   def guard_path(map, {i, j}, dir \\ {-1, 0}, path \\ MapSet.new()) do
@@ -41,9 +39,8 @@ defmodule Day06 do
   end
 
   def path_loops?(map, start) do
-    map
-    |> guard_path(start)
-    |> then(fn {_, loops} -> loops end)
+    {_, loops} = guard_path(map, start)
+    loops
   end
 
   def distinct_positions(path) do
@@ -73,12 +70,15 @@ defmodule Day06 do
   def parse_map(input) do
     input
     |> File.read!()
-    |> String.split()
-    |> Enum.map(&String.graphemes/1)
-    |> Enum.map(&Enum.with_index/1)
+    |> String.split("\n", trim: true)
     |> Enum.with_index()
-    |> Enum.flat_map(fn {row, i} -> Enum.map(row, fn {char, j} -> {char, i, j} end) end)
-    |> Map.new(fn {c, i, j} -> {{i, j}, c} end)
+    |> Enum.flat_map(fn {line, i} ->
+      line
+      |> String.graphemes()
+      |> Enum.with_index()
+      |> Enum.map(fn {char, j} -> {{i, j}, char} end)
+    end)
+    |> Map.new()
   end
 end
 
