@@ -5,21 +5,39 @@ defmodule Day06 do
     start = find_guard(map)
     {path, _} = guard_path(map, start)
 
-    p1 = distinct_positions(path)
+    p1 = length(path)
     IO.puts("Part1: #{p1}")
 
     p2 = possible_obstructions(path, map, start)
     IO.puts("Part2: #{p2}")
   end
 
-  def distinct_positions(path) do
-    path |> Enum.uniq_by(fn {i, j, _} -> {i, j} end) |> length()
+  def find_guard(map) do
+    map
+    |> Enum.find(fn {_, v} -> v == "^" end)
+    |> elem(0)
+  end
+
+  def guard_path(map, {i, j}, dir \\ {-1, 0}, path \\ MapSet.new()) do
+    npos = next_position(map, {i, j}, dir)
+
+    cond do
+      MapSet.member?(path, {i, j, dir}) ->
+        distinct = distinct_positions(path)
+        {distinct, true}
+
+      npos == nil ->
+        distinct = MapSet.put(path, {i, j, dir}) |> distinct_positions()
+        {distinct, false}
+
+      true ->
+        {ni, nj, ndir} = npos
+        guard_path(map, {ni, nj}, ndir, MapSet.put(path, {i, j, dir}))
+    end
   end
 
   def possible_obstructions(path, map, start) do
-    path
-    |> Enum.uniq_by(fn {i, j, _} -> {i, j} end)
-    |> Enum.count(fn {i, j, _} -> Map.put(map, {i, j}, "#") |> path_loops?(start) end)
+    path |> Enum.count(fn {i, j, _} -> Map.put(map, {i, j}, "#") |> path_loops?(start) end)
   end
 
   def path_loops?(map, start) do
@@ -28,26 +46,8 @@ defmodule Day06 do
     |> then(fn {_, loops} -> loops end)
   end
 
-  def guard_path(map, {i, j}, dir \\ {-1, 0}, positions \\ MapSet.new()) do
-    npos = next_position(map, {i, j}, dir)
-
-    cond do
-      MapSet.member?(positions, {i, j, dir}) ->
-        {positions, true}
-
-      npos == nil ->
-        {MapSet.put(positions, {i, j, dir}), false}
-
-      true ->
-        {ni, nj, ndir} = npos
-        guard_path(map, {ni, nj}, ndir, MapSet.put(positions, {i, j, dir}))
-    end
-  end
-
-  def find_guard(map) do
-    map
-    |> Enum.find(fn {_, v} -> v == "^" end)
-    |> elem(0)
+  def distinct_positions(path) do
+    path |> Enum.uniq_by(fn {i, j, _} -> {i, j} end)
   end
 
   def next_position(map, {i, j}, {di, dj}) do
