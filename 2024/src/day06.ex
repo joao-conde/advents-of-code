@@ -36,10 +36,7 @@ defmodule Day06 do
   end
 
   def possible_obstructions(path, map, start) do
-    path
-    |> Enum.count(fn {i, j} ->
-      Map.put(map, {i, j}, "#") |> path_loops?(start)
-    end)
+    path |> Enum.count(fn pos -> Map.put(map, pos, "#") |> path_loops?(start) end)
   end
 
   def path_loops?(map, start) do
@@ -74,7 +71,7 @@ defmodule Day06 do
   def parse_map(input) do
     input
     |> File.read!()
-    |> String.split("\n", trim: true)
+    |> String.split("\n")
     |> Enum.with_index()
     |> Enum.flat_map(fn {line, i} ->
       line
