@@ -1,18 +1,15 @@
 defmodule Day06 do
   def solve do
     map = parse_map("input/day06")
-
     {si, sj} = find_guard(map)
-
     {path, _} = guard_path(map, [], si, sj, {-1, 0})
-
-    path = path |> then(fn l -> [{si, sj, {-1, 0}} | l] end)
 
     p1 =
       path
       |> Enum.map(fn {i, j, _} -> {i, j} end)
       |> Enum.uniq()
       |> length()
+      |> then(&(&1 + 1))
 
     IO.puts("Part1: #{p1}")
 
@@ -27,13 +24,6 @@ defmodule Day06 do
       |> guard_path([], si, sj, {-1, 0})
       |> then(fn {_, loops} -> loops end)
     end)
-  end
-
-  def right_loops?(path, at) do
-    {i, j, dir} = Enum.at(path, at)
-    next = {i, j, rotate_right(dir)}
-
-    next in path and next != Enum.at(path, at + 1)
   end
 
   def find_guard(map) do
