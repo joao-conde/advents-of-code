@@ -1,11 +1,11 @@
 defmodule Day06 do
   def solve do
     map = parse_map("input/day06")
-    start = find_guard(map)
 
+    start = find_guard(map)
     {path, _} = guard_path(map, start)
 
-    p1 = distinct_positions(path) |> length()
+    p1 = length(path)
     IO.puts("Part1: #{p1}")
 
     p2 = possible_obstructions(path, map, start)
@@ -21,10 +21,12 @@ defmodule Day06 do
 
     cond do
       MapSet.member?(path, {i, j, dir}) ->
+        path = distinct_positions(path)
         {path, true}
 
       next_pos == nil ->
-        {MapSet.put(path, {i, j, dir}), false}
+        path = path |> MapSet.put({i, j, dir}) |> distinct_positions
+        {path, false}
 
       true ->
         {ni, nj, ndir} = next_pos
@@ -33,7 +35,7 @@ defmodule Day06 do
   end
 
   def possible_obstructions(path, map, start) do
-    distinct_positions(path)
+    path
     |> Enum.count(fn {i, j} ->
       Map.put(map, {i, j}, "#") |> path_loops?(start)
     end)
