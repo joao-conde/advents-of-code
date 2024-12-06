@@ -1,30 +1,31 @@
 defmodule Day06 do
   def solve do
     map = parse_map("input/day06")
+
     start = find_guard(map)
     {path, _} = guard_path(map, start)
 
-    p1 =
-      path
-      |> Enum.map(fn {i, j, _} -> {i, j} end)
-      |> Enum.uniq()
-      |> length()
-
+    p1 = distinct_positions(path)
     IO.puts("Part1: #{p1}")
 
-    p2 = count_loops(path, map, start)
+    p2 = possible_obstructions(path, map, start)
     IO.puts("Part2: #{p2}")
   end
 
-  def count_loops(path, map, start) do
+  def distinct_positions(path) do
+    path |> Enum.uniq_by(fn {i, j, _} -> {i, j} end) |> length()
+  end
+
+  def possible_obstructions(path, map, start) do
     path
-    |> Enum.map(fn {i, j, _} -> {i, j} end)
-    |> Enum.uniq()
-    |> Enum.count(fn {i, j} ->
-      Map.put(map, {i, j}, "#")
-      |> guard_path(start)
-      |> then(fn {_, loops} -> loops end)
-    end)
+    |> Enum.uniq_by(fn {i, j, _} -> {i, j} end)
+    |> Enum.count(fn {i, j, _} -> Map.put(map, {i, j}, "#") |> path_loops?(start) end)
+  end
+
+  def path_loops?(map, start) do
+    map
+    |> guard_path(start)
+    |> then(fn {_, loops} -> loops end)
   end
 
   def guard_path(map, {i, j}, dir \\ {-1, 0}, positions \\ MapSet.new()) do
