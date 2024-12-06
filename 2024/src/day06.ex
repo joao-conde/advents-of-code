@@ -1,11 +1,11 @@
 defmodule Day06 do
   def solve do
     map = parse_map("input/day06")
-
     start = find_guard(map)
+
     {path, _} = guard_path(map, start)
 
-    p1 = length(path)
+    p1 = distinct_positions(path) |> length()
     IO.puts("Part1: #{p1}")
 
     p2 = possible_obstructions(path, map, start)
@@ -17,25 +17,26 @@ defmodule Day06 do
   end
 
   def guard_path(map, {i, j}, dir \\ {-1, 0}, path \\ MapSet.new()) do
-    npos = next_position(map, {i, j}, dir)
+    next_pos = next_position(map, {i, j}, dir)
 
     cond do
       MapSet.member?(path, {i, j, dir}) ->
-        distinct = distinct_positions(path)
-        {distinct, true}
+        {path, true}
 
-      npos == nil ->
-        distinct = MapSet.put(path, {i, j, dir}) |> distinct_positions()
-        {distinct, false}
+      next_pos == nil ->
+        {MapSet.put(path, {i, j, dir}), false}
 
       true ->
-        {ni, nj, ndir} = npos
+        {ni, nj, ndir} = next_pos
         guard_path(map, {ni, nj}, ndir, MapSet.put(path, {i, j, dir}))
     end
   end
 
   def possible_obstructions(path, map, start) do
-    path |> Enum.count(fn {i, j, _} -> Map.put(map, {i, j}, "#") |> path_loops?(start) end)
+    distinct_positions(path)
+    |> Enum.count(fn {i, j} ->
+      Map.put(map, {i, j}, "#") |> path_loops?(start)
+    end)
   end
 
   def path_loops?(map, start) do
@@ -44,7 +45,7 @@ defmodule Day06 do
   end
 
   def distinct_positions(path) do
-    path |> Enum.uniq_by(fn {i, j, _} -> {i, j} end)
+    path |> Enum.map(fn {i, j, _} -> {i, j} end) |> Enum.uniq()
   end
 
   def next_position(map, {i, j}, {di, dj}) do
@@ -58,8 +59,8 @@ defmodule Day06 do
     end
   end
 
-  def rotate_right(dir) do
-    case dir do
+  def rotate_right({di, dj}) do
+    case {di, dj} do
       {-1, 0} -> {0, 1}
       {0, 1} -> {1, 0}
       {1, 0} -> {0, -1}
