@@ -18,19 +18,20 @@ defmodule Day06 do
 
   def guard_path(map, {i, j}, dir \\ {-1, 0}, path \\ MapSet.new()) do
     next_pos = next_position(map, {i, j}, dir)
+    next_path = MapSet.put(path, {i, j, dir})
 
     cond do
       MapSet.member?(path, {i, j, dir}) ->
-        path = distinct_positions(path)
+        path = distinct_positions(next_path)
         {path, true}
 
       next_pos == nil ->
-        path = path |> MapSet.put({i, j, dir}) |> distinct_positions
+        path = distinct_positions(next_path)
         {path, false}
 
       true ->
         {ni, nj, ndir} = next_pos
-        guard_path(map, {ni, nj}, ndir, MapSet.put(path, {i, j, dir}))
+        guard_path(map, {ni, nj}, ndir, next_path)
     end
   end
 
