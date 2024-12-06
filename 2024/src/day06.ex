@@ -1,29 +1,46 @@
 defmodule Day06 do
   def solve do
     map = parse_map("input/day06")
-    {si, sj} = find_guard(map)
-    {path, _} = guard_path(map, [], si, sj, {-1, 0})
+    start = find_guard(map)
+    {path, _} = guard_path(map, start)
 
     p1 =
       path
       |> Enum.map(fn {i, j, _} -> {i, j} end)
       |> Enum.uniq()
       |> length()
-      |> then(&(&1 + 1))
 
     IO.puts("Part1: #{p1}")
 
-    p2 = count_loops(map, si, sj)
+    p2 = count_loops(path, map, start)
     IO.puts("Part2: #{p2}")
   end
 
-  def count_loops(map, si, sj) do
-    Map.keys(map)
+  def count_loops(path, map, start) do
+    path
+    |> Enum.map(fn {i, j, _} -> {i, j} end)
+    |> Enum.uniq()
     |> Enum.count(fn {i, j} ->
       Map.put(map, {i, j}, "#")
-      |> guard_path([], si, sj, {-1, 0})
+      |> guard_path(start)
       |> then(fn {_, loops} -> loops end)
     end)
+  end
+
+  def guard_path(map, {i, j}, dir \\ {-1, 0}, positions \\ MapSet.new()) do
+    npos = next_position(map, {i, j}, dir)
+
+    cond do
+      MapSet.member?(positions, {i, j, dir}) ->
+        {positions, true}
+
+      npos == nil ->
+        {MapSet.put(positions, {i, j, dir}), false}
+
+      true ->
+        {ni, nj, ndir} = npos
+        guard_path(map, {ni, nj}, ndir, MapSet.put(positions, {i, j, dir}))
+    end
   end
 
   def find_guard(map) do
@@ -32,18 +49,7 @@ defmodule Day06 do
     |> elem(0)
   end
 
-  def guard_path(map, positions, i, j, dir) do
-    if {i, j, dir} in positions do
-      {positions, true}
-    else
-      case next_position(map, i, j, dir) do
-        {ni, nj, ndir} -> guard_path(map, [{i, j, dir} | positions], ni, nj, ndir)
-        nil -> {positions, false}
-      end
-    end
-  end
-
-  def next_position(map, i, j, {di, dj}) do
+  def next_position(map, {i, j}, {di, dj}) do
     ni = i + di
     nj = j + dj
 
