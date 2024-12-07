@@ -2,32 +2,32 @@ defmodule Day07 do
   def solve do
     equations = parse_equations("input/day07")
 
-    p1 = total_calibration(equations, &solutions/1)
+    p1 = calibration_total(equations, [&Kernel.*/2, &Kernel.+/2])
     IO.puts("Part1: #{p1}")
 
-    p2 = total_calibration(equations, &solutions2/1)
+    p2 = calibration_total(equations, [&Kernel.*/2, &Kernel.+/2, &concat/2])
     IO.puts("Part2: #{p2}")
   end
 
-  def total_calibration(equations, solve) do
+  def calibration_total(equations, operators) do
     equations
-    |> Enum.filter(fn {result, operands} -> result in solve.(operands) end)
+    |> Enum.filter(fn {result, operands} -> result in solutions(operands, operators) end)
     |> Enum.map(fn {result, _} -> result end)
     |> Enum.sum()
   end
 
-  def solutions([operand]), do: [operand]
+  def solutions([operand], _), do: [operand]
 
-  def solutions([operand | operands]) do
-    solutions(operands)
-    |> Enum.flat_map(fn s -> [operand * s, operand + s] end)
+  def solutions([operand | operands], operators) do
+    operands
+    |> solutions(operators)
+    |> Enum.flat_map(fn s ->
+      Enum.map(operators, fn operator -> operator.(operand, s) end)
+    end)
   end
 
-  def solutions2([operand]), do: [operand]
-
-  def solutions2([operand | operands]) do
-    solutions2(operands)
-    |> Enum.flat_map(fn s -> [operand * s, operand + s, String.to_integer("#{s}#{operand}")] end)
+  def concat(x, y) do
+    String.to_integer("#{y}#{x}")
   end
 
   def parse_equations(input) do
@@ -36,6 +36,7 @@ defmodule Day07 do
     |> String.split("\n")
     |> Enum.map(fn line ->
       [result, operands] = String.split(line, ":", parts: 2)
+
       result = String.to_integer(result)
 
       operands =
