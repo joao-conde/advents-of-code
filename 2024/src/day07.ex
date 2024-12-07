@@ -34,19 +34,21 @@ defmodule Day07 do
     input
     |> File.read!()
     |> String.split("\n")
-    |> Enum.map(fn line ->
-      [result, operands] = String.split(line, ":", parts: 2)
+    |> Enum.map(&parse_equation/1)
+  end
 
-      result = String.to_integer(result)
+  def parse_equation(line) do
+    [result, operands] = String.split(line, ":", parts: 2)
 
-      operands =
-        operands
-        |> String.split(" ", trim: true)
-        |> Enum.map(&String.to_integer/1)
-        |> Enum.reverse()
+    result = String.to_integer(result)
 
-      {result, operands}
-    end)
+    operands =
+      operands
+      |> String.split(" ", trim: true)
+      |> Enum.map(&String.to_integer/1)
+      |> Enum.reverse()
+
+    {result, operands}
   end
 end
 
