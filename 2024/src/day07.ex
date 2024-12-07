@@ -26,14 +26,12 @@ defmodule Day07 do
     end)
   end
 
-  def concat(x, y) do
-    String.to_integer("#{y}#{x}")
-  end
+  def concat(x, y), do: String.to_integer("#{y}#{x}")
 
   def parse_equations(input) do
     input
     |> File.read!()
-    |> String.split("\n")
+    |> String.split("\n", trim: true)
     |> Enum.map(&parse_equation/1)
   end
 
