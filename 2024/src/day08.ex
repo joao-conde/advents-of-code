@@ -13,14 +13,16 @@ defmodule Day08 do
   def antinode_locations(antennas, width, height, repeat_range) do
     antennas
     |> Map.values()
-    |> Enum.flat_map(fn locations ->
-      locations
-      |> pairings()
-      |> Enum.flat_map(fn {l1, l2} -> antinodes(l1, l2, repeat_range) end)
-    end)
+    |> Enum.flat_map(fn l -> antenna_antinodes(l, repeat_range) end)
     |> Enum.filter(fn location -> in_bounds?(location, width, height) end)
-    |> MapSet.new()
-    |> MapSet.size()
+    |> Enum.uniq()
+    |> length()
+  end
+
+  def antenna_antinodes(locations, repeat_range) do
+    locations
+    |> pairings()
+    |> Enum.flat_map(fn {l1, l2} -> antinodes(l1, l2, repeat_range) end)
   end
 
   def antinodes({i1, j1}, {i2, j2}, repeat_range) do
