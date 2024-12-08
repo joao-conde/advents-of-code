@@ -26,9 +26,9 @@ defmodule Day08 do
   def antinodes({i1, j1}, {i2, j2}, repeat_range) do
     {vi, vj} = {i2 - i1, j2 - j1}
 
-    Enum.flat_map(repeat_range, fn i ->
-      [{i1 - vi * i, j1 - vj * i}, {i2 + vi * i, j2 + vj * i}]
-    end)
+    List.flatten(
+      for i <- repeat_range, do: [{i1 - vi * i, j1 - vj * i}, {i2 + vi * i, j2 + vj * i}]
+    )
   end
 
   def pairings(locations) do
