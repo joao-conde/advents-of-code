@@ -13,20 +13,18 @@ defmodule Day08 do
   def antinode_locations(antennas, width, height, repeat_range) do
     antennas
     |> Map.values()
-    |> Enum.flat_map(fn a ->
-      a
+    |> Enum.flat_map(fn antenna ->
+      antenna
       |> pairings()
       |> Enum.flat_map(fn {l1, l2} -> antinodes(l1, l2, repeat_range) end)
     end)
-    |> Enum.filter(fn location ->
-      not out_of_bounds(location, width, height)
-    end)
+    |> Enum.filter(fn location -> not out_of_bounds(location, width, height) end)
     |> MapSet.new()
     |> MapSet.size()
   end
 
   def antinodes({i1, j1}, {i2, j2}, repeat_range) do
-    {vi, vj} = vector({i1, j1}, {i2, j2})
+    {vi, vj} = {i2 - i1, j2 - j1}
 
     Enum.flat_map(repeat_range, fn i ->
       [{i1 - vi * i, j1 - vj * i}, {i2 + vi * i, j2 + vj * i}]
@@ -46,10 +44,6 @@ defmodule Day08 do
 
   def out_of_bounds({i, j}, width, height) do
     i < 0 || i >= width || j < 0 || j >= height
-  end
-
-  def vector({i1, j1}, {i2, j2}) do
-    {i2 - i1, j2 - j1}
   end
 
   def parse_antennas(input) do
