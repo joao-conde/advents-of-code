@@ -18,7 +18,7 @@ defmodule Day08 do
       |> pairings()
       |> Enum.flat_map(fn {l1, l2} -> antinodes(l1, l2, repeat_range) end)
     end)
-    |> Enum.filter(fn location -> not out_of_bounds(location, width, height) end)
+    |> Enum.filter(fn location -> in_bounds?(location, width, height) end)
     |> MapSet.new()
     |> MapSet.size()
   end
@@ -37,8 +37,8 @@ defmodule Day08 do
     end)
   end
 
-  def out_of_bounds({i, j}, width, height) do
-    i < 0 || i >= width || j < 0 || j >= height
+  def in_bounds?({i, j}, width, height) do
+    i >= 0 && i < width && j >= 0 && j < height
   end
 
   def parse_antennas(input) do
@@ -57,8 +57,8 @@ defmodule Day08 do
       |> Enum.flat_map(fn {line, i} ->
         line
         |> Enum.with_index()
+        |> Enum.filter(fn {char, _} -> char != "." end)
         |> Enum.map(fn {char, j} -> {i, j, char} end)
-        |> Enum.filter(fn {_, _, char} -> char != "." end)
       end)
       |> Enum.group_by(fn {_, _, char} -> char end, fn {i, j, _} -> {i, j} end)
       |> Map.new()
