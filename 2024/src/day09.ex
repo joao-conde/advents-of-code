@@ -3,7 +3,7 @@ defmodule Day09 do
     {[file_head | files], spaces} = parse_disk_map("input/day09")
 
     p1 =
-      compact_files({files, spaces}, [file_head])
+      compact_files(files, spaces, [file_head])
       |> checksum()
 
     IO.puts("Part1: #{p1}")
@@ -19,18 +19,11 @@ defmodule Day09 do
     |> Enum.reduce(0, fn {digit, i}, sum -> sum + digit * i end)
   end
 
-  def compact_files({[], _}, final) do
+  def compact_files([], _, final) do
     Enum.reverse(final)
   end
 
-  def compact_files({files, free_space}, final) do
-    {files, spaces, final} =
-      compact_file({files, free_space}, final)
-
-    compact_files({files, spaces}, final)
-  end
-
-  def compact_file({files, free_spaces}, final) do
+  def compact_files(files, free_spaces, final) do
     {last_file, last_i} = List.last(files)
 
     [first_file | rest_files] = files
@@ -39,13 +32,13 @@ defmodule Day09 do
 
     cond do
       first_space == 0 ->
-        {rest_files, rest_spaces, [first_file | final]}
+        compact_files(rest_files, rest_spaces, [first_file | final])
 
       last_file < first_space ->
         next_files = files |> Enum.reverse() |> Enum.drop(1) |> Enum.reverse()
         next_spaces = [first_space - last_file | rest_spaces]
         next_final = [{last_file, last_i} | final]
-        {next_files, next_spaces, next_final}
+        compact_files(next_files, next_spaces, next_final)
 
       last_file >= first_space ->
         files_left = last_file - first_space
@@ -60,7 +53,7 @@ defmodule Day09 do
 
         next_final = [{first_space, last_i} | final]
 
-        {next_files, next_spaces, next_final}
+        compact_files(next_files, next_spaces, next_final)
     end
   end
 
