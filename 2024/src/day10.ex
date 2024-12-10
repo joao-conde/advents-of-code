@@ -60,7 +60,7 @@ defmodule Day10 do
 
   def height_nine_endings({{i, j}, _}, map_trails) do
     Map.get(map_trails, {i, j}, [])
-    |> Enum.map(fn t -> hd(t) end)
+    |> Enum.map(&List.first/1)
     |> Enum.uniq()
     |> length()
   end
