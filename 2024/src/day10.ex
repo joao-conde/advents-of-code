@@ -4,25 +4,17 @@ defmodule Day10 do
     trailheads = trailheads(map)
     map_trails = map_trails(map)
 
-    p1 =
-      score_trailheads(trailheads, fn trailhead ->
-        height_nine_endings(trailhead, map_trails)
-      end)
-
+    p1 = score_trailheads(trailheads, &height_nine_endings(&1, map_trails))
     IO.puts("Part1: #{p1}")
 
     map_endings_count = map_endings_count(map_trails)
 
-    p2 =
-      score_trailheads(trailheads, fn trailhead ->
-        distinct_trails(trailhead, map_endings_count)
-      end)
-
+    p2 = score_trailheads(trailheads, &distinct_trails(&1, map_endings_count))
     IO.puts("Part2: #{p2}")
   end
 
   def trailheads(map) do
-    map |> Enum.filter(fn {_, v} -> v == 0 end)
+    Enum.filter(map, fn {_, v} -> v == 0 end)
   end
 
   def map_trails(map) do
@@ -33,9 +25,7 @@ defmodule Day10 do
 
   def map_endings_count(map_trails) do
     map_trails
-    |> Enum.flat_map(fn {_, trails} ->
-      Enum.map(trails, fn trail -> trail |> Enum.reverse() |> hd() end)
-    end)
+    |> Enum.flat_map(fn {_, trails} -> Enum.map(trails, &List.last/1) end)
     |> Enum.frequencies()
   end
 
