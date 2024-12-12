@@ -27,15 +27,10 @@ defmodule Day11 do
   end
 
   def next_stones(stone) do
-    case split_half(stone) do
-      _ when stone == 0 ->
-        [1]
-
-      {left, right} ->
-        [left, right]
-
-      _ ->
-        [stone * 2024]
+    cond do
+      stone == 0 -> [1]
+      halves = split_half(stone) -> Tuple.to_list(halves)
+      true -> [stone * 2024]
     end
   end
 
@@ -44,8 +39,8 @@ defmodule Day11 do
     digit_count = String.length(string)
 
     if rem(digit_count, 2) == 0 do
-      String.split_at(string, div(digit_count, 2))
-      |> then(fn {left, right} -> {String.to_integer(left), String.to_integer(right)} end)
+      {left, right} = String.split_at(string, div(digit_count, 2))
+      {String.to_integer(left), String.to_integer(right)}
     else
       nil
     end
