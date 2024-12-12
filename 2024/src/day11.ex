@@ -1,28 +1,22 @@
 defmodule Day11 do
   def solve do
-    input = "8435 234 928434 14 0 7 92446 8992692"
+    stones_count = parse_stones("input/day11")
 
-    stones_count =
-      input
-      |> String.split(" ")
-      |> Enum.map(&String.to_integer/1)
-      |> Enum.frequencies()
+    p1 = blinks(stones_count, 25) |> total_stones
+    IO.puts("Part1: #{p1}")
 
-    1..25
-    |> Enum.reduce(stones_count, fn _, counts ->
-      blink(counts)
-    end)
+    p2 = blinks(stones_count, 75) |> total_stones
+    IO.puts("Part2: #{p2}")
+  end
+
+  def total_stones(stones_count) do
+    stones_count
     |> Map.values()
     |> Enum.sum()
-    |> IO.inspect()
+  end
 
-    1..75
-    |> Enum.reduce(stones_count, fn _, counts ->
-      blink(counts)
-    end)
-    |> Map.values()
-    |> Enum.sum()
-    |> IO.inspect()
+  def blinks(stones_count, times) do
+    1..times |> Enum.reduce(stones_count, fn _, counts -> blink(counts) end)
   end
 
   def blink(stones_count) do
@@ -55,6 +49,14 @@ defmodule Day11 do
     else
       nil
     end
+  end
+
+  def parse_stones(input) do
+    input
+    |> File.read!()
+    |> String.split(" ")
+    |> Enum.map(&String.to_integer/1)
+    |> Enum.frequencies()
   end
 end
 
