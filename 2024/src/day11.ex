@@ -2,10 +2,10 @@ defmodule Day11 do
   def solve do
     stones_count = parse_stones("input/day11")
 
-    p1 = blinks(stones_count, 25) |> total_stones
+    p1 = stones_count |> blinks(25) |> total_stones()
     IO.puts("Part1: #{p1}")
 
-    p2 = blinks(stones_count, 75) |> total_stones
+    p2 = stones_count |> blinks(75) |> total_stones()
     IO.puts("Part2: #{p2}")
   end
 
@@ -16,7 +16,7 @@ defmodule Day11 do
   end
 
   def blinks(stones_count, times) do
-    1..times |> Enum.reduce(stones_count, fn _, counts -> blink(counts) end)
+    Enum.reduce(1..times, stones_count, fn _, counts -> blink(counts) end)
   end
 
   def blink(stones_count) do
