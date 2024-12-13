@@ -40,7 +40,7 @@ defmodule Day08 do
   end
 
   def in_bounds?({i, j}, width, height) do
-    i >= 0 && i < width && j >= 0 && j < height
+    i >= 0 and (i < width and j >= 0 and j < height)
   end
 
   def parse_antennas(input) do
