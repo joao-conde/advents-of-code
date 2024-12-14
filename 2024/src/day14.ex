@@ -1,7 +1,7 @@
 defmodule Day14 do
-  @seconds 100
   @width 101
   @height 103
+  @seconds 100
 
   def solve do
     robots = parse_robots("input/day14")
