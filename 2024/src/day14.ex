@@ -46,15 +46,25 @@ defmodule Day14 do
     {Integer.mod(x + vx * seconds, width), Integer.mod(y + vy * seconds, height)}
   end
 
+  # By simulating a few times I was able to detect a pattern of
+  # horizontal and vertical lines grouping.
+  # I counted the first occurrence of each for my input, and then
+  # the frequency at which each line appeared.
+  # Then simulated faster, each step jumping that frequency which is
+  # either the height or width for vertical or horizontal lines.
+  # That way I quickly arrived at the 7338s for my input, where I
+  # saw the tree.
+  #
+  # In this function I pad the "noise" out of the picture with some
+  # magic numbers to make it prettier.
   def print_tree(robots, seconds, width, height) do
     robots = robot_positions(robots, seconds, width, height)
 
     15..(@width - 55)
     |> Enum.map(fn x -> Enum.map(33..(@height - 35), fn y -> {x, y} end) end)
-    |> Enum.map(fn line ->
+    |> Enum.map_join("\n", fn line ->
       Enum.map(line, fn {x, y} -> if {x, y} in robots, do: "#", else: " " end)
     end)
-    |> Enum.join("\n")
     |> IO.puts()
   end
 
