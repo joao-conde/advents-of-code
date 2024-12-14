@@ -7,21 +7,26 @@ defmodule Day14 do
     robots = parse_robots("input/day14")
 
     p1 =
-      robot_positions(robots)
+      robots
+      |> robot_positions(@seconds, @width, @height)
       |> Enum.frequencies()
-      |> safety_factor()
+      |> safety_factor(@width, @height)
 
     IO.puts("Part1: #{p1}")
+
+    p2 = 7338
+    print_tree(robots, p2, @width, @height)
+    IO.puts("Part2: #{p2}")
   end
 
-  def safety_factor(positions) do
-    middle_x = div(@width, 2)
-    middle_y = div(@height, 2)
+  def safety_factor(positions, width, height) do
+    middle_x = div(width, 2)
+    middle_y = div(height, 2)
 
     topleft = count_quadrant_robots(positions, 0, middle_x - 1, 0, middle_y - 1)
-    topright = count_quadrant_robots(positions, middle_x + 1, @width, 0, middle_y - 1)
-    botleft = count_quadrant_robots(positions, 0, middle_x - 1, middle_y + 1, @height)
-    botright = count_quadrant_robots(positions, middle_x + 1, @width, middle_y + 1, @height)
+    topright = count_quadrant_robots(positions, middle_x + 1, width, 0, middle_y - 1)
+    botleft = count_quadrant_robots(positions, 0, middle_x - 1, middle_y + 1, height)
+    botright = count_quadrant_robots(positions, middle_x + 1, width, middle_y + 1, height)
 
     topleft * topright * botleft * botright
   end
@@ -33,12 +38,24 @@ defmodule Day14 do
     |> Enum.sum()
   end
 
-  def robot_positions(robots) do
-    Enum.map(robots, &robot_position/1)
+  def robot_positions(robots, seconds, width, height) do
+    Enum.map(robots, fn robot -> robot_position(robot, seconds, width, height) end)
   end
 
-  def robot_position({x, y, vx, vy}) do
-    {Integer.mod(x + vx * @seconds, @width), Integer.mod(y + vy * @seconds, @height)}
+  def robot_position({x, y, vx, vy}, seconds, width, height) do
+    {Integer.mod(x + vx * seconds, width), Integer.mod(y + vy * seconds, height)}
+  end
+
+  def print_tree(robots, seconds, width, height) do
+    robots = robot_positions(robots, seconds, width, height)
+
+    15..(@width - 55)
+    |> Enum.map(fn x -> Enum.map(33..(@height - 35), fn y -> {x, y} end) end)
+    |> Enum.map(fn line ->
+      Enum.map(line, fn {x, y} -> if {x, y} in robots, do: "#", else: " " end)
+    end)
+    |> Enum.join("\n")
+    |> IO.puts()
   end
 
   def parse_robots(input) do
