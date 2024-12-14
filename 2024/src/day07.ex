@@ -2,10 +2,10 @@ defmodule Day07 do
   def solve do
     equations = parse_equations("input/day07")
 
-    p1 = calibration_total(equations, [&Kernel.*/2, &Kernel.+/2])
+    p1 = calibration_total(equations, [&*/2, &+/2])
     IO.puts("Part1: #{p1}")
 
-    p2 = calibration_total(equations, [&Kernel.*/2, &Kernel.+/2, &concat/2])
+    p2 = calibration_total(equations, [&*/2, &+/2, &concat/2])
     IO.puts("Part2: #{p2}")
   end
 
