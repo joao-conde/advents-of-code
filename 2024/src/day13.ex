@@ -2,30 +2,42 @@ defmodule Day13 do
   def solve do
     machines = parse_input("input/day13")
 
-    p1 =
-      machines
-      |> Enum.map(fn machine -> solution(machine) end)
-      |> Enum.filter(fn sol -> sol != nil end)
-      |> Enum.map(fn {pushes_a, pushes_b, _, _} -> token_cost(pushes_a, pushes_b) end)
-      |> Enum.sum()
-
+    p1 = fewest_tokens(machines)
     IO.puts("Part1: #{p1}")
 
-    p2 = 0
+    p2 =
+      machines
+      |> Enum.map(fn {btn_a, btn_b, {px, py}} ->
+        {btn_a, btn_b, {px + 10_000_000_000_000, py + 10_000_000_000_000}}
+      end)
+      |> fewest_tokens
+
     IO.puts("Part2: #{p2}")
   end
 
-  def solution({{ax, ay}, {bx, by}, {px, py}}) do
-    Enum.flat_map(1..100, fn i -> Enum.map(1..100, fn j -> {i, j} end) end)
-    |> Enum.map(fn {push_a, push_b} ->
-      {push_a, push_b, push_a * ax + push_b * bx, push_a * ay + push_b * by}
-    end)
-    |> Enum.filter(fn {_, _, x, y} -> x == px and y == py end)
-    |> Enum.sort(fn {a1, b1, _, _}, {a2, b2, _, _} -> a1 + b1 < a2 + b2 end)
-    |> List.first()
+  def fewest_tokens(machines) do
+    machines
+    |> Enum.map(&compute_pushes/1)
+    |> Enum.filter(fn pushes -> pushes != nil end)
+    |> Enum.map(&token_cost/1)
+    |> Enum.sum()
   end
 
-  def token_cost(pushes_a, pushes_b) do
+  def compute_pushes({{ax, ay}, {bx, by}, {px, py}}) do
+    b = round((py - ay * px / ax) / (by - ay * bx / ax))
+    a = round((px - bx * b) / ax)
+
+    total_x = a * ax + b * bx
+    total_y = a * ay + b * by
+
+    if total_x == px and total_y == py do
+      {round(a), round(b)}
+    else
+      nil
+    end
+  end
+
+  def token_cost({pushes_a, pushes_b}) do
     3 * pushes_a + pushes_b
   end
 
