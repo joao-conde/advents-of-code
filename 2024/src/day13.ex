@@ -5,20 +5,14 @@ defmodule Day13 do
     p1 = fewest_tokens(machines)
     IO.puts("Part1: #{p1}")
 
-    p2 =
-      machines
-      |> Enum.map(fn {btn_a, btn_b, {px, py}} ->
-        {btn_a, btn_b, {px + 10_000_000_000_000, py + 10_000_000_000_000}}
-      end)
-      |> fewest_tokens
-
+    p2 = machines |> offset_prizes(10_000_000_000_000) |> fewest_tokens
     IO.puts("Part2: #{p2}")
   end
 
   def fewest_tokens(machines) do
     machines
     |> Enum.map(&compute_pushes/1)
-    |> Enum.filter(fn pushes -> pushes != nil end)
+    |> Enum.reject(&is_nil/1)
     |> Enum.map(&token_cost/1)
     |> Enum.sum()
   end
@@ -39,6 +33,12 @@ defmodule Day13 do
 
   def token_cost({pushes_a, pushes_b}) do
     3 * pushes_a + pushes_b
+  end
+
+  def offset_prizes(machines, offset) do
+    Enum.map(machines, fn {btn_a, btn_b, {px, py}} ->
+      {btn_a, btn_b, {px + offset, py + offset}}
+    end)
   end
 
   def parse_input(input) do
