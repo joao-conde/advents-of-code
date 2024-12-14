@@ -1,11 +1,13 @@
 defmodule Day13 do
+  @prize_offset 10_000_000_000_000
+
   def solve do
     machines = parse_input("input/day13")
 
     p1 = fewest_tokens(machines)
     IO.puts("Part1: #{p1}")
 
-    p2 = machines |> offset_prizes(10_000_000_000_000) |> fewest_tokens
+    p2 = machines |> offset_prizes(@prize_offset) |> fewest_tokens
     IO.puts("Part2: #{p2}")
   end
 
