@@ -6,12 +6,7 @@ defmodule Day14 do
   def solve do
     robots = parse_robots("input/day14")
 
-    p1 =
-      robots
-      |> robot_positions(@seconds, @width, @height)
-      |> Enum.frequencies()
-      |> safety_factor(@width, @height)
-
+    p1 = safety_factor(robots, @width, @height)
     IO.puts("Part1: #{p1}")
 
     p2 = 7338
@@ -19,21 +14,32 @@ defmodule Day14 do
     IO.puts("Part2: #{p2}")
   end
 
-  def safety_factor(positions, width, height) do
+  def safety_factor(robots, width, height) do
+    positions =
+      robots
+      |> robot_positions(@seconds, @width, @height)
+      |> Enum.frequencies()
+
+    quadrants(width, height)
+    |> Enum.map(&count_quadrant_robots(positions, &1))
+    |> Enum.reduce(fn count, acc -> acc * count end)
+  end
+
+  def quadrants(width, height) do
     middle_x = div(width, 2)
     middle_y = div(height, 2)
 
-    topleft = count_quadrant_robots(positions, 0, middle_x - 1, 0, middle_y - 1)
-    topright = count_quadrant_robots(positions, middle_x + 1, width, 0, middle_y - 1)
-    botleft = count_quadrant_robots(positions, 0, middle_x - 1, middle_y + 1, height)
-    botright = count_quadrant_robots(positions, middle_x + 1, width, middle_y + 1, height)
-
-    topleft * topright * botleft * botright
+    [
+      {0..(middle_x - 1), 0..(middle_y - 1)},
+      {(middle_x + 1)..width, 0..(middle_y - 1)},
+      {(middle_x + 1)..width, (middle_y + 1)..height},
+      {0..(middle_x - 1), (middle_y + 1)..height}
+    ]
   end
 
-  def count_quadrant_robots(positions, from_x, to_x, from_y, to_y) do
+  def count_quadrant_robots(positions, {range_x, range_y}) do
     positions
-    |> Enum.filter(fn {{x, y}, _} -> x >= from_x and x <= to_x and y >= from_y and y <= to_y end)
+    |> Enum.filter(fn {{x, y}, _} -> x in range_x and y in range_y end)
     |> Enum.map(fn {_, count} -> count end)
     |> Enum.sum()
   end
