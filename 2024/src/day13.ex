@@ -25,7 +25,7 @@ defmodule Day13 do
     total_y = a * ay + b * by
 
     if total_x == px and total_y == py do
-      {round(a), round(b)}
+      {a, b}
     else
       nil
     end
