@@ -13,6 +13,7 @@ defmodule MixProject do
 
   defp deps do
     [
+      {:heap, "~> 3.0.0"},
       {:credo, "~> 1.7.10", only: [:dev], runtime: false}
     ]
   end
