@@ -28,9 +28,7 @@ defmodule Day16 do
         |> Enum.reject(fn {_, {i, j, di, dj}} ->
           out_of_bounds?(map, i, j) or wall?(map, i, j) or {i, j, di, dj} in next_visited
         end)
-        |> Enum.reduce(next_heap, fn {c, {i, j, di, dj}}, acc ->
-          Heap.push(acc, {c, {i, j, di, dj}})
-        end)
+        |> Enum.reduce(next_heap, fn state, heap -> Heap.push(heap, state) end)
 
       dijsktra_iter(map, next_heap, dst, next_visited)
     end
