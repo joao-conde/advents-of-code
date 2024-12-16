@@ -18,22 +18,21 @@ defmodule Day16 do
 
     next_visited = MapSet.put(visited, {i, j, di, dj})
 
-    cond do
-      {i, j} == dst ->
-        cost
+    if {i, j} == dst do
+      cost
+    else
+      next_heap =
+        rotations({di, dj})
+        |> Enum.map(fn {ri, rj} -> {cost + 1000, {i, j, ri, rj}} end)
+        |> then(fn neighbors -> [{cost + 1, {i + di, j + dj, di, dj}} | neighbors] end)
+        |> Enum.reject(fn {_, {i, j, di, dj}} ->
+          out_of_bounds?(map, i, j) or wall?(map, i, j) or {i, j, di, dj} in next_visited
+        end)
+        |> Enum.reduce(next_heap, fn {c, {i, j, di, dj}}, acc ->
+          Heap.push(acc, {c, {i, j, di, dj}})
+        end)
 
-      true ->
-        next_heap =
-          rotations({di, dj})
-          |> Enum.map(fn {ri, rj} -> {cost + 1000, {i, j, ri, rj}} end)
-          |> then(fn neighbors -> [{cost + 1, {i + di, j + dj, di, dj}} | neighbors] end)
-          |> Enum.reject(fn {_, {i, j, _, _}} -> Map.get(map, {i, j}, "#") == "#" end)
-          |> Enum.reject(fn {_, {i, j, di, dj}} -> {i, j, di, dj} in next_visited end)
-          |> Enum.reduce(next_heap, fn {c, {i, j, di, dj}}, acc ->
-            Heap.push(acc, {c, {i, j, di, dj}})
-          end)
-
-        dijsktra_iter(map, next_heap, dst, next_visited)
+      dijsktra_iter(map, next_heap, dst, next_visited)
     end
   end
 
@@ -44,6 +43,14 @@ defmodule Day16 do
       {1, 0} -> [{0, -1}, {0, 1}]
       {-1, 0} -> [{0, -1}, {0, 1}]
     end
+  end
+
+  def out_of_bounds?(map, i, j) do
+    Map.get(map, {i, j}) == nil
+  end
+
+  def wall?(map, i, j) do
+    Map.get(map, {i, j}) == "#"
   end
 
   def parse_map(input) do
