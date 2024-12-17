@@ -6,6 +6,42 @@ defmodule Day16 do
 
     p1 = dijkstra(map, src, dst)
     IO.puts("Part1: #{p1}")
+
+    p2 = dijkstra2(map, src, dst, p1) |> List.flatten() |> Enum.uniq() |> length
+    IO.puts("Part2: #{p2}")
+  end
+
+  def dijkstra2(map, {si, sj}, dst, max_cost) do
+    heap = Heap.min() |> Heap.push({0, {si, sj, 0, 1, [{si, sj}]}})
+    dijsktra_iter2(map, heap, dst, MapSet.new(), max_cost, [])
+  end
+
+  def dijsktra_iter2(map, heap, dst, visited, max_cost, paths) do
+    {{cost, {i, j, di, dj, path}}, next_heap} = Heap.split(heap)
+
+    next_visited = MapSet.put(visited, {i, j, di, dj})
+
+    cond do
+      {i, j} == dst ->
+        dijsktra_iter2(map, next_heap, dst, next_visited, max_cost, [[{i, j} | path] | paths])
+
+      cost > max_cost ->
+        paths
+
+      true ->
+        next_heap =
+          rotations({di, dj})
+          |> Enum.map(fn {ri, rj} -> {cost + 1000, {i, j, ri, rj}} end)
+          |> then(fn neighbors -> [{cost + 1, {i + di, j + dj, di, dj}} | neighbors] end)
+          |> Enum.reject(fn {_, {i, j, di, dj}} ->
+            out_of_bounds?(map, i, j) or wall?(map, i, j) or {i, j, di, dj} in next_visited
+          end)
+          |> Enum.reduce(next_heap, fn {cost, {i, j, di, dj}}, heap ->
+            Heap.push(heap, {cost, {i, j, di, dj, [{i, j} | path]}})
+          end)
+
+        dijsktra_iter2(map, next_heap, dst, next_visited, max_cost, paths)
+    end
   end
 
   def dijkstra(map, {si, sj}, dst) do
