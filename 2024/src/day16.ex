@@ -4,7 +4,7 @@ defmodule Day16 do
     {src, _} = Enum.find(map, fn {_, v} -> v == "S" end)
     {dst, _} = Enum.find(map, fn {_, v} -> v == "E" end)
 
-    p1 = dijkstra(map, dst, src)
+    p1 = dijkstra(map, src, dst)
     IO.puts("Part1: #{p1}")
   end
 
