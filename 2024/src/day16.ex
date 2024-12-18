@@ -14,14 +14,14 @@ defmodule Day16 do
   end
 
   def shortest_paths(map, {si, sj}, dst) do
-    # {cost, {i, j, di, dj, path}}
-    start_state = {0, {si, sj, 0, 1, [{si, sj}]}}
+    # {cost, i, j, di, dj, path}
+    start_state = {0, si, sj, 0, 1, [{si, sj}]}
     min_heap = Heap.min() |> Heap.push(start_state)
     shortest_paths(map, dst, min_heap, MapSet.new(), [], @infinity)
   end
 
   def shortest_paths(map, dst, min_heap, visited, paths, max_cost) do
-    {{cost, {i, j, di, dj, path}}, next_heap} = Heap.split(min_heap)
+    {{cost, i, j, di, dj, path}, next_heap} = Heap.split(min_heap)
 
     next_visited = MapSet.put(visited, {i, j, di, dj})
 
@@ -38,21 +38,19 @@ defmodule Day16 do
 
       true ->
         next_heap =
-          neighbors(map, next_visited, i, j, di, dj, cost)
-          |> Enum.map(fn {cost, {i, j, di, dj}} -> {cost, {i, j, di, dj, [{i, j} | path]}} end)
+          next_states(map, next_visited, i, j, di, dj, cost)
+          |> Enum.map(fn {cost, i, j, di, dj} -> {cost, i, j, di, dj, [{i, j} | path]} end)
           |> Enum.reduce(next_heap, fn state, heap -> Heap.push(heap, state) end)
 
         shortest_paths(map, dst, next_heap, next_visited, paths, max_cost)
     end
   end
 
-  def neighbors(map, visited, i, j, di, dj, cost) do
+  def next_states(map, visited, i, j, di, dj, cost) do
     rotations({di, dj})
-    |> Enum.map(fn {ri, rj} -> {cost + 1000, {i, j, ri, rj}} end)
-    |> then(fn neighbors -> [{cost + 1, {i + di, j + dj, di, dj}} | neighbors] end)
-    |> Enum.reject(fn {_, {i, j, di, dj}} ->
-      out_of_bounds?(map, i, j) or wall?(map, i, j) or {i, j, di, dj} in visited
-    end)
+    |> Enum.map(fn {ri, rj} -> rotate(cost, i, j, ri, rj) end)
+    |> then(fn neighbors -> [forward(cost, i, j, di, dj) | neighbors] end)
+    |> Enum.reject(fn {_, i, j, di, dj} -> not valid_state?(map, visited, i, j, di, dj) end)
   end
 
   def rotations(dir) do
@@ -62,6 +60,14 @@ defmodule Day16 do
       {1, 0} -> [{0, -1}, {0, 1}]
       {-1, 0} -> [{0, -1}, {0, 1}]
     end
+  end
+
+  def forward(cost, i, j, di, dj), do: {cost + 1, i + di, j + dj, di, dj}
+
+  def rotate(cost, i, j, di, dj), do: {cost + 1000, i, j, di, dj}
+
+  def valid_state?(map, visited, i, j, di, dj) do
+    not out_of_bounds?(map, i, j) and not wall?(map, i, j) and {i, j, di, dj} not in visited
   end
 
   def out_of_bounds?(map, i, j) do
