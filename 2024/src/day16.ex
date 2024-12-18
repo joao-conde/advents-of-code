@@ -16,7 +16,6 @@ defmodule Day16 do
   def shortest_paths(map, {si, sj}, dst) do
     # {cost, {i, j, di, dj, path}}
     start_state = {0, {si, sj, 0, 1, [{si, sj}]}}
-
     min_heap = Heap.min() |> Heap.push(start_state)
     shortest_paths(map, dst, min_heap, MapSet.new(), [], @infinity)
   end
@@ -27,6 +26,9 @@ defmodule Day16 do
     next_visited = MapSet.put(visited, {i, j, di, dj})
 
     cond do
+      cost > max_cost ->
+        {max_cost, paths}
+
       {i, j} == dst ->
         next_paths = [
           [{i, j} | path] | paths
@@ -34,15 +36,11 @@ defmodule Day16 do
 
         shortest_paths(map, dst, next_heap, next_visited, next_paths, cost)
 
-      cost > max_cost ->
-        {max_cost, paths}
-
       true ->
         next_heap =
           neighbors(map, next_visited, i, j, di, dj, cost)
-          |> Enum.reduce(next_heap, fn {cost, {i, j, di, dj}}, heap ->
-            Heap.push(heap, {cost, {i, j, di, dj, [{i, j} | path]}})
-          end)
+          |> Enum.map(fn {cost, {i, j, di, dj}} -> {cost, {i, j, di, dj, [{i, j} | path]}} end)
+          |> Enum.reduce(next_heap, fn state, heap -> Heap.push(heap, state) end)
 
         shortest_paths(map, dst, next_heap, next_visited, paths, max_cost)
     end
@@ -72,10 +70,6 @@ defmodule Day16 do
 
   def wall?(map, i, j) do
     Map.get(map, {i, j}) == "#"
-  end
-
-  def merge_heaps(h1, h2) do
-    Enum.reduce(h1, h2, fn i, acc -> Heap.push(acc, i) end)
   end
 
   def parse_map(input) do
