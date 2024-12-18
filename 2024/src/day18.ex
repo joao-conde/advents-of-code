@@ -2,11 +2,35 @@ defmodule Day18 do
   def solve do
     bytes = parse_byte_list("input/day18")
 
-    # {take, src, dst} = {12, {0, 0}, {6, 6}}
     {take, src, dst} = {1024, {0, 0}, {70, 70}}
 
     p1 = corrupted(bytes, take) |> bfs(src, dst)
     IO.puts("Part1: #{p1}")
+
+    {x, y} = blocked(bytes, src, dst)
+    IO.puts("Part2: #{x},#{y}")
+  end
+
+  def blocked(bytes, src, dst) do
+    point = blocked(bytes, src, dst, 0, length(bytes))
+    Enum.at(bytes, point - 1)
+  end
+
+  def blocked(bytes, src, dst, lb, ub) do
+    mid = lb + div(ub - lb, 2)
+
+    p = corrupted(bytes, mid) |> bfs(src, dst)
+
+    cond do
+      lb >= ub ->
+        mid
+
+      is_nil(p) ->
+        blocked(bytes, src, dst, lb, mid - 1)
+
+      lb < ub ->
+        blocked(bytes, src, dst, mid + 1, ub)
+    end
   end
 
   def bfs(corrupted, src, dst) do
@@ -15,23 +39,27 @@ defmodule Day18 do
   end
 
   def bfs(corrupted, src, dst, deque, visited) do
-    {steps, {x, y}} = :queue.get(deque)
-    next_deque = :queue.drop(deque)
-    next_visited = MapSet.put(visited, {x, y})
+    if :queue.is_empty(deque) do
+      nil
+    else
+      {steps, {x, y}} = :queue.get(deque)
+      next_deque = :queue.drop(deque)
+      next_visited = MapSet.put(visited, {x, y})
 
-    cond do
-      {x, y} == dst ->
-        steps
+      cond do
+        {x, y} == dst ->
+          steps
 
-      {x, y} in visited ->
-        bfs(corrupted, src, dst, next_deque, visited)
+        {x, y} in visited ->
+          bfs(corrupted, src, dst, next_deque, visited)
 
-      true ->
-        next_deque =
-          next_positions(corrupted, x, y, src, dst)
-          |> Enum.reduce(next_deque, fn pos, acc -> :queue.in({steps + 1, pos}, acc) end)
+        true ->
+          next_deque =
+            next_positions(corrupted, x, y, src, dst)
+            |> Enum.reduce(next_deque, fn pos, acc -> :queue.in({steps + 1, pos}, acc) end)
 
-        bfs(corrupted, src, dst, next_deque, next_visited)
+          bfs(corrupted, src, dst, next_deque, next_visited)
+      end
     end
   end
 
