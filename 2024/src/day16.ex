@@ -38,19 +38,19 @@ defmodule Day16 do
 
       true ->
         next_heap =
-          next_states(map, next_visited, i, j, di, dj, cost)
-          |> Enum.map(fn {cost, i, j, di, dj} -> {cost, i, j, di, dj, [{i, j} | path]} end)
+          next_states(map, next_visited, i, j, di, dj, cost, path)
           |> Enum.reduce(next_heap, fn state, heap -> Heap.push(heap, state) end)
 
         shortest_paths(map, dst, next_heap, next_visited, paths, max_cost)
     end
   end
 
-  def next_states(map, visited, i, j, di, dj, cost) do
+  def next_states(map, visited, i, j, di, dj, cost, path) do
     rotations({di, dj})
     |> Enum.map(fn {ri, rj} -> rotate(cost, i, j, ri, rj) end)
     |> then(fn neighbors -> [forward(cost, i, j, di, dj) | neighbors] end)
     |> Enum.reject(fn {_, i, j, di, dj} -> not valid_state?(map, visited, i, j, di, dj) end)
+    |> Enum.map(fn {cost, i, j, di, dj} -> {cost, i, j, di, dj, [{i, j} | path]} end)
   end
 
   def rotations(dir) do
@@ -70,13 +70,9 @@ defmodule Day16 do
     not out_of_bounds?(map, i, j) and not wall?(map, i, j) and {i, j, di, dj} not in visited
   end
 
-  def out_of_bounds?(map, i, j) do
-    Map.get(map, {i, j}) == nil
-  end
+  def out_of_bounds?(map, i, j), do: Map.get(map, {i, j}) == nil
 
-  def wall?(map, i, j) do
-    Map.get(map, {i, j}) == "#"
-  end
+  def wall?(map, i, j), do: Map.get(map, {i, j}) == "#"
 
   def parse_map(input) do
     input
