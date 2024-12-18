@@ -14,38 +14,47 @@ defmodule Day16 do
   end
 
   def shortest_paths(map, {si, sj}, dst) do
-    min_heap = Heap.min() |> Heap.push({0, {si, sj, 0, 1, [{si, sj}]}})
-    shortest_paths(map, min_heap, dst, MapSet.new(), @infinity, [])
+    # {cost, {i, j, di, dj, path}}
+    start_state = {0, {si, sj, 0, 1, [{si, sj}]}}
+
+    min_heap = Heap.min() |> Heap.push(start_state)
+    shortest_paths(map, dst, min_heap, MapSet.new(), [], @infinity)
   end
 
-  def shortest_paths(map, heap, dst, visited, max_cost, paths) do
-    {{cost, {i, j, di, dj, path}}, next_heap} = Heap.split(heap)
+  def shortest_paths(map, dst, min_heap, visited, paths, max_cost) do
+    {{cost, {i, j, di, dj, path}}, next_heap} = Heap.split(min_heap)
 
     next_visited = MapSet.put(visited, {i, j, di, dj})
 
     cond do
       {i, j} == dst ->
-        shortest_paths(map, next_heap, dst, next_visited, min(cost, max_cost), [
+        next_paths = [
           [{i, j} | path] | paths
-        ])
+        ]
+
+        shortest_paths(map, dst, next_heap, next_visited, next_paths, cost)
 
       cost > max_cost ->
         {max_cost, paths}
 
       true ->
         next_heap =
-          rotations({di, dj})
-          |> Enum.map(fn {ri, rj} -> {cost + 1000, {i, j, ri, rj}} end)
-          |> then(fn neighbors -> [{cost + 1, {i + di, j + dj, di, dj}} | neighbors] end)
-          |> Enum.reject(fn {_, {i, j, di, dj}} ->
-            out_of_bounds?(map, i, j) or wall?(map, i, j) or {i, j, di, dj} in next_visited
-          end)
+          neighbors(map, next_visited, i, j, di, dj, cost)
           |> Enum.reduce(next_heap, fn {cost, {i, j, di, dj}}, heap ->
             Heap.push(heap, {cost, {i, j, di, dj, [{i, j} | path]}})
           end)
 
-        shortest_paths(map, next_heap, dst, next_visited, max_cost, paths)
+        shortest_paths(map, dst, next_heap, next_visited, paths, max_cost)
     end
+  end
+
+  def neighbors(map, visited, i, j, di, dj, cost) do
+    rotations({di, dj})
+    |> Enum.map(fn {ri, rj} -> {cost + 1000, {i, j, ri, rj}} end)
+    |> then(fn neighbors -> [{cost + 1, {i + di, j + dj, di, dj}} | neighbors] end)
+    |> Enum.reject(fn {_, {i, j, di, dj}} ->
+      out_of_bounds?(map, i, j) or wall?(map, i, j) or {i, j, di, dj} in visited
+    end)
   end
 
   def rotations(dir) do
@@ -63,6 +72,10 @@ defmodule Day16 do
 
   def wall?(map, i, j) do
     Map.get(map, {i, j}) == "#"
+  end
+
+  def merge_heaps(h1, h2) do
+    Enum.reduce(h1, h2, fn i, acc -> Heap.push(acc, i) end)
   end
 
   def parse_map(input) do
