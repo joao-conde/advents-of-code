@@ -30,10 +30,7 @@ defmodule Day16 do
         {max_cost, paths}
 
       {i, j} == dst ->
-        next_paths = [
-          [{i, j} | path] | paths
-        ]
-
+        next_paths = [[{i, j} | path] | paths]
         shortest_paths(map, dst, next_heap, next_visited, next_paths, cost)
 
       true ->
