@@ -1,65 +1,70 @@
 defmodule Day18 do
+  @kilobyte 1024
+  @size 70
+
   def solve do
     bytes = parse_byte_list("input/day18")
 
-    {take, src, dst} = {1024, {0, 0}, {70, 70}}
-
-    p1 = corrupted(bytes, take) |> bfs(src, dst)
+    p1 = min_steps(bytes, @kilobyte, @size)
     IO.puts("Part1: #{p1}")
 
-    {x, y} = blocked(bytes, src, dst)
-    IO.puts("Part2: #{x},#{y}")
+    p2 = first_blocker(bytes, @size) |> then(fn {x, y} -> "#{x},#{y}" end)
+    IO.puts("Part2: #{p2}")
   end
 
-  def blocked(bytes, src, dst) do
-    point = blocked(bytes, src, dst, 0, length(bytes))
-    Enum.at(bytes, point - 1)
+  def first_blocker(bytes, size) do
+    index = first_blocker(bytes, size, 0, length(bytes))
+    Enum.at(bytes, index)
   end
 
-  def blocked(bytes, src, dst, lb, ub) do
+  def first_blocker(bytes, size, lb, ub) do
     mid = lb + div(ub - lb, 2)
 
-    p = corrupted(bytes, mid) |> bfs(src, dst)
+    steps = min_steps(bytes, mid, size)
 
     cond do
       lb >= ub ->
-        mid
+        mid - 1
 
-      is_nil(p) ->
-        blocked(bytes, src, dst, lb, mid - 1)
+      is_nil(steps) ->
+        first_blocker(bytes, size, lb, mid - 1)
 
       lb < ub ->
-        blocked(bytes, src, dst, mid + 1, ub)
+        first_blocker(bytes, size, mid + 1, ub)
     end
   end
 
-  def bfs(corrupted, src, dst) do
+  def min_steps(bytes, byte_count, size) do
+    src = {0, 0}
+    dst = {size, size}
+    corrupted = corrupted_bytes(bytes, byte_count)
     deque = :queue.from_list([{0, src}])
-    bfs(corrupted, src, dst, deque, MapSet.new())
+    visited = MapSet.new()
+    breadth_first_search(corrupted, src, dst, deque, visited)
   end
 
-  def bfs(corrupted, src, dst, deque, visited) do
-    if :queue.is_empty(deque) do
-      nil
-    else
-      {steps, {x, y}} = :queue.get(deque)
-      next_deque = :queue.drop(deque)
-      next_visited = MapSet.put(visited, {x, y})
+  def breadth_first_search(corrupted, src, dst, deque, visited) do
+    case :queue.out(deque) do
+      {:empty, _} ->
+        nil
 
-      cond do
-        {x, y} == dst ->
-          steps
+      {{_, {steps, {x, y}}}, next_deque} ->
+        next_visited = MapSet.put(visited, {x, y})
 
-        {x, y} in visited ->
-          bfs(corrupted, src, dst, next_deque, visited)
+        cond do
+          {x, y} == dst ->
+            steps
 
-        true ->
-          next_deque =
-            next_positions(corrupted, x, y, src, dst)
-            |> Enum.reduce(next_deque, fn pos, acc -> :queue.in({steps + 1, pos}, acc) end)
+          {x, y} in visited ->
+            breadth_first_search(corrupted, src, dst, next_deque, visited)
 
-          bfs(corrupted, src, dst, next_deque, next_visited)
-      end
+          true ->
+            next_deque =
+              next_positions(corrupted, x, y, src, dst)
+              |> Enum.reduce(next_deque, fn pos, acc -> :queue.in({steps + 1, pos}, acc) end)
+
+            breadth_first_search(corrupted, src, dst, next_deque, next_visited)
+        end
     end
   end
 
@@ -71,16 +76,16 @@ defmodule Day18 do
       {x, y - 1}
     ]
     |> Enum.reject(fn {x, y} ->
-      not valid_state?(corrupted, x, y, {src_x, src_y}, {dst_x, dst_y})
+      not valid_position?(corrupted, x, y, {src_x, src_y}, {dst_x, dst_y})
     end)
   end
 
-  def valid_state?(corrupted, x, y, {src_x, src_y}, {dst_x, dst_y}) do
+  def valid_position?(corrupted, x, y, {src_x, src_y}, {dst_x, dst_y}) do
     {x, y} not in corrupted and x >= src_x and y >= src_y and x <= dst_x and y <= dst_y
   end
 
-  def corrupted(bytes, n) do
-    bytes |> Enum.take(n) |> MapSet.new()
+  def corrupted_bytes(bytes, byte_count) do
+    bytes |> Enum.take(byte_count) |> MapSet.new()
   end
 
   def parse_byte_list(input) do
