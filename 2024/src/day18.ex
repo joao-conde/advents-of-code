@@ -13,11 +13,11 @@ defmodule Day18 do
   end
 
   def first_blocker(bytes, size) do
-    index = first_blocker(bytes, size, 0, length(bytes))
+    index = binary_search(bytes, size, 0, length(bytes))
     Enum.at(bytes, index)
   end
 
-  def first_blocker(bytes, size, lb, ub) do
+  def binary_search(bytes, size, lb, ub) do
     mid = lb + div(ub - lb, 2)
 
     steps = min_steps(bytes, mid, size)
@@ -27,10 +27,10 @@ defmodule Day18 do
         mid - 1
 
       is_nil(steps) ->
-        first_blocker(bytes, size, lb, mid - 1)
+        binary_search(bytes, size, lb, mid - 1)
 
       lb < ub ->
-        first_blocker(bytes, size, mid + 1, ub)
+        binary_search(bytes, size, mid + 1, ub)
     end
   end
 
