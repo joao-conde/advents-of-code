@@ -9,3 +9,6 @@ default-run = "aoc2025"
 opt-level = 3
 debug = false
 lto = true
+
+[dependencies]
+itertools = "0.14.0"
