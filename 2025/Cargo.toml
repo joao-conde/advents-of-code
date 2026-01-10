@@ -1,0 +1,11 @@
+[package]
+name = "aoc2025"
+version = "1.0.0"
+authors = ["João Conde <joaodiasconde@gmail.com>"]
+edition = "2024"
+default-run = "aoc2025"
+
+[profile.release]
+opt-level = 3
+debug = false
+lto = true

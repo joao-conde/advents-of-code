@@ -14,6 +14,7 @@ Specific versions detailed in each year's README file.
 
 |                 Year                  |  Language  | Completion |
 | :-----------------------------------: | :--------: | :--------: |
+| [2025](https://adventofcode.com/2025) |    Rust    |   00/50    |
 | [2024](https://adventofcode.com/2024) |   Elixir   |   30/50    |
 | [2023](https://adventofcode.com/2023) |    Rust    |   36/50    |
 | [2022](https://adventofcode.com/2022) |   Scala    |   43/50    |
